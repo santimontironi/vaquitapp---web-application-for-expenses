@@ -1,0 +1,108 @@
+import authRepository from '../repository/auth.repository.js';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
+import transporter from '../config/mail.config.js';
+
+class AuthController {
+    async register(req, res) {
+        try {
+            const { username, email, password } = req.body;
+
+            if(!username || !email || !password) {
+                return res.status(400).json({ message: 'El nombre de usuario, el correo electrónico y la contraseña son requeridos' });
+            }
+
+            const existingUserByEmail = await authRepository.findUserByEmail(email);
+            const existingUserByUsername = await authRepository.findUserByUsername(username);
+
+            if (existingUserByEmail || existingUserByUsername) {
+                return res.status(400).json({ message: 'El correo electrónico o el nombre de usuario ya están en uso' });
+            }
+
+            const hashedPassword = await bcrypt.hash(password, 10);
+
+            const newUser = await authRepository.registerUser(username, email, hashedPassword);
+
+            const urlConfirmed = `${process.env.FRONTEND_URL}/confirm/${newUser._id}`;
+
+            const mailOptions = {
+                from: process.env.EMAIL_USER,
+                to: newUser.email,
+                subject: 'Bienvenido a VaquitApp',
+                text: `Hola ${newUser.username},\n\nGracias por registrarte en VaquitApp. Para continuar debes de confirmar tu cuenta haciendo click en el siguiente enlace: ${urlConfirmed}`
+            }
+
+            await transporter.sendMail(mailOptions);
+
+            res.status(201).json({ message: 'Usuario registrado exitosamente' });
+        }
+        catch (error) {
+            res.status(500).json({ message: 'Error registrando usuario', error: error.message });
+        }
+    }
+
+    async login(req, res) {
+        try {
+            const { identifier, password } = req.body;
+
+            if(!identifier || !password) {
+                return res.status(400).json({ message: 'El correo electrónico o el nombre de usuario y la contraseña son requeridos' });
+            }
+
+            const user = await authRepository.findUserByIdentifier(identifier);
+
+            if (!user) {
+                return res.status(401).json({ message: 'Credenciales inválidas' });
+            }
+
+            const isPasswordValid = await bcrypt.compare(password, user.password);
+
+            if (!isPasswordValid) {
+                return res.status(401).json({ message: 'Credenciales inválidas' });
+            }
+
+            const token = jwt.sign(
+                { id: user._id },
+                process.env.JWT_SECRET,
+                { expiresIn: '7d' }
+            );
+
+            res.cookie('token', token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production' ? true : false,
+                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+                maxAge: 7 * 24 * 60 * 60 * 1000
+            });
+
+            res.status(200).json({
+                message: 'Login exitoso',
+                user: { user }
+            });
+        }
+        catch (error) {
+            res.status(500).json({ message: 'Error al iniciar sesión', error: error.message });
+        }
+    }
+
+    async dashboardUser(req, res) {
+        try{
+
+            const userId = req.user.id;
+
+            const user = await authRepository.findUserById(userId);
+
+            if (!user) {
+                return res.status(404).json({ message: 'Usuario no encontrado' });
+            }
+
+            res.status(200).json({ user });
+        }
+        catch (error) {
+            res.status(500).json({ message: 'Error al cargar el dashboard', error: error.message });
+        }
+    }
+}
+
+const authController = new AuthController();
+
+export default authController;
