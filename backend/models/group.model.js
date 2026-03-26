@@ -1,6 +1,9 @@
 import mongoose from 'mongoose';
 
 const groupSchema = new mongoose.Schema({
+    image: {
+        type: String
+    },
     name: {
         type: String,
         required: true
@@ -13,6 +16,10 @@ const groupSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
+    },
+    active: {
+        type: Boolean,
+        default: true
     },
     created_at: {
         type: Date,
