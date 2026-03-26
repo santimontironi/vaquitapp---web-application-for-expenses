@@ -19,7 +19,7 @@ const expenseSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
-    split_among: [
+    split_among: [ // Usuarios entre los que se divide el gasto
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User'

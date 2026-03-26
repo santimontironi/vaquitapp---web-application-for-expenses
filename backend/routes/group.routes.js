@@ -1,6 +1,10 @@
 import { Router } from "express";
 import groupController from "../controllers/group.controller.js";
+import { verifyToken } from "../middlewares/verify-auth.js";
+import { upload } from "../middlewares/multer.js";
 
 export const router = Router();
 
-router.post('/createGroup', groupController.createGroup);
+router.get('/groups', verifyToken, groupController.getAllGroupsByUser);
+router.post('/groups', verifyToken, upload.single('image'), groupController.createGroup);
+router.delete('/groups/:idGroup', verifyToken, verifyRole, groupController.deleteGroup);

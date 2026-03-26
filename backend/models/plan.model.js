@@ -1,6 +1,9 @@
 import mongoose from 'mongoose';
 
 const planSchema = new mongoose.Schema({
+    image: {
+        type: String
+    },
     name: {
         type: String,
         required: true
@@ -24,6 +27,10 @@ const planSchema = new mongoose.Schema({
             ref: 'User'
         }
     ],
+    active: {
+        type: Boolean,
+        default: true
+    },
     created_at: {
         type: Date,
         default: Date.now

@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import {router as authRouter} from "./routes/auth.routes.js";
 import {router as groupRouter} from "./routes/group.routes.js";
+import {router as planRouter} from "./routes/plan.routes.js";
 import cookieParser from "cookie-parser";
 
 dotenv.config();
@@ -13,5 +14,6 @@ app.use(cookieParser());
 
 app.use("", authRouter);
 app.use("", groupRouter);
+app.use("", planRouter);
 
 export default app;
