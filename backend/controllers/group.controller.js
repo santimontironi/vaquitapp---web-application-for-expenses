@@ -1,5 +1,8 @@
 import groupRepository from "../repository/group.repository.js";
+import authRepository from "../repository/auth.repository.js";
 import cloudinaryConfig from "../config/cloudinary.config.js";
+import transporter from "../config/mail.config.js";
+import jwt from "jsonwebtoken";
 
 class GroupController {
 
@@ -54,12 +57,144 @@ class GroupController {
         try {
             const { idGroup } = req.params;
 
+            const member = req.member
+
+            if(member.role !== 'admin') {
+                return res.status(403).json({ message: 'Solo los administradores pueden eliminar el grupo' });
+            }
+
             const groupDeleted = await groupRepository.deleteGroup(idGroup);
 
             res.status(200).json({ message: 'Grupo eliminado exitosamente', groupDeleted: groupDeleted });
         }
         catch (error) {
             res.status(500).json({ message: 'Error eliminando grupo', error: error.message });
+        }
+    }
+
+    async addMemberToGroup(req, res) {
+        try{
+            const { idGroup } = req.params;
+            const { email, role } = req.body;
+
+            if(!email || !role) {
+                return res.status(400).json({ message: 'Email y rol son requeridos' });
+            }
+
+            const member = req.member
+
+            if(member.role !== 'admin') {
+                return res.status(403).json({ message: 'Solo los administradores pueden agregar miembros al grupo' });
+            }
+
+            const inviteToken = jwt.sign(
+                { groupId: idGroup, email, role },
+                process.env.SECRET_KEY,
+                { expiresIn: '7d' }
+            );
+
+            const inviteLink = `${process.env.FRONTEND_URL}/accept-invitation/${inviteToken}`;
+
+            const mailOptions = {
+                from: process.env.EMAIL_USER,
+                to: email,
+                subject: 'Has sido invitado a un grupo en VaquitApp',
+                text: `Has sido invitado a un grupo en VaquitApp.\n\nPara unirte, iniciá sesión y usá el siguiente enlace:\n\n${inviteLink}\n\nEste enlace expira en 7 días.`
+            };
+
+            await transporter.sendMail(mailOptions);
+
+            res.status(200).json({ message: 'Invitación enviada exitosamente' });
+        }
+        catch (error) {
+            res.status(500).json({ message: 'Error agregando miembro al grupo', error: error.message });
+        }
+    }
+    
+    async acceptInvitation(req, res) {
+        try {
+            const { token } = req.params;
+
+            if (!token) {
+                return res.status(400).json({ message: 'Token de invitación requerido' });
+            }
+
+            let decoded;
+            try {
+                decoded = jwt.verify(token, process.env.SECRET_KEY);
+            } catch (error) {
+                return res.status(400).json({ message: 'Token inválido o expirado' });
+            }
+
+            const { groupId, email, role } = decoded;
+
+            const user = await authRepository.findUserByEmail(email);
+
+            if (!user) {
+                return res.status(404).json({ message: 'No existe una cuenta registrada con este email' });
+            }
+
+            const alreadyMember = await groupRepository.isAlreadyMember(groupId, user._id);
+
+            if (alreadyMember) {
+                return res.status(400).json({ message: 'Ya sos miembro de este grupo' });
+            }
+
+            const newMember = await groupRepository.addMemberToGroup(groupId, user._id, role);
+
+            res.status(200).json({ message: '¡Bienvenido al grupo!', newMember });
+        } catch (error) {
+            res.status(500).json({ message: 'Error al aceptar la invitación', error: error.message });
+        }
+    }
+
+    async editGroup(req, res) {
+        try {
+            const { idGroup } = req.params;
+            const { name, description } = req.body;
+
+            if(!name || !description) {
+                return res.status(400).json({ message: 'Nombre y descripción son requeridos' });
+            }
+
+            const member = req.member
+
+            if(member.role !== 'admin') {
+                return res.status(403).json({ message: 'Solo los administradores pueden editar el grupo' });
+            }
+
+            let imageUrl = null;
+
+            if(req.file){
+                const b64 = Buffer.from(req.file.buffer).toString('base64')
+                const dataURI = `data:${req.file.mimetype};base64,${b64}`
+                imageUrl = dataURI;
+            }
+
+            const updatedGroup = await groupRepository.editGroup(idGroup, imageUrl, name, description);
+
+            res.status(200).json({ message: 'Grupo actualizado exitosamente', updatedGroup });
+        } catch (error) {
+            res.status(500).json({ message: 'Error actualizando grupo', error: error.message });
+        }
+    }
+
+    async giveAdminRole(req, res) {
+        try{
+            const { idGroup, idMember } = req.params;
+
+            const member = req.member
+
+            if(member.role !== 'admin') {
+                return res.status(403).json({ message: 'Solo los administradores pueden otorgar roles de admin' });
+            }
+
+            const updatedMember = await groupRepository.giveAdminRole(idGroup, idMember);
+
+            res.status(200).json({ message: 'Rol de admin otorgado exitosamente', updatedMember });
+        }
+        catch (error) {
+            res.status(500).json({ message: 'Error otorgando rol de admin', error: error.message });
         }
     }
 }

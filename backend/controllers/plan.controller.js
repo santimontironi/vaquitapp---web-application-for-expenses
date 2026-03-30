@@ -50,6 +50,24 @@ class PlanController {
             res.status(500).json({ message: 'Error creando plan', error: error.message });
         }
     }
+
+    async checkPlanAsCompleted(req, res) {
+        try{
+            const { idPlan } = req.params;
+
+            const planCompleted = await planRepository.checkPlanAsCompleted(idPlan);
+
+            if(!planCompleted) {
+                return res.status(404).json({ message: 'Plan no encontrado' });
+            }
+
+            res.status(200).json({ message: 'Plan marcado como completado', planCompleted: planCompleted });
+
+        }
+        catch (error) {
+            res.status(500).json({ message: 'Error marcando plan como completado', error: error.message });
+        }
+    }
 }
 
 const planController = new PlanController();

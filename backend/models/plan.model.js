@@ -27,9 +27,10 @@ const planSchema = new mongoose.Schema({
             ref: 'User'
         }
     ],
-    active: {
-        type: Boolean,
-        default: true
+    state: {
+        type: String,
+        enum: ['active', 'completed'],
+        default: 'active'
     },
     created_at: {
         type: Date,

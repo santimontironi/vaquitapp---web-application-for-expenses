@@ -8,3 +8,4 @@ export const router = Router();
 
 router.get('/:idGroup/plans', verifyToken, verifyRole, planController.getAllPlansByGroup);
 router.post('/:idGroup/plans', verifyToken, verifyRole, upload.single('image'), planController.createPlan);
+router.patch('/:idGroup/plans/:idPlan/complete', verifyToken, verifyRole, planController.checkPlanAsCompleted);

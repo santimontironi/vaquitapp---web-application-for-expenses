@@ -25,6 +25,33 @@ class GroupRepository {
             });
         return groups.filter(gm => gm.group !== null); // se excluyen los grupos inactivos.
     }
+
+    async isAlreadyMember(groupId, userId) {
+        return await GroupMember.findOne({ group: groupId, user: userId });
+    }
+
+    async addMemberToGroup(groupId, userId, role) {
+        const newMember = await GroupMember.create({ group: groupId, user: userId, role });
+        return newMember;
+    }
+
+    async editGroup(groupId, photo, name, description) {
+        const updatedGroup = await Group.findByIdAndUpdate(
+            groupId,
+            { image: photo, name, description },
+            { new: true }
+        );
+        return updatedGroup;
+    }
+
+    async giveAdminRole(groupId, userId) {
+        const updatedMember = await GroupMember.findOneAndUpdate(
+            { group: groupId, user: userId },
+            { role: 'admin' },
+            { new: true }
+        );
+        return updatedMember;
+    }
 }
 
 const groupRepository = new GroupRepository();
