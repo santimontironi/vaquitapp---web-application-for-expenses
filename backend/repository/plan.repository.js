@@ -6,6 +6,15 @@ class PlanRepository {
         return planCreated;
     }
 
+    async addMembersToPlan(planId, userIds) {
+        const planUpdated = await Plan.findByIdAndUpdate(
+            planId,
+            { $addToSet: { members: { $each: userIds } } }, //addToSet sirve para evitar duplicados, y each para agregar varios elementos al array
+            { new: true }
+        );
+        return planUpdated;
+    }
+
     async getAllPlansByGroup(groupId) {
         const plans = await Plan.find({ group: groupId, state: 'active' }).populate('created_by', 'username');
         return plans;

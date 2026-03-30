@@ -68,6 +68,28 @@ class PlanController {
             res.status(500).json({ message: 'Error marcando plan como completado', error: error.message });
         }
     }
+
+    async addMembersToPlan(req, res) {
+        try{
+            const { idPlan } = req.params;
+            const { userIds } = req.body;
+
+            if(!userIds || !Array.isArray(userIds) || userIds.length === 0) {
+                return res.status(400).json({ message: 'Se requiere un array de IDs de usuarios' });
+            }
+
+            const planUpdated = await planRepository.addMembersToPlan(idPlan, userIds);
+
+            if(!planUpdated) {
+                return res.status(404).json({ message: 'Plan no encontrado' });
+            }
+
+            res.status(200).json({ message: 'Miembros agregados al plan exitosamente', planUpdated: planUpdated });
+        }
+        catch (error) {
+            res.status(500).json({ message: 'Error agregando miembros al plan', error: error.message });
+        }
+    }
 }
 
 const planController = new PlanController();
