@@ -7,7 +7,7 @@ import Swal from "sweetalert2"
 
 const Register = () => {
   const { registerUser, loadingAuth } = useAuth()
-  const { register, handleSubmit, formState: { errors } } = useForm<RegisterData>()
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<RegisterData>()
 
   const [errorAuth, setErrorAuth] = useState<string | null>(null);
 
@@ -18,15 +18,17 @@ const Register = () => {
         icon: 'success',
         title: '¡Registro exitoso!',
         text: 'Tu cuenta ha sido creada correctamente. Ahora deberás de confirmar tu email para iniciar sesión.',
-        confirmButtonText: "Iniciar sesión",
-        cancelButtonText: "Cerrar",
-        showCancelButton: true,
+        timer: 4000,
+        timerProgressBar: true,
+        showConfirmButton: false,
       })
+      reset()
     }
     catch (error: any) {
       if (error.response?.data?.message) {
         setErrorAuth(error.response.data.message);
       }
+      reset()
     }
   }
 

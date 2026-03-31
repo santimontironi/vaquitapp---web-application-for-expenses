@@ -14,3 +14,7 @@ export const loginUserService = (data: LoginData) => {
 export const dashboardService = () => {
     return axios.get<DashboardResponse>(`${API_URL}/dashboard`);
 }
+
+export const confirmUserService = (token: string) => {
+    return axios.get(`${API_URL}/confirm/${token}`);
+}

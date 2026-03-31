@@ -24,6 +24,7 @@ export interface LoadingAuth {
     loginLoading: boolean;
     registerLoading: boolean;
     dashboardLoading?: boolean;
+    confirmLoading?: boolean;
 }
 
 export interface DashboardResponse {

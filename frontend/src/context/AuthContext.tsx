@@ -1,12 +1,13 @@
 import { createContext, useState, useEffect } from "react";
 import type { User, RegisterData, LoadingAuth, LoginData, LoginResponse } from "../types/AuthTypes";
-import { registerUserService, loginUserService, dashboardService } from "../services/AuthServices";
+import { registerUserService, loginUserService, dashboardService, confirmUserService } from "../services/AuthServices";
 
 interface AuthContextType {
     user: User | null;
     registerUser: (data: RegisterData) => Promise<void>;
     loginUser: (data: LoginData) => Promise<LoginResponse>;
     loadingAuth: LoadingAuth;
+    confirmUser: (token: string) => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -17,7 +18,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [loadingAuth, setLoadingAuth] = useState<LoadingAuth>({
         loginLoading: false,
         registerLoading: false,
-        dashboardLoading: true
+        dashboardLoading: true,
+        confirmLoading: false
     });
 
     async function registerUser(data: RegisterData) {
@@ -30,6 +32,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
         finally {
             setLoadingAuth(prev => ({ ...prev, registerLoading: false }));
+        }
+    }
+
+    async function confirmUser(token: string) {
+        setLoadingAuth(prev => ({ ...prev, confirmLoading: true }));
+        try {
+            await confirmUserService(token);
+        }
+        catch(error) {
+            console.error("Error confirmando usuario:", error);
+        }
+        finally {
+            setLoadingAuth(prev => ({ ...prev, confirmLoading: false }));
         }
     }
 
@@ -64,7 +79,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ user, registerUser, loginUser, loadingAuth }}>
+        <AuthContext.Provider value={{ user, registerUser, loginUser, loadingAuth, confirmUser }}>
             {children}
         </AuthContext.Provider>
     )
