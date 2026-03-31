@@ -27,6 +27,11 @@ class AuthRepository {
         });
         return user;
     }
+
+    async confirmUser(userId) {
+        const user = await User.findByIdAndUpdate(userId, { isConfirmed: true }, { new: true }).select('-password');
+        return user;
+    }
 }
 
 const authRepository = new AuthRepository();

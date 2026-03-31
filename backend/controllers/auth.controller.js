@@ -23,7 +23,13 @@ class AuthController {
 
             const newUser = await authRepository.registerUser(username, email, hashedPassword);
 
-            const urlConfirmed = `${process.env.FRONTEND_URL}/confirmar/${newUser._id}`;
+            const confirmToken = jwt.sign(
+                { id: newUser._id },
+                process.env.JWT_SECRET,
+                { expiresIn: '24h' }
+            );
+
+            const urlConfirmed = `${process.env.FRONTEND_URL}/confirmar/${confirmToken}`;
 
             const mailOptions = {
                 from: process.env.EMAIL_USER,
@@ -35,6 +41,36 @@ class AuthController {
             await transporter.sendMail(mailOptions);
 
             res.status(201).json({ message: 'Usuario registrado exitosamente' });
+        }
+        catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    }
+
+    async confirmUser(req, res) {
+        try{
+            const { token } = req.params;
+
+            let decoded;
+            try {
+                decoded = jwt.verify(token, process.env.JWT_SECRET);
+            } catch {
+                return res.status(400).json({ message: 'El enlace de confirmación es inválido o ha expirado' });
+            }
+
+            const user = await authRepository.findUserById(decoded.id);
+
+            if (!user) {
+                return res.status(404).json({ message: 'Usuario no encontrado' });
+            }
+
+            if (user.isConfirmed) {
+                return res.status(400).json({ message: 'El usuario ya ha sido confirmado' });
+            }
+
+            await authRepository.confirmUser(decoded.id);
+
+            res.status(200).json({ message: 'Usuario confirmado exitosamente' });
         }
         catch (error) {
             res.status(500).json({ message: error.message });
@@ -53,6 +89,10 @@ class AuthController {
 
             if (!user) {
                 return res.status(401).json({ message: 'Credenciales inválidas' });
+            }
+
+            if(!user.isConfirmed) {
+                return res.status(401).json({ message: 'Debes confirmar tu cuenta para iniciar sesión' });
             }
 
             const isPasswordValid = await bcrypt.compare(password, user.password);
