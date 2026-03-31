@@ -144,6 +144,10 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
+    },
+    isConfirmed: {
+        type: Boolean,
+        default: false
     }
 });
 

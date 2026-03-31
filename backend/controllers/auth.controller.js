@@ -23,7 +23,7 @@ class AuthController {
 
             const newUser = await authRepository.registerUser(username, email, hashedPassword);
 
-            const urlConfirmed = `${process.env.FRONTEND_URL}/confirm/${newUser._id}`;
+            const urlConfirmed = `${process.env.FRONTEND_URL}/confirmar/${newUser._id}`;
 
             const mailOptions = {
                 from: process.env.EMAIL_USER,
@@ -37,7 +37,7 @@ class AuthController {
             res.status(201).json({ message: 'Usuario registrado exitosamente' });
         }
         catch (error) {
-            res.status(500).json({ message: 'Error registrando usuario', error: error.message });
+            res.status(500).json({ message: error.message });
         }
     }
 
@@ -74,13 +74,19 @@ class AuthController {
                 maxAge: 7 * 24 * 60 * 60 * 1000
             });
 
+            const userWithoutPassword = {
+                id: user._id,
+                username: user.username,
+                email: user.email
+            }
+
             res.status(200).json({
                 message: 'Login exitoso',
-                user: { user }
+                user: userWithoutPassword 
             });
         }
         catch (error) {
-            res.status(500).json({ message: 'Error al iniciar sesión', error: error.message });
+            res.status(500).json({ message: error.message });
         }
     }
 
@@ -98,7 +104,7 @@ class AuthController {
             res.status(200).json({ user });
         }
         catch (error) {
-            res.status(500).json({ message: 'Error al cargar el dashboard', error: error.message });
+            res.status(500).json({ message: error.message });
         }
     }
 }

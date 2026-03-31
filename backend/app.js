@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 import {router as authRouter} from "./routes/auth.routes.js";
 import {router as groupRouter} from "./routes/group.routes.js";
 import {router as planRouter} from "./routes/plan.routes.js";
@@ -11,6 +12,11 @@ const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
+
+app.use(cors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true
+}));
 
 app.use("", authRouter);
 app.use("", groupRouter);
