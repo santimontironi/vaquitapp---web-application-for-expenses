@@ -1,12 +1,15 @@
 import useAuth from "../hooks/useAuth"
 import { useForm } from "react-hook-form"
 import { Link } from "react-router-dom"
-import { useState } from "react"
-import type { LoginData } from "../types/AuthTypes"
+import { useState, useEffect } from "react"
+import type { LoginData } from "../types"
+import { useNavigate } from "react-router-dom"
 
 const Login = () => {
-  const { loginUser, loadingAuth } = useAuth()
+  const { loginUser, loadingAuth, user } = useAuth()
   const { register, handleSubmit, formState: { errors } } = useForm<LoginData>()
+
+  const navigate = useNavigate()
 
   const [errorAuth, setErrorAuth] = useState<string | null>(null);
 
@@ -20,6 +23,12 @@ const Login = () => {
       }
     }
   }
+
+  useEffect(() => {
+    if (user){
+      navigate("/inicio")
+    }
+  }, [user, navigate])
 
   return (
     <main className="relative min-h-screen bg-[#0F172A] flex items-center justify-center py-5 md:py-6 xl:py-10 2xl:py-15 px-4 overflow-hidden">

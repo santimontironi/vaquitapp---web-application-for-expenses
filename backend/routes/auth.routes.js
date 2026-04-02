@@ -8,3 +8,4 @@ router.post('/register', authController.register);
 router.post('/login', authController.login);
 router.get('/confirm/:token', authController.confirmUser);
 router.get('/dashboard', verifyToken, authController.dashboardUser);
+router.post('/logout', authController.logout);

@@ -2,7 +2,7 @@ import useAuth from "../hooks/useAuth"
 import { useForm } from "react-hook-form"
 import { Link } from "react-router-dom"
 import { useState } from "react"
-import type { RegisterData } from "../types/AuthTypes"
+import type { RegisterData } from "../types"
 import Swal from "sweetalert2"
 
 const Register = () => {

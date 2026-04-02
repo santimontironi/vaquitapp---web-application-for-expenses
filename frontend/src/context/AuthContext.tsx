@@ -1,11 +1,12 @@
 import { createContext, useState, useEffect } from "react";
-import type { User, RegisterData, LoadingAuth, LoginData, LoginResponse } from "../types/AuthTypes";
-import { registerUserService, loginUserService, dashboardService, confirmUserService } from "../services/AuthServices";
+import type { User, RegisterData, LoadingAuth, LoginData, LoginResponse } from "../types";
+import { registerUserService, loginUserService, dashboardService, confirmUserService, logoutService } from "../services/apiServices";
 
 interface AuthContextType {
     user: User | null;
     registerUser: (data: RegisterData) => Promise<void>;
     loginUser: (data: LoginData) => Promise<LoginResponse>;
+    logoutUser: () => void;
     loadingAuth: LoadingAuth;
     confirmUser: (token: string) => Promise<void>;
 }
@@ -48,6 +49,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
     }
 
+    async function logoutUser() {
+        try {
+            await logoutService();
+        } catch (error) {
+            console.error("Error cerrando sesión:", error);
+        } finally {
+            setUser(null);
+        }
+    }
+
     async function loginUser (data: LoginData) {
         setLoadingAuth(prev => ({ ...prev, loginLoading: true }));
         try {
@@ -79,7 +90,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ user, registerUser, loginUser, loadingAuth, confirmUser }}>
+        <AuthContext.Provider value={{ user, registerUser, loginUser, logoutUser, loadingAuth, confirmUser }}>
             {children}
         </AuthContext.Provider>
     )

@@ -7,12 +7,13 @@ const VerifyAuth = ({ children }: { children: React.ReactNode }) => {
 
   const navigate = useNavigate();
 
-  if (!user) {
-    navigate("/");
+  if (loadingAuth.dashboardLoading) {
+    return <Loader />;
   }
 
-  if(loadingAuth.dashboardLoading){
-    return <Loader />
+  if (!user) {
+    navigate("/");
+    return null;
   }
 
   return children;

@@ -49,7 +49,7 @@ class GroupController {
             res.status(201).json({ message: 'Grupo creado exitosamente', groupCreated: groupCreated });
         }
         catch (error) {
-            res.status(500).json({ message: 'Error creando grupo', error: error.message });
+            res.status(500).json({ message: error.message });
         }
     }
 
