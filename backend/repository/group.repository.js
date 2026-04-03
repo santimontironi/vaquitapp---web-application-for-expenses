@@ -8,6 +8,11 @@ class GroupRepository {
         return groupCreated;
     }
 
+    async findGroupById(groupId) {
+        const group = await Group.findById(groupId);
+        return group;
+    }
+
     async findGroupByIdAndUser(groupId, userId) {
         const member = await GroupMember.findOne({ group: groupId, user: userId });
         return member;
@@ -24,10 +29,6 @@ class GroupRepository {
                 match: { active: true }
             });
         return groups.filter(gm => gm.group !== null); // se excluyen los grupos inactivos.
-    }
-
-    async isAlreadyMember(groupId, userId) {
-        return await GroupMember.findOne({ group: groupId, user: userId });
     }
 
     async addMemberToGroup(groupId, userId, role) {

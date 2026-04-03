@@ -7,6 +7,7 @@ import ConfirmUser from "./pages/ConfirmUser";
 import Dashboard from "./pages/Dashboard";
 import VerifyAuth from "./components/VerifyAuth";
 import NewGroup from "./pages/NewGroup";
+import Group from "./pages/Group";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route path="/confirmar/:token" element={<ConfirmUser />} />
             <Route path="/inicio" element={<VerifyAuth><Dashboard /></VerifyAuth>} />
             <Route path="/nuevo-grupo" element={<VerifyAuth><NewGroup /></VerifyAuth>} />
+            <Route path="/grupo/:idGroup" element={<VerifyAuth><Group /></VerifyAuth>} />
           </Routes>
         </BrowserRouter>
       </GroupProvider>

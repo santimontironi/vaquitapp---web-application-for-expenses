@@ -75,6 +75,10 @@ export interface CreateGroupResponse {
     groupCreated: Group;
 }
 
+export interface GroupDetailsResponse {
+    group: Group;
+}
+
 // ============================================================
 // PROPS
 // ============================================================

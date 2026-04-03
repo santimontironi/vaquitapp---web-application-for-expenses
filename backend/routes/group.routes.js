@@ -7,6 +7,7 @@ import { upload } from "../middlewares/multer.js";
 export const router = Router();
 
 router.get('/groups', verifyToken, groupController.getAllGroupsByUser);
+router.get('/groups/:idGroup', verifyToken, verifyRole, groupController.getGroupById);
 router.post('/groups', verifyToken, upload.single('image'), groupController.createGroup);
 router.delete('/groups/:idGroup', verifyToken, verifyRole, groupController.deleteGroup);
 router.post('/groups/:idGroup/invite', verifyToken, verifyRole, groupController.addMemberToGroup);

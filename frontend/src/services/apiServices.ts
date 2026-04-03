@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { RegisterData, LoginData, LoginResponse, DashboardResponse, CreateGroupResponse, GroupMemberResponse } from '../types';
+import type { RegisterData, LoginData, LoginResponse, DashboardResponse, CreateGroupResponse, GroupMemberResponse, GroupDetailsResponse } from '../types';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -36,4 +36,8 @@ export const createGroupService = (data: FormData) => {
 
 export const logoutService = () => {
     return api.post(`/logout`);
+}
+
+export const getGroupDetailsService = (idGroup: string) => {
+    return api.get<GroupDetailsResponse>(`/groups/${idGroup}`);
 }

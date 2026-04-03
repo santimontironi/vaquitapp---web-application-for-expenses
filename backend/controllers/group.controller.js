@@ -19,7 +19,30 @@ class GroupController {
             res.status(200).json({ message: 'Grupos obtenidos exitosamente', groups: groups });
         }
         catch (error) {
-            res.status(500).json({ message: 'Error obteniendo grupos', error: error.message });
+            res.status(500).json({ message: error.message });
+        }
+    }
+
+    async getGroupById(req, res) {
+        try{
+            const { idGroup } = req.params;
+
+            const member = req.member
+
+            if(!member) {
+                return res.status(403).json({ message: 'No sos miembro de este grupo' });
+            }
+
+            const group = await groupRepository.findGroupById(idGroup);
+
+            if(!group) {
+                return res.status(404).json({ message: 'No se encontró el grupo' });
+            }
+
+            res.status(200).json({ message: 'Grupo obtenido exitosamente', group: group });
+        }
+        catch (error) {
+            res.status(500).json({ message: error.message });
         }
     }
 
@@ -68,7 +91,7 @@ class GroupController {
             res.status(200).json({ message: 'Grupo eliminado exitosamente', groupDeleted: groupDeleted });
         }
         catch (error) {
-            res.status(500).json({ message: 'Error eliminando grupo', error: error.message });
+            res.status(500).json({ message: error.message });
         }
     }
 
@@ -85,6 +108,15 @@ class GroupController {
 
             if(member.role !== 'admin') {
                 return res.status(403).json({ message: 'Solo los administradores pueden agregar miembros al grupo' });
+            }
+
+            const invitedUser = await authRepository.findUserByEmail(email);
+
+            if(invitedUser) {
+                const alreadyMember = await groupRepository.findGroupByIdAndUser(idGroup, invitedUser._id);
+                if(alreadyMember) {
+                    return res.status(400).json({ message: 'El usuario ya es miembro de este grupo' });
+                }
             }
 
             const inviteToken = jwt.sign(
@@ -107,7 +139,7 @@ class GroupController {
             res.status(200).json({ message: 'Invitación enviada exitosamente' });
         }
         catch (error) {
-            res.status(500).json({ message: 'Error agregando miembro al grupo', error: error.message });
+            res.status(500).json({ message: error.message });
         }
     }
     
@@ -134,17 +166,11 @@ class GroupController {
                 return res.status(404).json({ message: 'No existe una cuenta registrada con este email' });
             }
 
-            const alreadyMember = await groupRepository.isAlreadyMember(groupId, user._id);
-
-            if (alreadyMember) {
-                return res.status(400).json({ message: 'Ya sos miembro de este grupo' });
-            }
-
             const newMember = await groupRepository.addMemberToGroup(groupId, user._id, role);
 
             res.status(200).json({ message: '¡Bienvenido al grupo!', newMember });
         } catch (error) {
-            res.status(500).json({ message: 'Error al aceptar la invitación', error: error.message });
+            res.status(500).json({ message: error.message });
         }
     }
 
@@ -175,7 +201,7 @@ class GroupController {
 
             res.status(200).json({ message: 'Grupo actualizado exitosamente', updatedGroup });
         } catch (error) {
-            res.status(500).json({ message: 'Error actualizando grupo', error: error.message });
+            res.status(500).json({ message: error.message });
         }
     }
 
@@ -194,7 +220,7 @@ class GroupController {
             res.status(200).json({ message: 'Rol de admin otorgado exitosamente', updatedMember });
         }
         catch (error) {
-            res.status(500).json({ message: 'Error otorgando rol de admin', error: error.message });
+            res.status(500).json({ message: error.message });
         }
     }
 }
