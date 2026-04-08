@@ -121,11 +121,11 @@ class GroupController {
 
             const inviteToken = jwt.sign(
                 { groupId: idGroup, email, role },
-                process.env.SECRET_KEY,
+                process.env.JWT_SECRET,
                 { expiresIn: '7d' }
             );
 
-            const inviteLink = `${process.env.FRONTEND_URL}/accept-invitation/${inviteToken}`;
+            const inviteLink = `${process.env.FRONTEND_URL}/invitacion/${inviteToken}`;
 
             const mailOptions = {
                 from: process.env.EMAIL_USER,
@@ -153,7 +153,7 @@ class GroupController {
 
             let decoded;
             try {
-                decoded = jwt.verify(token, process.env.SECRET_KEY);
+                decoded = jwt.verify(token, process.env.JWT_SECRET);
             } catch (error) {
                 return res.status(400).json({ message: 'Token inválido o expirado' });
             }
@@ -164,6 +164,11 @@ class GroupController {
 
             if (!user) {
                 return res.status(404).json({ message: 'No existe una cuenta registrada con este email' });
+            }
+
+            const alreadyMember = await groupRepository.findGroupByIdAndUser(groupId, user._id);
+            if (alreadyMember) {
+                return res.status(400).json({ message: 'Ya sos miembro de este grupo' });
             }
 
             const newMember = await groupRepository.addMemberToGroup(groupId, user._id, role);
@@ -218,6 +223,48 @@ class GroupController {
             const updatedMember = await groupRepository.giveAdminRole(idGroup, idMember);
 
             res.status(200).json({ message: 'Rol de admin otorgado exitosamente', updatedMember });
+        }
+        catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    }
+
+    async getGroupMembers(req, res) {
+        try{
+            const { idGroup } = req.params;
+
+            const member = req.member
+
+            if(!member) {
+                return res.status(403).json({ message: 'No sos miembro de este grupo' });
+            }
+
+            const members = await groupRepository.getGroupMembers(idGroup);
+
+            if(members.length === 0) {
+                return res.status(404).json({ message: 'No se encontraron miembros para este grupo' });
+            }
+
+            res.status(200).json({ message: 'Miembros obtenidos exitosamente', members: members });
+        }
+        catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    }
+
+    async deleteMemberFromGroup(req, res) {
+        try{
+            const { idGroup, idMember } = req.params;
+
+            const member = req.member
+
+            if(member.role !== 'admin') {
+                return res.status(403).json({ message: 'Solo los administradores pueden eliminar miembros del grupo' });
+            }
+
+            await groupRepository.deleteMemberFromGroup(idGroup, idMember);
+
+            res.status(200).json({ message: 'Miembro eliminado del grupo exitosamente' });
         }
         catch (error) {
             res.status(500).json({ message: error.message });

@@ -22,7 +22,7 @@ const MyGroups = ({ myGroups, loading }: MyGroupsProps) => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 xl:gap-6">
           {myGroups.map(group => (
-            <MyGroupCard key={group.id} myGroup={group} />
+            <MyGroupCard key={group._id} myGroup={group} />
           ))}
         </div>
       )}

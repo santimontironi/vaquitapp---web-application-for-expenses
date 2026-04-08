@@ -3,7 +3,7 @@
 // ============================================================
 
 export interface User {
-    id: string;
+    _id: string;
     username: string;
     email: string;
 }
@@ -40,7 +40,7 @@ export interface DashboardResponse {
 // ============================================================
 
 export interface Group {
-    id: string;
+    _id: string;
     name: string;
     image: string | null;
     description: string;
@@ -49,7 +49,7 @@ export interface Group {
 }
 
 export interface GroupMember {
-    id: string;
+    _id: string;
     group: Group;
     user: User;
     role: "admin" | "member";
@@ -62,7 +62,8 @@ export interface GroupMemberResponse {
 
 export interface LoadingGroups {
     fetchLoading: boolean;
-    createLoading: boolean
+    createLoading: boolean;
+    invitationLoading: boolean;
 }
 
 export interface CreateGroupData {
@@ -79,8 +80,25 @@ export interface GroupDetailsResponse {
     group: Group;
 }
 
+export interface Members {
+    _id: string;
+    group: string;
+    user: User;
+    role: "admin" | "member";
+    joined_at: Date;
+}
+
+export interface MembersResponse {
+    members: Members[];
+}
+
+export interface AddMemberData {
+  email: string;
+  role: "admin" | "member";
+}
+
 // ============================================================
-// PROPS
+// PROPS AND COMPONENTS
 // ============================================================
 
 export interface HeaderDashboardProps {
@@ -95,3 +113,21 @@ export interface MyGroupsProps {
 export interface MyGroupCardProps {
     myGroup: GroupMember;
 }
+
+export interface SideNavGroupProps {
+    itemSelected: GroupDashboardView;
+    setSelectedItem: (item: GroupDashboardView) => void;
+}
+
+export interface MemberItemProps {
+    member: Members;
+    onDeleteMember: (userId: string) => void;
+}
+
+export type GroupDashboardView = "members" | "add-member" | "view-plans";
+
+export interface AllMembersProps {
+    members: Members[] | null;
+    onDeleteMember: (userId: string) => void;
+}
+

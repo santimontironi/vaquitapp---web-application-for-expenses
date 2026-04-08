@@ -8,6 +8,7 @@ import Dashboard from "./pages/Dashboard";
 import VerifyAuth from "./components/VerifyAuth";
 import NewGroup from "./pages/NewGroup";
 import Group from "./pages/Group";
+import AcceptInvitation from "./pages/AcceptInvitation";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             <Route path="/inicio" element={<VerifyAuth><Dashboard /></VerifyAuth>} />
             <Route path="/nuevo-grupo" element={<VerifyAuth><NewGroup /></VerifyAuth>} />
             <Route path="/grupo/:idGroup" element={<VerifyAuth><Group /></VerifyAuth>} />
+            <Route path="/invitacion/:token" element={<VerifyAuth><AcceptInvitation /></VerifyAuth>} />
           </Routes>
         </BrowserRouter>
       </GroupProvider>

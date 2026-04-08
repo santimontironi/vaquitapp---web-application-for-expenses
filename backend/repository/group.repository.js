@@ -53,6 +53,15 @@ class GroupRepository {
         );
         return updatedMember;
     }
+
+    async getGroupMembers(groupId) {
+        const members = await GroupMember.find({ group: groupId }).populate('user');
+        return members;
+    }
+
+    async deleteMemberFromGroup(groupId, userId) {
+        await GroupMember.findOneAndDelete({ group: groupId, user: userId });
+    }
 }
 
 const groupRepository = new GroupRepository();
