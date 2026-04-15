@@ -2,7 +2,7 @@ import useAuth from "../hooks/useAuth"
 import { useForm } from "react-hook-form"
 import { Link } from "react-router-dom"
 import { useState, useEffect } from "react"
-import type { LoginData } from "../types"
+import type { LoginData } from "../types/auth.types"
 import { useNavigate } from "react-router-dom"
 
 const Login = () => {

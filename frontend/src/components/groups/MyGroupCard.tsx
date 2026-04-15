@@ -1,5 +1,5 @@
-import type { MyGroupCardProps } from "../types"
-import { formatJoinedDate } from "../utils/date"
+import type { MyGroupCardProps } from "../../types/groups.types"
+import { formatJoinedDate } from "../../utils/date"
 import { Link } from "react-router-dom"
 
 const MyGroupCard = ({ myGroup }: MyGroupCardProps) => {

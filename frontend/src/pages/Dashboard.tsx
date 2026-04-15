@@ -2,8 +2,8 @@ import useAuth from "../hooks/useAuth"
 import useGroup from "../hooks/useGroup"
 import { useEffect } from "react"
 import { Link } from "react-router-dom"
-import HeaderDashboard from "../components/HeaderDashboard"
-import MyGroups from "../components/MyGroups"
+import HeaderDashboard from "../components/layout/HeaderDashboard"
+import MyGroups from "../components/groups/MyGroups"
 
 const Dashboard = () => {
 

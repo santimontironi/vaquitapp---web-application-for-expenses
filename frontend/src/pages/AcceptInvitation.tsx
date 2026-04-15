@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import useGroup from "../hooks/useGroup";
-import Loader from "../components/Loader";
+import Loader from "../components/ui/Loader";
 
 const AcceptInvitation = () => {
   const { acceptInvitation, loading } = useGroup();

@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form"
-import type { AddMemberData } from "../types"
+import type { AddMemberData } from "../../types/groups.types"
 import { useState } from "react"
-import useGroup from "../hooks/useGroup"
+import useGroup from "../../hooks/useGroup"
 import Swal from "sweetalert2"
 
 const AddMember = ({ idGroup }: { idGroup: string | undefined }) => {

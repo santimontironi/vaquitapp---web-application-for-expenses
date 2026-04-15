@@ -1,7 +1,35 @@
-import type { AllMembersProps } from "../types"
+import { useEffect } from "react"
+import type { AllMembersProps } from "../../types/groups.types"
+import useGroup from "../../hooks/useGroup"
 import MemberItem from "./MemberItem"
+import Swal from "sweetalert2"
 
-const AllMembers = ({ members, onDeleteMember }: AllMembersProps) => {
+const AllMembers = ({ idGroup }: AllMembersProps) => {
+  const { members, getMembersByGroup, deleteMember } = useGroup()
+
+  useEffect(() => {
+    getMembersByGroup(idGroup)
+  }, [idGroup])
+
+  const handleDeleteMember = async (idUser: string) => {
+    try {
+      const result = await Swal.fire({
+        title: "¿Eliminar miembro?",
+        text: "¿Estás seguro de que quieres eliminar a este miembro del grupo? Esta acción no se puede deshacer.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#EF4444",
+        cancelButtonColor: "#6B7280",
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar",
+      })
+      if (result.isConfirmed) {
+        await deleteMember(idGroup, idUser)
+      }
+    } catch (error) {
+      console.error("Error al eliminar al miembro del grupo:", error)
+    }
+  }
   return (
     <div className="relative p-px rounded-2xl bg-linear-to-br from-[#10B981]/20 via-white/4 to-[#3B82F6]/15 shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
       <div className="relative rounded-[15px] bg-[#0A1020]/85 backdrop-blur-2xl p-6 md:p-8 overflow-hidden">
@@ -30,7 +58,7 @@ const AllMembers = ({ members, onDeleteMember }: AllMembersProps) => {
           {members && members.length > 0 ? (
             <div className="flex flex-col gap-2">
               {members.map((member) => (
-                <MemberItem key={member._id} member={member} onDeleteMember={onDeleteMember} />
+                <MemberItem key={member._id} member={member} onDeleteMember={() => handleDeleteMember(member.user._id)} />
               ))}
             </div>
           ) : (

@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect } from "react";
-import type { User, RegisterData, LoadingAuth, LoginData, LoginResponse } from "../types";
-import { registerUserService, loginUserService, dashboardService, confirmUserService, logoutService } from "../services/apiServices";
+import type { User, RegisterData, LoadingAuth, LoginData, LoginResponse } from "../types/auth.types";
+import { registerUserService, loginUserService, dashboardService, confirmUserService, logoutService } from "../services/auth.service";
 
 interface AuthContextType {
     user: User | null;

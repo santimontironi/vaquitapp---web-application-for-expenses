@@ -8,6 +8,4 @@ La idea de este proyecto es una app web que sea de organizar los gastos de una s
 
 BACKEND (NODE.JS, EXPRESS.JS y MONGODB): carpetas config, controllers, middlewares, models, repository y routes. luego archivos como: .env, gitignore, app.js, index.js, server.js y los package-json
 
-FRONTEND (REACT + TYPESCRIPT + TAILWIND CSS, creado con Vite): carpetas context, components, pages, assets y utils.
-
-*LA IDEA ES TERMINAR EL BACKEND PRIMERO ANTES DE ARRANCAR EL FRONTEND.*
+FRONTEND (REACT + TYPESCRIPT + TAILWIND CSS, creado con Vite): carpetas context, components, pages, hooks, services, assets y utils.

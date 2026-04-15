@@ -119,7 +119,7 @@ const planSchema = new mongoose.Schema({
     ],
     state: {
         type: String,
-        enum: ['active', 'completed'],
+        enum: ['active', 'completed', 'cancelled'],
         default: 'active'
     },
     created_at: {

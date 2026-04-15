@@ -1,5 +1,5 @@
-import type { MyGroupsProps } from "../types"
-import Loader from "./Loader"
+import type { MyGroupsProps } from "../../types/groups.types"
+import Loader from "../ui/Loader"
 import MyGroupCard from "./MyGroupCard"
 
 const MyGroups = ({ myGroups, loading }: MyGroupsProps) => {

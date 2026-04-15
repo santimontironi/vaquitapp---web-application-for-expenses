@@ -1,5 +1,5 @@
-import type { HeaderDashboardProps } from "../types";
-import useAuth from "../hooks/useAuth";
+import type { HeaderDashboardProps } from "../../types/groups.types";
+import useAuth from "../../hooks/useAuth";
 
 const HeaderDashboard = ({ user }: HeaderDashboardProps) => {
   const { logoutUser } = useAuth();

@@ -3,21 +3,22 @@ import groupController from "../controllers/group.controller.js";
 import { verifyToken } from "../middlewares/verify-auth.js";
 import { verifyRole } from "../middlewares/verify-role.js";
 import { upload } from "../middlewares/multer.js";
+import { validateObjectId } from "../middlewares/validate-object-id.js";
 
 export const router = Router();
 
 // Grupos
 router.get('/groups', verifyToken, groupController.getAllGroupsByUser);
-router.get('/groups/:idGroup', verifyToken, verifyRole, groupController.getGroupById);
-router.patch('/groups/:idGroup', verifyToken, verifyRole, upload.single('image'), groupController.editGroup);
-router.delete('/groups/:idGroup', verifyToken, verifyRole, groupController.deleteGroup);
+router.get('/groups/:idGroup', verifyToken, validateObjectId('idGroup'), verifyRole, groupController.getGroupById);
+router.patch('/groups/:idGroup', verifyToken, validateObjectId('idGroup'), verifyRole, upload.single('image'), groupController.editGroup);
+router.delete('/groups/:idGroup', verifyToken, validateObjectId('idGroup'), verifyRole, groupController.deleteGroup);
 router.post('/groups', verifyToken, upload.single('image'), groupController.createGroup);
 
 // Miembros
-router.get('/groups/:idGroup/members', verifyToken, verifyRole, groupController.getGroupMembers);
-router.delete('/groups/:idGroup/members/:idMember', verifyToken, verifyRole, groupController.deleteMemberFromGroup);
-router.patch('/groups/:idGroup/members/:idMember/admin', verifyToken, verifyRole, groupController.giveAdminRole);
+router.get('/groups/:idGroup/members', verifyToken, validateObjectId('idGroup'), verifyRole, groupController.getGroupMembers);
+router.delete('/groups/:idGroup/members/:idMember', verifyToken, validateObjectId('idGroup', 'idMember'), verifyRole, groupController.deleteMemberFromGroup);
+router.patch('/groups/:idGroup/members/:idMember/admin', verifyToken, validateObjectId('idGroup', 'idMember'), verifyRole, groupController.giveAdminRole);
 
 // Invitaciones
-router.post('/groups/:idGroup/invite', verifyToken, verifyRole, groupController.addMemberToGroup);
+router.post('/groups/:idGroup/invite', verifyToken, validateObjectId('idGroup'), verifyRole, groupController.addMemberToGroup);
 router.get('/groups/invite/accept/:token', groupController.acceptInvitation);

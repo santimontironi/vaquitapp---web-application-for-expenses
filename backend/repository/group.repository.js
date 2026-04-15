@@ -9,7 +9,7 @@ class GroupRepository {
     }
 
     async findGroupById(groupId) {
-        const group = await Group.findById(groupId);
+        const group = await Group.findOne({ _id: groupId, active: true });
         return group;
     }
 
@@ -19,7 +19,7 @@ class GroupRepository {
     }
 
     async deleteGroup(groupId) {
-        await Group.findByIdAndUpdate(groupId, { active: false });
+        return await Group.findOneAndUpdate({ _id: groupId, active: true }, { active: false });
     }
 
     async getAllGroupsByUser(userId) {
@@ -37,8 +37,8 @@ class GroupRepository {
     }
 
     async editGroup(groupId, photo, name, description) {
-        const updatedGroup = await Group.findByIdAndUpdate(
-            groupId,
+        const updatedGroup = await Group.findOneAndUpdate(
+            { _id: groupId, active: true },
             { image: photo, name, description },
             { new: true }
         );
@@ -60,7 +60,7 @@ class GroupRepository {
     }
 
     async deleteMemberFromGroup(groupId, userId) {
-        await GroupMember.findOneAndDelete({ group: groupId, user: userId });
+        return await GroupMember.findOneAndDelete({ group: groupId, user: userId });
     }
 }
 

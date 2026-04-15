@@ -1,6 +1,6 @@
 import { createContext, useState } from "react";
-import type { GroupMember, LoadingGroups, Group, Members, AddMemberData } from "../types";
-import { getUserGroupsService, createGroupService, getGroupDetailsService, getGroupMembersService, inviteMemberService, acceptInvitationService, deleteMemberService } from "../services/apiServices";
+import type { GroupMember, LoadingGroups, Group, Members, AddMemberData } from "../types/groups.types";
+import { getUserGroupsService, createGroupService, getGroupDetailsService, getGroupMembersService, inviteMemberService, acceptInvitationService, deleteMemberService } from "../services/groups.service";
 
 export interface GroupContextType {
     groups: GroupMember[] | null;

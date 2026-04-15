@@ -1,5 +1,6 @@
 import planRepository from "../repository/plan.repository.js";
 import cloudinaryConfig from "../config/cloudinary.config.js";
+import GroupMember from "../models/groupMember.model.js";
 
 class PlanController {
 
@@ -21,15 +22,33 @@ class PlanController {
 
     async createPlan(req, res) {
         try{
-            const { name, description } = req.body;
+            const { name, description, members } = req.body;
 
             const { idGroup } = req.params;
 
-            if(!name || !description) {
-                return res.status(400).json({ message: 'Nombre, descripción e id del grupo son requeridos' });
+            if(!name) {
+                return res.status(400).json({ message: 'Nombre del plan es requerido' });
+            }
+
+            if(!members || !Array.isArray(members) || members.length === 0) {
+                return res.status(400).json({ message: 'Se requiere al menos un miembro para el plan' });
+            }
+
+            const groupMembers = await GroupMember.find({ group: idGroup }).select('user');
+            const groupMemberIds = groupMembers.map(m => m.user.toString());
+
+            const invalidMembers = members.filter(userId => !groupMemberIds.includes(userId));
+
+            if(invalidMembers.length > 0) {
+                return res.status(400).json({ message: 'Algunos usuarios no pertenecen al grupo' });
             }
 
             const created_by = req.user.id;
+
+            //este if es para asegurarnos que el creador del plan siempre sea parte de los miembros, aunque no lo haya incluido en la lista de miembros al crear el plan
+            if (!members.includes(created_by)) { 
+                members.push(created_by);
+            }
 
             let imageUrl = null;
 
@@ -42,7 +61,7 @@ class PlanController {
                 imageUrl = uploadResult.secure_url;
             }
 
-            const planCreated = await planRepository.createPlan(imageUrl, name, description, idGroup, created_by);
+            const planCreated = await planRepository.createPlan(imageUrl, name, description, idGroup, created_by, members);
 
             res.status(201).json({ message: 'Plan creado exitosamente', planCreated: planCreated });
         }
@@ -53,15 +72,17 @@ class PlanController {
 
     async checkPlanAsCompleted(req, res) {
         try{
-            const { idPlan } = req.params;
+            const { idGroup, idPlan } = req.params;
+
+            const plan = await planRepository.getPlanByIdAndGroup(idPlan, idGroup);
+
+            if(!plan) {
+                return res.status(404).json({ message: 'Plan no encontrado o no pertenece a este grupo' });
+            }
 
             const planCompleted = await planRepository.checkPlanAsCompleted(idPlan);
 
-            if(!planCompleted) {
-                return res.status(404).json({ message: 'Plan no encontrado' });
-            }
-
-            res.status(200).json({ message: 'Plan marcado como completado', planCompleted: planCompleted });
+            res.status(200).json({ message: 'Plan marcado como completado', planCompleted });
 
         }
         catch (error) {
@@ -71,20 +92,31 @@ class PlanController {
 
     async addMembersToPlan(req, res) {
         try{
-            const { idPlan } = req.params;
+            const { idGroup, idPlan } = req.params;
             const { userIds } = req.body;
 
             if(!userIds || !Array.isArray(userIds) || userIds.length === 0) {
                 return res.status(400).json({ message: 'Se requiere un array de IDs de usuarios' });
             }
 
-            const planUpdated = await planRepository.addMembersToPlan(idPlan, userIds);
+            const plan = await planRepository.getPlanByIdAndGroup(idPlan, idGroup);
 
-            if(!planUpdated) {
-                return res.status(404).json({ message: 'Plan no encontrado' });
+            if(!plan) {
+                return res.status(404).json({ message: 'Plan no encontrado o no pertenece a este grupo' });
             }
 
-            res.status(200).json({ message: 'Miembros agregados al plan exitosamente', planUpdated: planUpdated });
+            const groupMembers = await GroupMember.find({ group: idGroup }).select('user');
+            const groupMemberIds = groupMembers.map(m => m.user.toString());
+
+            const invalidMembers = userIds.filter(userId => !groupMemberIds.includes(userId));
+            
+            if(invalidMembers.length > 0) {
+                return res.status(400).json({ message: 'Algunos usuarios no pertenecen al grupo' });
+            }
+
+            const planUpdated = await planRepository.addMembersToPlan(idPlan, userIds);
+
+            res.status(200).json({ message: 'Miembros agregados al plan exitosamente', planUpdated });
         }
         catch (error) {
             res.status(500).json({ message: 'Error agregando miembros al plan', error: error.message });

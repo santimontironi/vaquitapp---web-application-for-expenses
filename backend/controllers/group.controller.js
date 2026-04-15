@@ -25,19 +25,7 @@ class GroupController {
 
     async getGroupById(req, res) {
         try{
-            const { idGroup } = req.params;
-
-            const member = req.member
-
-            if(!member) {
-                return res.status(403).json({ message: 'No sos miembro de este grupo' });
-            }
-
-            const group = await groupRepository.findGroupById(idGroup);
-
-            if(!group) {
-                return res.status(404).json({ message: 'No se encontró el grupo' });
-            }
+            const group = req.group;
 
             res.status(200).json({ message: 'Grupo obtenido exitosamente', group: group });
         }
@@ -79,8 +67,7 @@ class GroupController {
     async deleteGroup(req, res) {
         try {
             const { idGroup } = req.params;
-
-            const member = req.member
+            const member = req.member;
 
             if(member.role !== 'admin') {
                 return res.status(403).json({ message: 'Solo los administradores pueden eliminar el grupo' });
@@ -104,7 +91,7 @@ class GroupController {
                 return res.status(400).json({ message: 'Email y rol son requeridos' });
             }
 
-            const member = req.member
+            const member = req.member;
 
             if(member.role !== 'admin') {
                 return res.status(403).json({ message: 'Solo los administradores pueden agregar miembros al grupo' });
@@ -142,7 +129,7 @@ class GroupController {
             res.status(500).json({ message: error.message });
         }
     }
-    
+
     async acceptInvitation(req, res) {
         try {
             const { token } = req.params;
@@ -159,6 +146,11 @@ class GroupController {
             }
 
             const { groupId, email, role } = decoded;
+
+            const group = await groupRepository.findGroupById(groupId);
+            if(!group) {
+                return res.status(404).json({ message: 'No se encontró el grupo o no está activo' });
+            }
 
             const user = await authRepository.findUserByEmail(email);
 
@@ -188,7 +180,7 @@ class GroupController {
                 return res.status(400).json({ message: 'Nombre y descripción son requeridos' });
             }
 
-            const member = req.member
+            const member = req.member;
 
             if(member.role !== 'admin') {
                 return res.status(403).json({ message: 'Solo los administradores pueden editar el grupo' });
@@ -213,14 +205,17 @@ class GroupController {
     async giveAdminRole(req, res) {
         try{
             const { idGroup, idMember } = req.params;
-
-            const member = req.member
+            const member = req.member;
 
             if(member.role !== 'admin') {
                 return res.status(403).json({ message: 'Solo los administradores pueden otorgar roles de admin' });
             }
 
             const updatedMember = await groupRepository.giveAdminRole(idGroup, idMember);
+
+            if(!updatedMember) {
+                return res.status(404).json({ message: 'No se encontró el miembro o el grupo' });
+            }
 
             res.status(200).json({ message: 'Rol de admin otorgado exitosamente', updatedMember });
         }
@@ -232,12 +227,6 @@ class GroupController {
     async getGroupMembers(req, res) {
         try{
             const { idGroup } = req.params;
-
-            const member = req.member
-
-            if(!member) {
-                return res.status(403).json({ message: 'No sos miembro de este grupo' });
-            }
 
             const members = await groupRepository.getGroupMembers(idGroup);
 
@@ -255,14 +244,17 @@ class GroupController {
     async deleteMemberFromGroup(req, res) {
         try{
             const { idGroup, idMember } = req.params;
-
-            const member = req.member
+            const member = req.member;
 
             if(member.role !== 'admin') {
                 return res.status(403).json({ message: 'Solo los administradores pueden eliminar miembros del grupo' });
             }
 
-            await groupRepository.deleteMemberFromGroup(idGroup, idMember);
+            const deletedMember = await groupRepository.deleteMemberFromGroup(idGroup, idMember);
+
+            if(!deletedMember) {
+                return res.status(404).json({ message: 'No se encontró el miembro o el grupo' });
+            }
 
             res.status(200).json({ message: 'Miembro eliminado del grupo exitosamente' });
         }

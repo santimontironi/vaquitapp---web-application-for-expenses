@@ -1,5 +1,5 @@
-import Loader from "./Loader";
-import useAuth from "../hooks/useAuth";
+import Loader from "../ui/Loader";
+import useAuth from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
 const VerifyAuth = ({ children }: { children: React.ReactNode }) => {

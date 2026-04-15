@@ -1,0 +1,1 @@
+- [VaquitApp Architecture Patterns](project_architecture.md) — middlewares, roles, soft delete, imagenes, invitaciones, cookie, rutas de planes, estado Expense pendiente

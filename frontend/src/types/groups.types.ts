@@ -1,43 +1,4 @@
-// ============================================================
-// AUTH
-// ============================================================
-
-export interface User {
-    _id: string;
-    username: string;
-    email: string;
-}
-
-export interface RegisterData {
-    username: string;
-    email: string;
-    password: string;
-}
-
-export interface LoginData {
-    identifier: string;
-    password: string;
-}
-
-export interface LoginResponse {
-    message: string;
-    user: User;
-}
-
-export interface LoadingAuth {
-    loginLoading: boolean;
-    registerLoading: boolean;
-    dashboardLoading?: boolean;
-    confirmLoading?: boolean;
-}
-
-export interface DashboardResponse {
-    user: User;
-}
-
-// ============================================================
-// GROUPS
-// ============================================================
+import type { User } from "./auth.types";
 
 export interface Group {
     _id: string;
@@ -69,7 +30,7 @@ export interface LoadingGroups {
 export interface CreateGroupData {
     name: string;
     description: string;
-    image: FileList
+    image: FileList;
 }
 
 export interface CreateGroupResponse {
@@ -93,14 +54,13 @@ export interface MembersResponse {
 }
 
 export interface AddMemberData {
-  email: string;
-  role: "admin" | "member";
+    email: string;
+    role: "admin" | "member";
 }
 
-// ============================================================
-// PROPS AND COMPONENTS
-// ============================================================
+export type GroupDashboardView = "members" | "add-member" | "view-plans" | "create-plan";
 
+// Props
 export interface HeaderDashboardProps {
     user: User;
 }
@@ -121,13 +81,9 @@ export interface SideNavGroupProps {
 
 export interface MemberItemProps {
     member: Members;
-    onDeleteMember: (userId: string) => void;
+    onDeleteMember: () => void;
 }
-
-export type GroupDashboardView = "members" | "add-member" | "view-plans";
 
 export interface AllMembersProps {
-    members: Members[] | null;
-    onDeleteMember: (userId: string) => void;
+    idGroup: string;
 }
-

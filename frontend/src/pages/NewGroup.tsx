@@ -1,6 +1,6 @@
 import useGroup from "../hooks/useGroup"
 import { useForm } from "react-hook-form"
-import type { CreateGroupData } from "../types"
+import type { CreateGroupData } from "../types/groups.types"
 import { Link, useNavigate } from "react-router-dom"
 import { useState } from "react"
 

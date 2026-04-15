@@ -1,41 +1,26 @@
 import { useParams, useNavigate } from "react-router-dom"
 import useGroup from "../hooks/useGroup";
 import { useEffect, useState } from "react";
-import Loader from "../components/Loader";
-import SideNavGroup from "../components/SideNavGroup";
-import AllPlans from "./AllPlans";
-import AllMembers from "../components/AllMembers";
-import type { GroupDashboardView } from "../types";
-import AddMember from "../components/AddMember";
+import Loader from "../components/ui/Loader";
+import SideNavGroup from "../components/groups/SideNavGroup";
+import AllPlans from "../components/plans/AllPlans";
+import AllMembers from "../components/groups/AllMembers";
+import CreatePlan from "../components/plans/CreatePlan";
+import type { GroupDashboardView } from "../types/groups.types";
+import AddMember from "../components/groups/AddMember";
 
 const Group = () => {
 
-  const { idGroup } = useParams();
+  const { idGroup } = useParams() as { idGroup: string }; //as es para decirle a TS que idGroup siempre va a ser un string
   const navigate = useNavigate();
 
-  const { groupById, getGroupById, loading, members, getMembersByGroup, deleteMember} = useGroup();
+  const { groupById, getGroupById, loading } = useGroup();
 
   const [itemSelected, setItemSelected] = useState<GroupDashboardView>("members");
-
-  const handleDeleteMember = async (idUser: string) => {
-    if (idGroup) {
-      try {
-        await deleteMember(idGroup, idUser);
-      } catch (error) {
-        console.error("Error al eliminar al miembro del grupo:", error);
-      }
-    }
-  };
 
   useEffect(() => {
     if (idGroup) {
       getGroupById(idGroup);
-    }
-  }, [idGroup]);
-
-  useEffect(() => {
-    if (idGroup) {
-      getMembersByGroup(idGroup);
     }
   }, [idGroup]);
 
@@ -61,7 +46,7 @@ const Group = () => {
 
       <div className="absolute top-0 left-0 w-96 h-96 rounded-full bg-[#10B981]/5 blur-[130px] pointer-events-none -translate-x-1/2 -translate-y-1/3" />
       <div className="absolute top-1/3 right-0 w-80 h-80 rounded-full bg-[#3B82F6]/4 blur-[120px] pointer-events-none translate-x-1/2" />
-
+Ñ
       <div className="relative w-full overflow-hidden">
 
         {groupById?.image ? (
@@ -114,7 +99,8 @@ const Group = () => {
         )}
       </div>
 
-      <div className="flex items-start gap-6 px-4 pt-6 pb-12 md:px-8 md:pt-8 md:gap-7 xl:px-16 xl:gap-8 2xl:px-24">
+      {/* Mobile: tabs on top, content below. Desktop: sidebar left + content right */}
+      <div className="flex flex-col md:flex-row md:items-start gap-4 px-4 pt-6 pb-12 md:px-8 md:pt-8 md:gap-7 xl:px-16 xl:gap-8 2xl:px-24">
 
         <SideNavGroup
           itemSelected={itemSelected}
@@ -122,9 +108,10 @@ const Group = () => {
         />
 
         <div className="flex-1 min-w-0">
-          {itemSelected === "members" && <AllMembers members={members} onDeleteMember={handleDeleteMember} />}
+          {itemSelected === "members" && <AllMembers idGroup={idGroup} />}
           {itemSelected === "add-member" && <AddMember idGroup={idGroup} />}
-          {itemSelected === "view-plans" && <AllPlans />}
+          {itemSelected === "view-plans" && <AllPlans idGroup={idGroup} />}
+          {itemSelected === "create-plan" && <CreatePlan idGroup={idGroup} />}
         </div>
 
       </div>
