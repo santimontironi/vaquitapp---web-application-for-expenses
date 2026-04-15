@@ -163,7 +163,7 @@ VaquitApp/
 
 ## Modelos de Datos
 
-> Ver diagrama ERD: [https://excalidraw.com/#json=eD5PED0cEl7YkqjAES21n,4AX3_inJAucEtvPSnbTBig](https://excalidraw.com/#json=eD5PED0cEl7YkqjAES21n,4AX3_inJAucEtvPSnbTBig)
+> Ver diagrama ERD: [![Ver en Excalidraw](https://img.shields.io/badge/Excalidraw-Ver%20diagrama%20ERD-6965db?style=flat)](https://excalidraw.com/#json=eD5PED0cEl7YkqjAES21n,4AX3_inJAucEtvPSnbTBig)
 
 ### User
 
@@ -228,7 +228,7 @@ VaquitApp/
 
 ## Endpoints de la API
 
-> Ver diagrama de flujo de auth e invitaciones: [https://excalidraw.com/#json=qGLfcb9lJoyk7863fVerV,6x8Z-8kOMHa31nTPPT8izg](https://excalidraw.com/#json=qGLfcb9lJoyk7863fVerV,6x8Z-8kOMHa31nTPPT8izg)
+> Ver diagrama de flujo de auth e invitaciones: [![Ver en Excalidraw](https://img.shields.io/badge/Excalidraw-Ver%20flujo%20de%20auth%20e%20invitaciones-6965db?style=flat)](https://excalidraw.com/#json=qGLfcb9lJoyk7863fVerV,6x8Z-8kOMHa31nTPPT8izg)
 
 **Base URL:** configurada mediante `VITE_API_URL` en el frontend y servida por Express en el puerto `PORT` del backend.
 
@@ -478,7 +478,7 @@ npm run build
 
 ## Roles y Permisos
 
-> Ver diagrama de arquitectura del sistema: [https://excalidraw.com/#json=76iZRa1G1VEyvA4miaiN7,3oHSGacV76a0u4OtDBlUmA](https://excalidraw.com/#json=76iZRa1G1VEyvA4miaiN7,3oHSGacV76a0u4OtDBlUmA)
+> Ver diagrama de arquitectura del sistema: [![Ver en Excalidraw](https://img.shields.io/badge/Excalidraw-Ver%20arquitectura%20del%20sistema-6965db?style=flat)](https://excalidraw.com/#json=76iZRa1G1VEyvA4miaiN7,3oHSGacV76a0u4OtDBlUmA)
 
 Los roles se aplican **por grupo**: un mismo usuario puede ser admin en un grupo y member en otro.
 
@@ -502,7 +502,7 @@ Los roles se aplican **por grupo**: un mismo usuario puede ser admin en un grupo
 
 ## Sistema de Autenticacion
 
-> Ver diagrama de flujos: [https://excalidraw.com/#json=qGLfcb9lJoyk7863fVerV,6x8Z-8kOMHa31nTPPT8izg](https://excalidraw.com/#json=qGLfcb9lJoyk7863fVerV,6x8Z-8kOMHa31nTPPT8izg)
+> Ver diagrama de flujos: [![Ver en Excalidraw](https://img.shields.io/badge/Excalidraw-Ver%20flujo%20de%20auth%20e%20invitaciones-6965db?style=flat)](https://excalidraw.com/#json=qGLfcb9lJoyk7863fVerV,6x8Z-8kOMHa31nTPPT8izg)
 
 ### Flujo de registro y confirmacion
 

@@ -122,6 +122,8 @@ class PlanController {
             res.status(500).json({ message: 'Error agregando miembros al plan', error: error.message });
         }
     }
+
+    
 }
 
 const planController = new PlanController();
