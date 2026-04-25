@@ -1,10 +1,11 @@
 import { createContext, useState } from "react";
 import type { Plans, LoadingPlans } from "../types/plans.types";
-import { createPlanService, getAllPlansService } from "../services/plans.service";
+import { createPlanService, getAllPlansService, checkPlanAsCompletedService } from "../services/plans.service";
 
 interface PlanContextType {
     plans: Plans[];
     createPlan: (data: FormData, idGroup: string) => Promise<void>;
+    checkPlanAsCompleted: (idGroup: string, idPlan: string) => Promise<void>;
     loading: LoadingPlans;
     getPlans: (idGroup: string) => Promise<void>;
 }
@@ -46,8 +47,18 @@ export const PlanProvider = ({children}: {children: React.ReactNode}) => {
         }
     }
 
+    async function checkPlanAsCompleted(idGroup: string, idPlan: string) {
+        try {
+            await checkPlanAsCompletedService(idGroup, idPlan);
+            await getPlans(idGroup);
+        } catch (error) {
+            console.error("Error al marcar el plan como completado:", error);
+            throw error;
+        }
+    }
+
     return (
-        <PlanContext.Provider value={{plans, createPlan, getPlans, loading  }}>
+        <PlanContext.Provider value={{plans, createPlan, getPlans, loading, checkPlanAsCompleted  }}>
             {children}
         </PlanContext.Provider>
     )

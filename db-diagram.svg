@@ -1,0 +1,143 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-20 -30 1370 590" width="1340" height="560" font-family="'Courier New', Courier, monospace" font-size="13">
+  <defs>
+    <marker id="arrowGreen" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#22c55e"/>
+    </marker>
+    <marker id="arrowPurple" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#8b5cf6"/>
+    </marker>
+    <marker id="arrowAmber" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#d97706"/>
+    </marker>
+    <marker id="arrowCyan" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#06b6d4"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect x="-20" y="-30" width="1370" height="590" fill="#f8f9fa" rx="4"/>
+
+  <!-- Title -->
+  <text x="670" y="-5" text-anchor="middle" font-size="18" font-weight="bold" fill="#1e1e1e" font-family="'Segoe UI', sans-serif">Diagrama de la Base de Datos · VaquitApp</text>
+
+  <!-- =========================================== -->
+  <!-- USER  (x=30, y=100, w=235, h=141)           -->
+  <!-- =========================================== -->
+  <rect x="30" y="100" width="235" height="141" rx="8" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
+  <rect x="30" y="100" width="235" height="36" rx="8" fill="#4a9eed"/>
+  <rect x="30" y="128" width="235" height="8" fill="#4a9eed"/>
+  <text x="147" y="123" text-anchor="middle" font-size="14" font-weight="bold" fill="white" font-family="'Segoe UI', sans-serif">User</text>
+  <line x1="38" y1="138" x2="257" y2="138" stroke="#4a9eed" stroke-width="0.8" stroke-dasharray="3,2"/>
+  <text x="40" y="154" fill="#1a1a1a"><tspan font-weight="bold" fill="#2563eb">PK</tspan>  _id : ObjectId</text>
+  <text x="40" y="171" fill="#1a1a1a">    username : String</text>
+  <text x="40" y="188" fill="#1a1a1a">    email : String</text>
+  <text x="40" y="205" fill="#1a1a1a">    password : String</text>
+  <text x="40" y="222" fill="#1a1a1a">    isConfirmed : Boolean</text>
+
+  <!-- =========================================== -->
+  <!-- GROUP  (x=370, y=35, w=240, h=175)          -->
+  <!-- =========================================== -->
+  <rect x="370" y="35" width="240" height="175" rx="8" fill="#b2f2bb" stroke="#22c55e" stroke-width="2"/>
+  <rect x="370" y="35" width="240" height="36" rx="8" fill="#22c55e"/>
+  <rect x="370" y="63" width="240" height="8" fill="#22c55e"/>
+  <text x="490" y="58" text-anchor="middle" font-size="14" font-weight="bold" fill="white" font-family="'Segoe UI', sans-serif">Group</text>
+  <line x1="378" y1="73" x2="602" y2="73" stroke="#22c55e" stroke-width="0.8" stroke-dasharray="3,2"/>
+  <text x="380" y="89" fill="#1a1a1a"><tspan font-weight="bold" fill="#15803d">PK</tspan>  _id : ObjectId</text>
+  <text x="380" y="106" fill="#1a1a1a">    name : String</text>
+  <text x="380" y="123" fill="#1a1a1a">    description : String</text>
+  <text x="380" y="140" fill="#1a1a1a">    image : String</text>
+  <text x="380" y="157" fill="#1a1a1a"><tspan font-weight="bold" fill="#15803d">FK</tspan>  created_by : User</text>
+  <text x="380" y="174" fill="#1a1a1a">    active : Boolean</text>
+  <text x="380" y="191" fill="#1a1a1a">    created_at : Date</text>
+
+  <!-- =========================================== -->
+  <!-- GROUP MEMBER  (x=185, y=385, w=250, h=141)  -->
+  <!-- =========================================== -->
+  <rect x="185" y="385" width="250" height="141" rx="8" fill="#d0bfff" stroke="#8b5cf6" stroke-width="2"/>
+  <rect x="185" y="385" width="250" height="36" rx="8" fill="#8b5cf6"/>
+  <rect x="185" y="413" width="250" height="8" fill="#8b5cf6"/>
+  <text x="310" y="408" text-anchor="middle" font-size="14" font-weight="bold" fill="white" font-family="'Segoe UI', sans-serif">GroupMember</text>
+  <line x1="193" y1="423" x2="427" y2="423" stroke="#8b5cf6" stroke-width="0.8" stroke-dasharray="3,2"/>
+  <text x="195" y="439" fill="#1a1a1a"><tspan font-weight="bold" fill="#6d28d9">PK</tspan>  _id : ObjectId</text>
+  <text x="195" y="456" fill="#1a1a1a"><tspan font-weight="bold" fill="#6d28d9">FK</tspan>  group : Group</text>
+  <text x="195" y="473" fill="#1a1a1a"><tspan font-weight="bold" fill="#6d28d9">FK</tspan>  user : User</text>
+  <text x="195" y="490" fill="#1a1a1a">    role : String (enum)</text>
+  <text x="195" y="507" fill="#1a1a1a">    joined_at : Date</text>
+
+  <!-- =========================================== -->
+  <!-- PLAN  (x=715, y=35, w=255, h=209)           -->
+  <!-- =========================================== -->
+  <rect x="715" y="35" width="255" height="209" rx="8" fill="#ffd8a8" stroke="#f59e0b" stroke-width="2"/>
+  <rect x="715" y="35" width="255" height="36" rx="8" fill="#f59e0b"/>
+  <rect x="715" y="63" width="255" height="8" fill="#f59e0b"/>
+  <text x="842" y="58" text-anchor="middle" font-size="14" font-weight="bold" fill="white" font-family="'Segoe UI', sans-serif">Plan</text>
+  <line x1="723" y1="73" x2="962" y2="73" stroke="#f59e0b" stroke-width="0.8" stroke-dasharray="3,2"/>
+  <text x="725" y="89" fill="#1a1a1a"><tspan font-weight="bold" fill="#d97706">PK</tspan>   _id : ObjectId</text>
+  <text x="725" y="106" fill="#1a1a1a">     name : String</text>
+  <text x="725" y="123" fill="#1a1a1a">     description : String</text>
+  <text x="725" y="140" fill="#1a1a1a">     image : String</text>
+  <text x="725" y="157" fill="#1a1a1a"><tspan font-weight="bold" fill="#d97706">FK</tspan>   group : Group</text>
+  <text x="725" y="174" fill="#1a1a1a"><tspan font-weight="bold" fill="#d97706">FK</tspan>   created_by : User</text>
+  <text x="725" y="191" fill="#1a1a1a"><tspan font-weight="bold" fill="#d97706">FK[]</tspan> members : [User]</text>
+  <text x="725" y="208" fill="#1a1a1a">     state : String (enum)</text>
+  <text x="725" y="225" fill="#1a1a1a">     created_at : Date</text>
+
+  <!-- =========================================== -->
+  <!-- EXPENSE  (x=1050, y=100, w=260, h=192)      -->
+  <!-- =========================================== -->
+  <rect x="1050" y="100" width="260" height="192" rx="8" fill="#c3fae8" stroke="#06b6d4" stroke-width="2"/>
+  <rect x="1050" y="100" width="260" height="36" rx="8" fill="#06b6d4"/>
+  <rect x="1050" y="128" width="260" height="8" fill="#06b6d4"/>
+  <text x="1180" y="123" text-anchor="middle" font-size="14" font-weight="bold" fill="white" font-family="'Segoe UI', sans-serif">Expense</text>
+  <line x1="1058" y1="138" x2="1302" y2="138" stroke="#06b6d4" stroke-width="0.8" stroke-dasharray="3,2"/>
+  <text x="1060" y="154" fill="#1a1a1a"><tspan font-weight="bold" fill="#0891b2">PK</tspan>  _id : ObjectId</text>
+  <text x="1060" y="171" fill="#1a1a1a">    description : String</text>
+  <text x="1060" y="188" fill="#1a1a1a">    amount : Number</text>
+  <text x="1060" y="205" fill="#1a1a1a"><tspan font-weight="bold" fill="#0891b2">FK</tspan>  plan : Plan</text>
+  <text x="1060" y="222" fill="#1a1a1a"><tspan font-weight="bold" fill="#0891b2">FK</tspan>  paid_by : User</text>
+  <text x="1060" y="239" fill="#1a1a1a"><tspan font-weight="bold" fill="#0891b2">FK[]</tspan>split_among : [User]</text>
+  <text x="1060" y="256" fill="#1a1a1a">    createdAt : Date</text>
+  <text x="1060" y="273" fill="#1a1a1a">    updatedAt : Date</text>
+
+  <!-- =========================================== -->
+  <!-- ARROWS                                      -->
+  <!-- =========================================== -->
+
+  <!-- 1. Group.created_by → User -->
+  <line x1="370" y1="122" x2="266" y2="170" stroke="#22c55e" stroke-width="1.5" marker-end="url(#arrowGreen)"/>
+  <text x="302" y="133" text-anchor="middle" font-size="11" fill="#15803d" font-family="'Segoe UI', sans-serif">created_by</text>
+
+  <!-- 2. GroupMember.group → Group -->
+  <line x1="312" y1="385" x2="491" y2="211" stroke="#8b5cf6" stroke-width="1.5" marker-end="url(#arrowPurple)"/>
+  <text x="424" y="296" text-anchor="middle" font-size="11" fill="#6d28d9" font-family="'Segoe UI', sans-serif">group</text>
+
+  <!-- 3. GroupMember.user → User -->
+  <line x1="185" y1="455" x2="148" y2="242" stroke="#8b5cf6" stroke-width="1.5" marker-end="url(#arrowPurple)"/>
+  <text x="147" y="351" text-anchor="middle" font-size="11" fill="#6d28d9" font-family="'Segoe UI', sans-serif">user</text>
+
+  <!-- 4. Plan.group → Group -->
+  <line x1="715" y1="148" x2="611" y2="135" stroke="#f59e0b" stroke-width="1.5" marker-end="url(#arrowAmber)"/>
+  <text x="660" y="133" text-anchor="middle" font-size="11" fill="#d97706" font-family="'Segoe UI', sans-serif">group</text>
+
+  <!-- 5. Plan.created_by / members → User (dashed, routes below entities) -->
+  <path d="M 715,185 L 620,185 L 620,285 L 267,285 L 267,172" stroke="#d97706" stroke-width="1.5" stroke-dasharray="5,3" fill="none" marker-end="url(#arrowAmber)"/>
+  <text x="495" y="278" text-anchor="middle" font-size="11" fill="#d97706" font-family="'Segoe UI', sans-serif">created_by / members</text>
+
+  <!-- 6. Expense.plan → Plan -->
+  <line x1="1050" y1="205" x2="971" y2="170" stroke="#06b6d4" stroke-width="1.5" marker-end="url(#arrowCyan)"/>
+  <text x="1005" y="179" text-anchor="middle" font-size="11" fill="#0891b2" font-family="'Segoe UI', sans-serif">plan</text>
+
+  <!-- 7. Expense.paid_by / split_among → User (dashed, routes below) -->
+  <path d="M 1180,292 L 1180,365 L 148,365 L 148,242" stroke="#06b6d4" stroke-width="1.5" stroke-dasharray="5,3" fill="none" marker-end="url(#arrowCyan)"/>
+  <text x="680" y="358" text-anchor="middle" font-size="11" fill="#0891b2" font-family="'Segoe UI', sans-serif">paid_by / split_among</text>
+
+  <!-- Legend -->
+  <rect x="30" y="310" width="135" height="48" rx="4" fill="white" stroke="#cccccc" stroke-width="1"/>
+  <line x1="40" y1="325" x2="60" y2="325" stroke="#555" stroke-width="1.5"/>
+  <polygon points="57,322 65,325 57,328" fill="#555"/>
+  <text x="68" y="329" font-size="11" fill="#555" font-family="'Segoe UI', sans-serif">relacion directa</text>
+  <line x1="40" y1="345" x2="60" y2="345" stroke="#555" stroke-width="1.5" stroke-dasharray="4,2"/>
+  <polygon points="57,342 65,345 57,348" fill="#555"/>
+  <text x="68" y="349" font-size="11" fill="#555" font-family="'Segoe UI', sans-serif">relacion FK</text>
+
+</svg>

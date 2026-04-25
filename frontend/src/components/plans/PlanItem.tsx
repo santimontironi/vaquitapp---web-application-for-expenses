@@ -3,7 +3,7 @@ import { formatJoinedDate } from "../../utils/date"
 
 const MAX_VISIBLE_AVATARS = 3
 
-const PlanItem = ({ plan }: PlanItemProps) => {
+const PlanItem = ({ plan, onCheckCompleted }: PlanItemProps) => {
   
   const visibleMembers = plan.members.slice(0, MAX_VISIBLE_AVATARS)
   const extraCount = plan.members.length - MAX_VISIBLE_AVATARS
@@ -106,6 +106,16 @@ const PlanItem = ({ plan }: PlanItemProps) => {
             <span style={{ fontSize: "11px" }}>{formatJoinedDate(plan.created_at)}</span>
           </div>
         </div>
+
+        {plan.state === "active" && (
+          <button
+            onClick={onCheckCompleted}
+            className="w-full flex items-center justify-center gap-2 py-2 rounded-xl border border-[#10B981]/20 bg-[#10B981]/8 text-[#10B981]/70 text-xs font-medium transition-all duration-200 hover:bg-[#10B981]/15 hover:border-[#10B981]/40 hover:text-[#10B981] cursor-pointer"
+          >
+            <i className="bi bi-check-circle" style={{ fontSize: "13px" }} />
+            Marcar como completado
+          </button>
+        )}
 
       </div>
     </div>

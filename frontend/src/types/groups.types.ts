@@ -12,7 +12,7 @@ export interface Group {
 export interface GroupMember {
     _id: string;
     group: Group;
-    user: User;
+    user: string;
     role: "admin" | "member";
     joined_at: Date;
 }

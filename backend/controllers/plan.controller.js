@@ -123,6 +123,22 @@ class PlanController {
         }
     }
 
+    async getPlanByIdAndGroup(req, res) {
+        try{
+            const { idGroup, idPlan } = req.params;
+
+            const plan = await planRepository.getPlanByIdAndGroup(idPlan, idGroup);
+
+            if(!plan) {
+                return res.status(404).json({ message: 'Plan no encontrado o no pertenece a este grupo' });
+            }
+
+            res.status(200).json({ message: 'Plan obtenido exitosamente', plan: plan });
+        }
+        catch (error) {
+            res.status(500).json({ message: 'Error obteniendo plan', error: error.message });
+        }
+    }
     
 }
 

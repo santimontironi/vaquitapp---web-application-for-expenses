@@ -8,3 +8,7 @@ export const getAllPlansService = (idGroup: string) => {
 export const createPlanService = (data: FormData, idGroup: string) => {
     return api.post<CreatePlanResponse>(`/${idGroup}/plans`, data);
 };
+
+export const checkPlanAsCompletedService = (idGroup: string, idPlan: string) => {
+    return api.patch(`/${idGroup}/plans/${idPlan}/complete`);
+}

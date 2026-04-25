@@ -163,7 +163,7 @@ VaquitApp/
 
 ## Modelos de Datos
 
-> Ver diagrama ERD: [![Ver en Excalidraw](https://img.shields.io/badge/Excalidraw-Ver%20diagrama%20ERD-6965db?style=flat)](https://excalidraw.com/#json=7S-ed3t09nf9T60HWKFaB,Tm9vPZrAWeLFJ60E5Pa_kg)
+![Diagrama de la Base de Datos](./db-diagram.svg)
 
 ### User
 
@@ -227,8 +227,6 @@ VaquitApp/
 ---
 
 ## Endpoints de la API
-
-> Ver diagrama de flujo de auth e invitaciones: [![Ver en Excalidraw](https://img.shields.io/badge/Excalidraw-Ver%20flujo%20de%20auth%20e%20invitaciones-6965db?style=flat)](https://excalidraw.com/#json=bBIMXDML1E-Tl7iG_m_Gt,VaFggKQss7qqK7H_ZKoPQw)
 
 **Base URL:** configurada mediante `VITE_API_URL` en el frontend y servida por Express en el puerto `PORT` del backend.
 
@@ -478,8 +476,6 @@ npm run build
 
 ## Roles y Permisos
 
-> Ver diagrama de arquitectura del sistema: [![Ver en Excalidraw](https://img.shields.io/badge/Excalidraw-Ver%20arquitectura%20del%20sistema-6965db?style=flat)](https://excalidraw.com/#json=dCMm8huiiorTwialhn97K,xL-QgxM4q6FQAleI42NlEA)
-
 Los roles se aplican **por grupo**: un mismo usuario puede ser admin en un grupo y member en otro.
 
 | Accion | admin | member |
@@ -501,8 +497,6 @@ Los roles se aplican **por grupo**: un mismo usuario puede ser admin en un grupo
 ---
 
 ## Sistema de Autenticacion
-
-> Ver diagrama de flujos: [![Ver en Excalidraw](https://img.shields.io/badge/Excalidraw-Ver%20flujo%20de%20auth%20e%20invitaciones-6965db?style=flat)](https://excalidraw.com/#json=bBIMXDML1E-Tl7iG_m_Gt,VaFggKQss7qqK7H_ZKoPQw)
 
 ### Flujo de registro y confirmacion
 

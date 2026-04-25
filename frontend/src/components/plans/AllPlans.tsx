@@ -3,13 +3,29 @@ import Loader from "../ui/Loader"
 import PlanItem from "./PlanItem"
 import { useEffect } from "react"
 import type { AllPlansProps } from "../../types/plans.types"
+import Swal from "sweetalert2"
 
 const AllPlans = ({ idGroup }: AllPlansProps) => {
-  const { plans, loading, getPlans } = usePlan()
+  const { plans, loading, getPlans, checkPlanAsCompleted } = usePlan()
 
   useEffect(() => {
     getPlans(idGroup)
   }, [idGroup])
+
+  const handleCheckCompleted = async (id: string) => {
+    const result = await Swal.fire({
+      title: "¿Marcar este plan como completado?",
+      text: "Esta acción no se puede deshacer.",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Sí, marcar como completado",
+      cancelButtonText: "No, cancelar",
+      reverseButtons: true,
+    })
+    if(result.isConfirmed) {
+      checkPlanAsCompleted(id, idGroup)
+    }
+  }
 
   return (
     <div className="relative p-px rounded-2xl bg-linear-to-br from-[#10B981]/20 via-white/4 to-[#3B82F6]/15 shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
@@ -43,7 +59,7 @@ const AllPlans = ({ idGroup }: AllPlansProps) => {
           ) : plans.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {plans.map((plan) => (
-                <PlanItem key={plan._id} plan={plan} />
+                <PlanItem key={plan._id} plan={plan} onCheckCompleted={() => handleCheckCompleted(plan._id)} />
               ))}
             </div>
           ) : (

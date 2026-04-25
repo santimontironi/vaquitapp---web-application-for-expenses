@@ -35,6 +35,7 @@ export interface LoadingPlans {
 
 export interface PlanItemProps {
     plan: Plans;
+    onCheckCompleted: () => void;
 }
 
 export interface AllPlansProps {
