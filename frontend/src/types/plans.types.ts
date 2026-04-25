@@ -17,6 +17,10 @@ export interface GetPlansResponse {
     plans: Plans[];
 }
 
+export interface GetPlanByIdResponse {
+    plan: Plans
+}
+
 export interface CreatePlanData {
     members: string[];
     image: FileList | null;
@@ -30,11 +34,13 @@ export interface CreatePlanResponse {
 
 export interface LoadingPlans {
     fetchLoading: boolean;
+    fetchByIdLoading: boolean
     createLoading: boolean;
 }
 
 export interface PlanItemProps {
     plan: Plans;
+    idGroup: string;
     onCheckCompleted: () => void;
 }
 

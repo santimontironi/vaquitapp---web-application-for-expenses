@@ -59,7 +59,7 @@ const AllPlans = ({ idGroup }: AllPlansProps) => {
           ) : plans.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {plans.map((plan) => (
-                <PlanItem key={plan._id} plan={plan} onCheckCompleted={() => handleCheckCompleted(plan._id)} />
+                <PlanItem key={plan._id} plan={plan} idGroup={idGroup} onCheckCompleted={() => handleCheckCompleted(plan._id)} />
               ))}
             </div>
           ) : (

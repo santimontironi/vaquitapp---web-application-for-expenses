@@ -1,15 +1,20 @@
+import { useNavigate } from "react-router-dom"
 import type { PlanItemProps } from "../../types/plans.types"
 import { formatJoinedDate } from "../../utils/date"
 
 const MAX_VISIBLE_AVATARS = 3
 
-const PlanItem = ({ plan, onCheckCompleted }: PlanItemProps) => {
-  
+const PlanItem = ({ plan, idGroup, onCheckCompleted }: PlanItemProps) => {
+
+  const navigate = useNavigate()
   const visibleMembers = plan.members.slice(0, MAX_VISIBLE_AVATARS)
   const extraCount = plan.members.length - MAX_VISIBLE_AVATARS
 
   return (
-    <div className="group flex flex-col rounded-2xl bg-white/3 border border-white/6 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-[#10B981]/20 hover:bg-white/6 hover:shadow-[0_8px_32px_rgba(0,0,0,0.45)] cursor-pointer">
+    <div
+      onClick={() => navigate(`/grupo/${idGroup}/planes/${plan._id}`)}
+      className="group flex flex-col rounded-2xl bg-white/3 border border-white/6 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-[#10B981]/20 hover:bg-white/6 hover:shadow-[0_8px_32px_rgba(0,0,0,0.45)] cursor-pointer"
+    >
 
       {plan.image ? (
         <div className="relative w-full h-36 overflow-hidden">
@@ -109,7 +114,7 @@ const PlanItem = ({ plan, onCheckCompleted }: PlanItemProps) => {
 
         {plan.state === "active" && (
           <button
-            onClick={onCheckCompleted}
+            onClick={(e) => { e.stopPropagation(); onCheckCompleted(); }}
             className="w-full flex items-center justify-center gap-2 py-2 rounded-xl border border-[#10B981]/20 bg-[#10B981]/8 text-[#10B981]/70 text-xs font-medium transition-all duration-200 hover:bg-[#10B981]/15 hover:border-[#10B981]/40 hover:text-[#10B981] cursor-pointer"
           >
             <i className="bi bi-check-circle" style={{ fontSize: "13px" }} />

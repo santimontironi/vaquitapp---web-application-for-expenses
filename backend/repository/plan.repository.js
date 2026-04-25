@@ -7,7 +7,9 @@ class PlanRepository {
     }
 
     async getPlanByIdAndGroup(planId, groupId) {
-        const plan = await Plan.findOne({ _id: planId, group: groupId, state: 'active' });
+        const plan = await Plan.findOne({ _id: planId, group: groupId, state: 'active' })
+            .populate('created_by', 'username')
+            .populate('members', 'username');
         return plan;
     }
 
