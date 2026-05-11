@@ -20,10 +20,24 @@ VaquitApp usa un patron Repository entre controllers y modelos de Mongoose. Nunc
 
 **Rutas de planes:** usan prefijo `/:idGroup/plans` (no `/groups/:idGroup/plans`). Esto es diferente al patron de los grupos.
 
+**Rutas de gastos:** usan prefijo `/groups/:idGroup/plans/:idPlan/expenses`. Esto SI usa el prefijo /groups, a diferencia de planes.
+
 **Estado del Plan:** `active` | `completed` | `cancelled`. Solo se puede marcar como `completed` via endpoint dedicado. No hay endpoint para cancelar todavia.
 
-**Expense:** el modelo esta definido pero NO hay controladores, repositorios ni rutas implementadas aun. Es funcionalidad planificada.
+**Expense — COMPLETAMENTE IMPLEMENTADO (actualizado 2026-05-11):**
+- Modelo: `description`, `amount`, `plan`, `paid_by`, `split_among`, `state` (active|completed), timestamps automaticos.
+- Controladores, repositorios y rutas completos: createExpense, getExpensesByPlan, getAllExpensesByPlan, getBalances, completeExpense.
+- Algoritmo de balance: greedy, O(n log n), minimiza cantidad de transacciones. Implementado en `expense.controller.js → getBalances`.
+- Solo el `paid_by` o un admin puede marcar un gasto como `completed`. Los gastos completados son excluidos del calculo de balances (`state: 'active'` filter).
 
-**Why:** el proyecto esta en desarrollo activo. El modelo Expense ya existe en MongoDB pero los endpoints de gastos y el algoritmo de calculo son el siguiente paso.
+**Frontend — features recientes (2026-05-11):**
+- `SideNavGroup` incluye boton "Abandonar grupo" con validacion: si el usuario es el unico admin, bloquea la accion con SweetAlert.
+- `AllMembers` + `MemberItem`: admin puede dar rol de admin a un miembro (boton shield-plus) y eliminar miembros. El boton de dar admin NO aparece si el miembro ya es admin.
+- `PlanHistory`: modal que muestra planes completados/cancelados con badge de estado.
+- `ExpenseContext`: maneja `createExpense`, `getExpenses`, `completeExpense`.
+- Componentes de gastos: `CreateExpense` (modal con form), `ExpenseCard`, `PaidByPicker`, `SplitPicker`.
+- `PlanDetail`: muestra gastos activos del plan, boton "Agregar gasto" abre modal CreateExpense.
 
-**How to apply:** al actualizar el README, no documentar endpoints de gastos que no existen. Mencionar el modelo como definido y los endpoints como pendientes.
+**Why:** el proyecto esta en desarrollo activo. La feature de gastos fue completada en la iteracion actual.
+
+**How to apply:** al actualizar el README, documentar todos los endpoints de gastos como implementados y funcionales. El algoritmo de balance es el core de la aplicacion y merece documentacion detallada.
