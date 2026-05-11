@@ -1,47 +1,47 @@
 # VaquitApp
 
-VaquitApp is a web application for organizing shared expenses among groups of people. Users create groups, define plans within those groups (e.g., "Sunday barbecue"), register expenses per plan specifying who paid and who shares the cost, and the app calculates the minimum set of transfers needed to settle all debts.
+VaquitApp es una aplicación web para organizar gastos compartidos entre grupos de personas. Los usuarios crean grupos, definen planes dentro de esos grupos (por ejemplo, "asado del domingo"), registran gastos por plan especificando quién pagó y entre quiénes se divide el costo, y la app calcula el conjunto mínimo de transferencias necesarias para saldar todas las deudas.
 
 ---
 
-## Table of Contents
+## Tabla de contenidos
 
-- [Tech Stack](#tech-stack)
-- [Project Structure](#project-structure)
-- [Features](#features)
-- [Data Models](#data-models)
-- [API Endpoints](#api-endpoints)
-- [Request & Response Examples](#request--response-examples)
-- [Environment Variables](#environment-variables)
-- [Installation & Setup](#installation--setup)
+- [Stack tecnológico](#stack-tecnológico)
+- [Estructura del proyecto](#estructura-del-proyecto)
+- [Funcionalidades](#funcionalidades)
+- [Modelos de datos](#modelos-de-datos)
+- [Endpoints de la API](#endpoints-de-la-api)
+- [Ejemplos de solicitudes y respuestas](#ejemplos-de-solicitudes-y-respuestas)
+- [Variables de entorno](#variables-de-entorno)
+- [Instalación y configuración](#instalación-y-configuración)
 - [Scripts](#scripts)
-- [Roles & Permissions](#roles--permissions)
-- [Expense Calculation Logic](#expense-calculation-logic)
+- [Roles y permisos](#roles-y-permisos)
+- [Lógica de cálculo de gastos](#lógica-de-cálculo-de-gastos)
 
 ---
 
-## Tech Stack
+## Stack tecnológico
 
-| Layer | Technology | Version |
+| Capa | Tecnología | Versión |
 |---|---|---|
-| Backend runtime | Node.js + Express.js | Express 5.x |
-| Database | MongoDB + Mongoose | Mongoose 9.x |
-| Authentication | JSON Web Tokens (httpOnly cookie) | jsonwebtoken 9.x |
-| Password hashing | bcryptjs | 3.x |
-| File upload | Multer (memory storage) | 2.x |
-| Image hosting | Cloudinary | 2.x |
-| Email | Nodemailer | 8.x |
-| Frontend framework | React + TypeScript | React 19, TS 5.9 |
-| Build tool | Vite | 8.x |
-| Styling | Tailwind CSS | 4.x |
-| HTTP client | Axios | 1.x |
-| Forms | React Hook Form | 7.x |
-| Alerts | SweetAlert2 | 11.x |
-| Icons | Bootstrap Icons | 1.x |
+| Runtime del backend | Node.js + Express.js | Express 5.x |
+| Base de datos | MongoDB + Mongoose | Mongoose 9.x |
+| Autenticación | JSON Web Tokens (cookie httpOnly) | jsonwebtoken 9.x |
+| Hash de contraseñas | bcryptjs | 3.x |
+| Subida de archivos | Multer (almacenamiento en memoria) | 2.x |
+| Hosting de imágenes | Cloudinary | 2.x |
+| Correo electrónico | Nodemailer | 8.x |
+| Framework frontend | React + TypeScript | React 19, TS 5.9 |
+| Herramienta de build | Vite | 8.x |
+| Estilos | Tailwind CSS | 4.x |
+| Cliente HTTP | Axios | 1.x |
+| Formularios | React Hook Form | 7.x |
+| Alertas | SweetAlert2 | 11.x |
+| Iconos | Bootstrap Icons | 1.x |
 
 ---
 
-## Project Structure
+## Estructura del proyecto
 
 ```
 VaquitApp/
@@ -137,238 +137,238 @@ VaquitApp/
 
 ---
 
-## Features
+## Funcionalidades
 
-### Authentication
-- User registration with email confirmation (JWT link, 24 h expiry)
-- Login via username or email + password; session stored in `httpOnly` cookie (7-day expiry)
-- Account must be confirmed before login is allowed
-- Logout clears the session cookie
+### Autenticación
+- Registro de usuario con confirmación por correo electrónico (enlace JWT, vencimiento de 24 h)
+- Inicio de sesión con nombre de usuario o correo + contraseña; sesión almacenada en cookie `httpOnly` (vencimiento de 7 días)
+- La cuenta debe estar confirmada antes de poder iniciar sesión
+- El cierre de sesión elimina la cookie de sesión
 
-### Groups
-- Create a group with name, description, and optional image (uploaded to Cloudinary)
-- View all groups the authenticated user belongs to
-- View group details
-- Edit group name, description, and image (admin only)
-- Soft-delete a group (`active: false`) (admin only)
-- Leave a group — blocked if the user is the sole admin
+### Grupos
+- Crear un grupo con nombre, descripción e imagen opcional (subida a Cloudinary)
+- Ver todos los grupos a los que pertenece el usuario autenticado
+- Ver los detalles de un grupo
+- Editar nombre, descripción e imagen del grupo (solo admin)
+- Eliminar un grupo de forma suave (`active: false`) (solo admin)
+- Abandonar un grupo — bloqueado si el usuario es el único admin
 
-### Group Members
-- View all members with their role and join date
-- Invite a member by email; sends a signed JWT invitation link (7-day expiry, role included)
-- Accept an invitation via token (requires active session on the frontend)
-- Promote any member to admin role (admin only)
-- Remove a member from the group (admin only)
+### Miembros del grupo
+- Ver todos los miembros con su rol y fecha de ingreso
+- Invitar a un miembro por correo electrónico; envía un enlace de invitación firmado con JWT (vencimiento de 7 días, incluye el rol)
+- Aceptar una invitación mediante token (requiere sesión activa en el frontend)
+- Promover a cualquier miembro al rol de admin (solo admin)
+- Eliminar a un miembro del grupo (solo admin)
 
-### Plans
-- Create a plan within a group with name, optional description, optional image, and initial member list
-- Plan creator is always added to the member list automatically
-- View all active plans in a group
-- View plan history (completed and cancelled plans)
-- Get a single plan by ID with full member and creator details
-- Mark a plan as completed (any group member)
-- Add new members to an existing plan (members must belong to the group)
+### Planes
+- Crear un plan dentro de un grupo con nombre, descripción opcional, imagen opcional y lista inicial de miembros
+- El creador del plan siempre se agrega automáticamente a la lista de miembros
+- Ver todos los planes activos de un grupo
+- Ver el historial de planes (planes completados y cancelados)
+- Obtener un plan específico por ID con detalles completos de miembros y creador
+- Marcar un plan como completado (cualquier miembro del grupo)
+- Agregar nuevos miembros a un plan existente (los miembros deben pertenecer al grupo)
 
-### Expenses
-- Register an expense within a plan: amount, optional description, who paid, and among whom it is split
-- All parties (`paid_by`, each user in `split_among`) must be members of the plan
-- List active expenses for a plan (state = `active`)
-- List all expenses for a plan regardless of state
-- Mark an expense as completed/settled — allowed only to the user who paid or a group admin
-- Calculate settlement balances: returns the minimum list of transfers to settle all debts
+### Gastos
+- Registrar un gasto dentro de un plan: monto, descripción opcional, quién pagó y entre quiénes se divide
+- Todas las partes (`paid_by`, cada usuario en `split_among`) deben ser miembros del plan
+- Listar los gastos activos de un plan (estado = `active`)
+- Listar todos los gastos de un plan sin importar el estado
+- Marcar un gasto como completado/saldado — permitido únicamente al usuario que pagó o a un admin del grupo
+- Calcular los balances de liquidación: devuelve la lista mínima de transferencias para saldar todas las deudas
 
 ---
 
-## Data Models
+## Modelos de datos
 
-> See Excalidraw ERD: https://excalidraw.com/#json=qtdbviQGrIOk3onpaJiH4,e-pFMZ4woTeBDTWgxPsISg
+> Ver diagrama ERD en Excalidraw: https://excalidraw.com/#json=qtdbviQGrIOk3onpaJiH4,e-pFMZ4woTeBDTWgxPsISg
 
-### User
+### User (Usuario)
 
-| Field | Type | Required | Description |
+| Campo | Tipo | Requerido | Descripción |
 |---|---|---|---|
-| `_id` | ObjectId | auto | Primary key |
-| `username` | String | yes | Unique username |
-| `email` | String | yes | Unique email address |
-| `password` | String | yes | Bcrypt hash |
-| `isConfirmed` | Boolean | — | `false` until email link is clicked |
+| `_id` | ObjectId | auto | Clave primaria |
+| `username` | String | sí | Nombre de usuario único |
+| `email` | String | sí | Dirección de correo electrónico única |
+| `password` | String | sí | Hash de bcrypt |
+| `isConfirmed` | Boolean | — | `false` hasta que se hace clic en el enlace de confirmación |
 
-### Group
+### Group (Grupo)
 
-| Field | Type | Required | Description |
+| Campo | Tipo | Requerido | Descripción |
 |---|---|---|---|
-| `_id` | ObjectId | auto | Primary key |
-| `name` | String | yes | Group display name |
-| `description` | String | yes | Group description |
-| `image` | String | — | Cloudinary URL |
-| `created_by` | ObjectId → User | yes | User who created the group |
-| `active` | Boolean | — | `false` = soft-deleted (default `true`) |
-| `created_at` | Date | — | Creation timestamp |
+| `_id` | ObjectId | auto | Clave primaria |
+| `name` | String | sí | Nombre visible del grupo |
+| `description` | String | sí | Descripción del grupo |
+| `image` | String | — | URL de Cloudinary |
+| `created_by` | ObjectId → User | sí | Usuario que creó el grupo |
+| `active` | Boolean | — | `false` = eliminado de forma suave (por defecto `true`) |
+| `created_at` | Date | — | Fecha y hora de creación |
 
-### GroupMember
+### GroupMember (Miembro del grupo)
 
-| Field | Type | Required | Description |
+| Campo | Tipo | Requerido | Descripción |
 |---|---|---|---|
-| `_id` | ObjectId | auto | Primary key |
-| `group` | ObjectId → Group | yes | Reference to the group |
-| `user` | ObjectId → User | yes | Reference to the user |
-| `role` | String | — | `admin` or `member` (default `member`) |
-| `joined_at` | Date | — | When the user joined |
+| `_id` | ObjectId | auto | Clave primaria |
+| `group` | ObjectId → Group | sí | Referencia al grupo |
+| `user` | ObjectId → User | sí | Referencia al usuario |
+| `role` | String | — | `admin` o `member` (por defecto `member`) |
+| `joined_at` | Date | — | Fecha en que el usuario se unió |
 
 ### Plan
 
-| Field | Type | Required | Description |
+| Campo | Tipo | Requerido | Descripción |
 |---|---|---|---|
-| `_id` | ObjectId | auto | Primary key |
-| `name` | String | yes | Plan display name |
-| `description` | String | — | Optional description |
-| `image` | String | — | Cloudinary URL |
-| `group` | ObjectId → Group | yes | Group this plan belongs to |
-| `created_by` | ObjectId → User | yes | User who created the plan |
-| `members` | [ObjectId → User] | — | Users participating in this plan |
-| `state` | String | — | `active`, `completed`, or `cancelled` (default `active`) |
-| `created_at` | Date | — | Creation timestamp |
+| `_id` | ObjectId | auto | Clave primaria |
+| `name` | String | sí | Nombre visible del plan |
+| `description` | String | — | Descripción opcional |
+| `image` | String | — | URL de Cloudinary |
+| `group` | ObjectId → Group | sí | Grupo al que pertenece este plan |
+| `created_by` | ObjectId → User | sí | Usuario que creó el plan |
+| `members` | [ObjectId → User] | — | Usuarios que participan en este plan |
+| `state` | String | — | `active`, `completed` o `cancelled` (por defecto `active`) |
+| `created_at` | Date | — | Fecha y hora de creación |
 
-### Expense
+### Expense (Gasto)
 
-| Field | Type | Required | Description |
+| Campo | Tipo | Requerido | Descripción |
 |---|---|---|---|
-| `_id` | ObjectId | auto | Primary key |
-| `description` | String | — | Optional label (e.g., "Supermarket") |
-| `amount` | Number | yes | Total amount paid; must be > 0 |
-| `plan` | ObjectId → Plan | yes | Plan this expense belongs to |
-| `paid_by` | ObjectId → User | yes | User who paid the full amount |
-| `split_among` | [ObjectId → User] | — | Users sharing the cost |
-| `state` | String | — | `active` or `completed` (default `active`) |
-| `createdAt` | Date | — | Auto-set by Mongoose timestamps |
-| `updatedAt` | Date | — | Auto-set by Mongoose timestamps |
+| `_id` | ObjectId | auto | Clave primaria |
+| `description` | String | — | Etiqueta opcional (por ejemplo, "Supermercado") |
+| `amount` | Number | sí | Monto total pagado; debe ser > 0 |
+| `plan` | ObjectId → Plan | sí | Plan al que pertenece este gasto |
+| `paid_by` | ObjectId → User | sí | Usuario que pagó el monto completo |
+| `split_among` | [ObjectId → User] | — | Usuarios que comparten el costo |
+| `state` | String | — | `active` o `completed` (por defecto `active`) |
+| `createdAt` | Date | — | Establecido automáticamente por los timestamps de Mongoose |
+| `updatedAt` | Date | — | Establecido automáticamente por los timestamps de Mongoose |
 
 ---
 
-## API Endpoints
+## Endpoints de la API
 
-All endpoints are served relative to the backend base URL (e.g., `http://localhost:3000`).
+Todos los endpoints se sirven relativos a la URL base del backend (por ejemplo, `http://localhost:3000`).
 
-**Middleware chain for protected group/plan/expense routes:**
-`verifyToken` → `validateObjectId(...)` → `verifyRole` → controller
+**Cadena de middlewares para rutas protegidas de grupo/plan/gasto:**
+`verifyToken` → `validateObjectId(...)` → `verifyRole` → controlador
 
-`verifyRole` populates `req.group` and `req.member` (the caller's GroupMember document). Role checks (`admin` vs. `member`) are enforced inside each controller.
+`verifyRole` puebla `req.group` y `req.member` (el documento GroupMember del solicitante). Las verificaciones de rol (`admin` vs. `member`) se aplican dentro de cada controlador.
 
-### Auth
+### Autenticación
 
-| Method | Endpoint | Auth Required | Description |
+| Método | Endpoint | Requiere autenticación | Descripción |
 |---|---|---|---|
-| POST | `/register` | No | Register a new user; sends confirmation email |
-| POST | `/login` | No | Login with `identifier` (username or email) + `password`; sets session cookie |
-| GET | `/confirm/:token` | No | Confirm email address via JWT token |
-| GET | `/dashboard` | Yes | Return authenticated user's profile |
-| POST | `/logout` | No | Clear session cookie |
+| POST | `/register` | No | Registrar un nuevo usuario; envía correo de confirmación |
+| POST | `/login` | No | Iniciar sesión con `identifier` (nombre de usuario o correo) + `password`; establece la cookie de sesión |
+| GET | `/confirm/:token` | No | Confirmar la dirección de correo electrónico mediante token JWT |
+| GET | `/dashboard` | Sí | Devuelve el perfil del usuario autenticado |
+| POST | `/logout` | No | Elimina la cookie de sesión |
 
-### Groups
+### Grupos
 
-| Method | Endpoint | Auth Required | Description |
+| Método | Endpoint | Requiere autenticación | Descripción |
 |---|---|---|---|
-| POST | `/groups` | Yes | Create a new group (multipart/form-data for optional image) |
-| GET | `/groups` | Yes | List all groups the authenticated user belongs to |
-| GET | `/groups/:idGroup` | Yes + member | Get group details |
-| PATCH | `/groups/:idGroup` | Yes + admin | Edit group name, description, and image |
-| DELETE | `/groups/:idGroup` | Yes + admin | Soft-delete the group |
-| DELETE | `/groups/:idGroup/leave` | Yes + member | Leave the group |
+| POST | `/groups` | Sí | Crear un nuevo grupo (multipart/form-data para imagen opcional) |
+| GET | `/groups` | Sí | Listar todos los grupos a los que pertenece el usuario autenticado |
+| GET | `/groups/:idGroup` | Sí + miembro | Obtener los detalles del grupo |
+| PATCH | `/groups/:idGroup` | Sí + admin | Editar nombre, descripción e imagen del grupo |
+| DELETE | `/groups/:idGroup` | Sí + admin | Eliminar el grupo de forma suave |
+| DELETE | `/groups/:idGroup/leave` | Sí + miembro | Abandonar el grupo |
 
-### Group Members
+### Miembros del grupo
 
-| Method | Endpoint | Auth Required | Description |
+| Método | Endpoint | Requiere autenticación | Descripción |
 |---|---|---|---|
-| GET | `/groups/:idGroup/members` | Yes + member | List all members with role and join date |
-| POST | `/groups/:idGroup/invite` | Yes + admin | Send an email invitation with a signed token |
-| GET | `/groups/invite/accept/:token` | No | Accept an invitation and add the user to the group |
-| PATCH | `/groups/:idGroup/members/:idMember/admin` | Yes + admin | Promote a member to admin |
-| DELETE | `/groups/:idGroup/members/:idMember` | Yes + admin | Remove a member from the group |
+| GET | `/groups/:idGroup/members` | Sí + miembro | Listar todos los miembros con rol y fecha de ingreso |
+| POST | `/groups/:idGroup/invite` | Sí + admin | Enviar una invitación por correo con token firmado |
+| GET | `/groups/invite/accept/:token` | No | Aceptar una invitación y agregar al usuario al grupo |
+| PATCH | `/groups/:idGroup/members/:idMember/admin` | Sí + admin | Promover a un miembro al rol de admin |
+| DELETE | `/groups/:idGroup/members/:idMember` | Sí + admin | Eliminar a un miembro del grupo |
 
-### Plans
+### Planes
 
-> Note: plan routes use the prefix `/:idGroup/plans`, not `/groups/:idGroup/plans`.
+> Nota: las rutas de planes usan el prefijo `/:idGroup/plans`, no `/groups/:idGroup/plans`.
 
-| Method | Endpoint | Auth Required | Description |
+| Método | Endpoint | Requiere autenticación | Descripción |
 |---|---|---|---|
-| GET | `/:idGroup/plans` | Yes + member | List all active plans in the group |
-| GET | `/:idGroup/plans/history` | Yes + member | List completed and cancelled plans |
-| GET | `/:idGroup/plans/:idPlan` | Yes + member | Get a single active plan by ID |
-| POST | `/:idGroup/plans` | Yes + member | Create a new plan (multipart/form-data) |
-| PATCH | `/:idGroup/plans/:idPlan/complete` | Yes + member | Mark a plan as completed |
-| PATCH | `/:idGroup/plans/:idPlan/addMembers` | Yes + member | Add group members to an existing plan |
+| GET | `/:idGroup/plans` | Sí + miembro | Listar todos los planes activos del grupo |
+| GET | `/:idGroup/plans/history` | Sí + miembro | Listar planes completados y cancelados |
+| GET | `/:idGroup/plans/:idPlan` | Sí + miembro | Obtener un plan activo por ID |
+| POST | `/:idGroup/plans` | Sí + miembro | Crear un nuevo plan (multipart/form-data) |
+| PATCH | `/:idGroup/plans/:idPlan/complete` | Sí + miembro | Marcar un plan como completado |
+| PATCH | `/:idGroup/plans/:idPlan/addMembers` | Sí + miembro | Agregar miembros del grupo a un plan existente |
 
-### Expenses
+### Gastos
 
-| Method | Endpoint | Auth Required | Description |
+| Método | Endpoint | Requiere autenticación | Descripción |
 |---|---|---|---|
-| POST | `/groups/:idGroup/plans/:idPlan/expenses` | Yes + member | Register a new expense |
-| GET | `/groups/:idGroup/plans/:idPlan/expenses` | Yes + member | List active expenses for a plan |
-| GET | `/groups/:idGroup/plans/:idPlan/expenses/all` | Yes + member | List all expenses for a plan (all states) |
-| GET | `/groups/:idGroup/plans/:idPlan/expenses/balances` | Yes + member | Calculate and return the settlement transaction list |
-| PATCH | `/groups/:idGroup/plans/:idPlan/expenses/:idExpense/complete` | Yes + member | Mark an expense as completed (paid_by user or admin only) |
+| POST | `/groups/:idGroup/plans/:idPlan/expenses` | Sí + miembro | Registrar un nuevo gasto |
+| GET | `/groups/:idGroup/plans/:idPlan/expenses` | Sí + miembro | Listar los gastos activos de un plan |
+| GET | `/groups/:idGroup/plans/:idPlan/expenses/all` | Sí + miembro | Listar todos los gastos de un plan (todos los estados) |
+| GET | `/groups/:idGroup/plans/:idPlan/expenses/balances` | Sí + miembro | Calcular y devolver la lista de transacciones de liquidación |
+| PATCH | `/groups/:idGroup/plans/:idPlan/expenses/:idExpense/complete` | Sí + miembro | Marcar un gasto como completado (solo el usuario que pagó o un admin) |
 
 ---
 
-## Request & Response Examples
+## Ejemplos de solicitudes y respuestas
 
 ### POST `/register`
 
 ```json
-// Request body
+// Cuerpo de la solicitud
 {
   "username": "ana",
-  "email": "ana@example.com",
-  "password": "secret123"
+  "email": "ana@ejemplo.com",
+  "password": "secreto123"
 }
 
-// Response 201
+// Respuesta 201
 { "message": "Usuario registrado exitosamente" }
 ```
 
 ### POST `/login`
 
 ```json
-// Request body — accepts username or email in "identifier"
+// Cuerpo de la solicitud — acepta nombre de usuario o correo en "identifier"
 {
   "identifier": "ana",
-  "password": "secret123"
+  "password": "secreto123"
 }
 
-// Response 200 — sets httpOnly cookie "token"
+// Respuesta 200 — establece la cookie httpOnly "token"
 {
   "message": "Login exitoso",
-  "user": { "id": "...", "username": "ana", "email": "ana@example.com" }
+  "user": { "id": "...", "username": "ana", "email": "ana@ejemplo.com" }
 }
 ```
 
 ### POST `/groups/:idGroup/invite`
 
 ```json
-// Request body
+// Cuerpo de la solicitud
 {
-  "email": "bob@example.com",
+  "email": "bob@ejemplo.com",
   "role": "member"
 }
 
-// Response 200
+// Respuesta 200
 { "message": "Invitación enviada exitosamente" }
 ```
 
-The invitation endpoint signs a JWT `{ groupId, email, role }` with a 7-day expiry and emails a link to `FRONTEND_URL/invitacion/<token>`. The frontend requires an active session before rendering the acceptance page.
+El endpoint de invitación firma un JWT `{ groupId, email, role }` con vencimiento de 7 días y envía por correo un enlace a `FRONTEND_URL/invitacion/<token>`. El frontend requiere una sesión activa antes de mostrar la página de aceptación.
 
 ### POST `/groups/:idGroup/plans/:idPlan/expenses`
 
 ```json
-// Request body
+// Cuerpo de la solicitud
 {
-  "description": "Supermarket run",
+  "description": "Compras en el supermercado",
   "amount": 90,
   "paid_by": "<userId-ana>",
   "split_among": ["<userId-ana>", "<userId-bob>", "<userId-carol>"]
 }
 
-// Response 201
+// Respuesta 201
 {
   "message": "Gasto creado exitosamente",
   "expense": { "_id": "...", "amount": 90, "state": "active", "..." : "..." }
@@ -378,7 +378,7 @@ The invitation endpoint signs a JWT `{ groupId, email, role }` with a 7-day expi
 ### GET `/groups/:idGroup/plans/:idPlan/expenses/balances`
 
 ```json
-// Response 200
+// Respuesta 200
 {
   "message": "Balances calculados exitosamente",
   "transactions": [
@@ -398,39 +398,39 @@ The invitation endpoint signs a JWT `{ groupId, email, role }` with a 7-day expi
 
 ---
 
-## Environment Variables
+## Variables de entorno
 
 ### Backend (`backend/.env`)
 
-| Variable | Description | Example |
+| Variable | Descripción | Ejemplo |
 |---|---|---|
-| `PORT` | Port the server listens on | `3000` |
-| `MONGO_URI` | MongoDB connection string | `mongodb+srv://user:pass@cluster/db` |
-| `JWT_SECRET` | Secret used to sign all JWT tokens | `a_long_random_string` |
-| `FRONTEND_URL` | Frontend origin for CORS and email links | `http://localhost:5173` |
-| `NODE_ENV` | Environment (`development` or `production`) | `development` |
-| `EMAIL_USER` | SMTP sender address | `noreply@vaquitapp.com` |
-| `EMAIL_PASS` | SMTP sender password / app password | `smtp_app_password` |
-| `CLOUDINARY_CLOUD_NAME` | Cloudinary cloud identifier | `my_cloud` |
-| `CLOUDINARY_API_KEY` | Cloudinary API key | `123456789` |
-| `CLOUDINARY_API_SECRET` | Cloudinary API secret | `abc123secret` |
+| `PORT` | Puerto en el que escucha el servidor | `3000` |
+| `MONGO_URI` | Cadena de conexión a MongoDB | `mongodb+srv://usuario:pass@cluster/db` |
+| `JWT_SECRET` | Secreto utilizado para firmar todos los tokens JWT | `una_cadena_aleatoria_larga` |
+| `FRONTEND_URL` | Origen del frontend para CORS y enlaces de correo | `http://localhost:5173` |
+| `NODE_ENV` | Entorno (`development` o `production`) | `development` |
+| `EMAIL_USER` | Dirección de correo del remitente SMTP | `noreply@vaquitapp.com` |
+| `EMAIL_PASS` | Contraseña / contraseña de aplicación del remitente SMTP | `contrasena_smtp_app` |
+| `CLOUDINARY_CLOUD_NAME` | Identificador de la nube en Cloudinary | `mi_nube` |
+| `CLOUDINARY_API_KEY` | Clave de API de Cloudinary | `123456789` |
+| `CLOUDINARY_API_SECRET` | Secreto de API de Cloudinary | `abc123secreto` |
 
 ### Frontend (`frontend/.env`)
 
-| Variable | Description | Example |
+| Variable | Descripción | Ejemplo |
 |---|---|---|
-| `VITE_API_URL` | Backend base URL used by Axios | `http://localhost:3000` |
+| `VITE_API_URL` | URL base del backend utilizada por Axios | `http://localhost:3000` |
 
 ---
 
-## Installation & Setup
+## Instalación y configuración
 
-### Prerequisites
+### Requisitos previos
 
 - Node.js 18+
-- A running MongoDB instance (local or Atlas)
-- A Cloudinary account
-- An SMTP email provider
+- Una instancia de MongoDB en ejecución (local o Atlas)
+- Una cuenta de Cloudinary
+- Un proveedor de correo SMTP
 
 ### Backend
 
@@ -439,13 +439,13 @@ cd backend
 npm install
 ```
 
-Create `backend/.env` using the variables described above, then:
+Crear `backend/.env` usando las variables descritas arriba, luego:
 
 ```bash
 npm run dev
 ```
 
-The server starts on the configured `PORT` (default `3000`).
+El servidor se inicia en el `PORT` configurado (por defecto `3000`).
 
 ### Frontend
 
@@ -454,19 +454,19 @@ cd frontend
 npm install
 ```
 
-Create `frontend/.env`:
+Crear `frontend/.env`:
 
 ```
 VITE_API_URL=http://localhost:3000
 ```
 
-Then:
+Luego:
 
 ```bash
 npm run dev
 ```
 
-Vite starts the dev server, typically at `http://localhost:5173`.
+Vite inicia el servidor de desarrollo, generalmente en `http://localhost:5173`.
 
 ---
 
@@ -474,76 +474,76 @@ Vite starts the dev server, typically at `http://localhost:5173`.
 
 ### Backend
 
-| Command | Description |
+| Comando | Descripción |
 |---|---|
-| `npm start` | Start the server with `node index.js` |
-| `npm run dev` | Start with `nodemon` (auto-restart on file change) |
+| `npm start` | Iniciar el servidor con `node index.js` |
+| `npm run dev` | Iniciar con `nodemon` (reinicio automático al cambiar archivos) |
 
 ### Frontend
 
-| Command | Description |
+| Comando | Descripción |
 |---|---|
-| `npm run dev` | Start Vite dev server with HMR |
-| `npm run build` | Type-check and produce production bundle in `dist/` |
-| `npm run preview` | Serve the production build locally |
-| `npm run lint` | Run ESLint across the source tree |
+| `npm run dev` | Iniciar el servidor de desarrollo de Vite con HMR |
+| `npm run build` | Verificar tipos y generar el bundle de producción en `dist/` |
+| `npm run preview` | Servir el build de producción de forma local |
+| `npm run lint` | Ejecutar ESLint en todo el árbol de fuentes |
 
 ---
 
-## Roles & Permissions
+## Roles y permisos
 
-| Action | admin | member |
+| Acción | admin | member |
 |---|---|---|
-| View group details | yes | yes |
-| View group members | yes | yes |
-| Leave group | yes (blocked if sole admin) | yes |
-| Edit group (name, description, image) | yes | no |
-| Delete group | yes | no |
-| Invite member to group | yes | no |
-| Remove member from group | yes | no |
-| Promote member to admin | yes | no |
-| Create plan | yes | yes |
-| View plans / plan history | yes | yes |
-| Mark plan as completed | yes | yes |
-| Add members to plan | yes | yes |
-| Create expense | yes | yes |
-| View expenses | yes | yes |
-| Get balance/settlement | yes | yes |
-| Complete (settle) any expense | yes | no |
-| Complete own expense (`paid_by`) | yes | yes |
+| Ver detalles del grupo | sí | sí |
+| Ver miembros del grupo | sí | sí |
+| Abandonar el grupo | sí (bloqueado si es el único admin) | sí |
+| Editar el grupo (nombre, descripción, imagen) | sí | no |
+| Eliminar el grupo | sí | no |
+| Invitar a un miembro al grupo | sí | no |
+| Eliminar a un miembro del grupo | sí | no |
+| Promover a un miembro a admin | sí | no |
+| Crear plan | sí | sí |
+| Ver planes / historial de planes | sí | sí |
+| Marcar un plan como completado | sí | sí |
+| Agregar miembros a un plan | sí | sí |
+| Crear gasto | sí | sí |
+| Ver gastos | sí | sí |
+| Obtener balance/liquidación | sí | sí |
+| Completar (saldar) cualquier gasto | sí | no |
+| Completar el propio gasto (`paid_by`) | sí | sí |
 
 ---
 
-## Expense Calculation Logic
+## Lógica de cálculo de gastos
 
-> See Excalidraw diagram: https://excalidraw.com/#json=wsV5aY-OgcicKmYSDt2ID,25dORAP5yLdzb5mXo80hTw
+> Ver diagrama en Excalidraw: https://excalidraw.com/#json=wsV5aY-OgcicKmYSDt2ID,25dORAP5yLdzb5mXo80hTw
 
-The balance algorithm runs server-side in `expense.controller.js → getBalances` when the client requests `GET .../expenses/balances`. It works in three stages:
+El algoritmo de balances se ejecuta en el servidor en `expense.controller.js → getBalances` cuando el cliente solicita `GET .../expenses/balances`. Funciona en tres etapas:
 
-**Stage 1 — Build the balance map.**
-For every active expense in the plan:
-- The `paid_by` user's balance increases by the full `amount` (they are owed this money).
-- Each user in `split_among` has their balance decreased by `amount / split_among.length` (their equal share of the cost).
+**Etapa 1 — Construir el mapa de balances.**
+Para cada gasto activo del plan:
+- El balance del usuario `paid_by` aumenta en el `amount` total (se le debe ese dinero).
+- El balance de cada usuario en `split_among` disminuye en `amount / split_among.length` (su parte proporcional del costo).
 
-Users with a positive final balance are *creditors* (others owe them money). Users with a negative balance are *debtors*.
+Los usuarios con balance final positivo son *acreedores* (otros les deben dinero). Los usuarios con balance negativo son *deudores*.
 
-**Stage 2 — Greedy pairing.**
-Creditors are sorted largest-balance-first; debtors are sorted most-negative-first. In each iteration the largest debtor is paired with the largest creditor. The transfer amount is `min(creditor.balance, |debtor.balance|)`. Both balances are reduced by that amount; any party that reaches zero is removed from their list. This continues until all balances are settled.
+**Etapa 2 — Emparejamiento voraz.**
+Los acreedores se ordenan del balance más alto al más bajo; los deudores se ordenan del más negativo al menos negativo. En cada iteración, el deudor más grande se empareja con el acreedor más grande. El monto de transferencia es `min(balance del acreedor, |balance del deudor|)`. Ambos balances se reducen en ese monto; cualquier parte que llegue a cero se elimina de su lista. Esto continúa hasta que todos los balances estén saldados.
 
-This greedy approach guarantees the **minimum number of transactions** required to settle all debts.
+Este enfoque voraz garantiza el **número mínimo de transacciones** necesarias para saldar todas las deudas.
 
-**Stage 3 — Rounding.**
-Every intermediate and final amount is rounded to 2 decimal places using `Math.round(value * 100) / 100` to prevent floating-point drift.
+**Etapa 3 — Redondeo.**
+Cada monto intermedio y final se redondea a 2 decimales usando `Math.round(value * 100) / 100` para evitar errores de punto flotante.
 
-### Example
+### Ejemplo
 
-| Expense | Paid by | Split among | Net effect |
+| Gasto | Pagado por | Dividido entre | Efecto neto |
 |---|---|---|---|
 | $90 | Ana | Ana, Bob, Carol | Ana +60, Bob -30, Carol -30 |
 | $60 | Bob | Bob, Carol | Bob +30, Carol -30 |
 
-Final balances: Ana +60, Bob +30, Carol -90.
+Balances finales: Ana +60, Bob +30, Carol -90.
 
-Settlement (2 transactions — optimal):
-- Carol pays Ana $60
-- Carol pays Bob $30
+Liquidación (2 transacciones — óptimo):
+- Carol le paga a Ana $60
+- Carol le paga a Bob $30
