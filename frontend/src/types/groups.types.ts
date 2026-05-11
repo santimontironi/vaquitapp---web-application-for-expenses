@@ -60,7 +60,7 @@ export interface AddMemberData {
 
 export type GroupDashboardView = "members" | "add-member" | "view-plans" | "create-plan";
 
-// Props
+
 export interface HeaderDashboardProps {
     user: User;
 }
@@ -77,11 +77,14 @@ export interface MyGroupCardProps {
 export interface SideNavGroupProps {
     itemSelected: GroupDashboardView;
     setSelectedItem: (item: GroupDashboardView) => void;
+    groupId: string;
 }
 
 export interface MemberItemProps {
     member: Members;
     onDeleteMember: () => void;
+    onGrantAdmin: () => void;
+    isAdmin: boolean;
 }
 
 export interface AllMembersProps {

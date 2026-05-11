@@ -1,12 +1,14 @@
 import usePlan from "../../hooks/usePlan"
 import Loader from "../ui/Loader"
 import PlanItem from "./PlanItem"
-import { useEffect } from "react"
+import PlanHistory from "./PlanHistory"
+import { useEffect, useState } from "react"
 import type { AllPlansProps } from "../../types/plans.types"
 import Swal from "sweetalert2"
 
 const AllPlans = ({ idGroup }: AllPlansProps) => {
   const { plans, loading, getPlans, checkPlanAsCompleted } = usePlan()
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false)
 
   useEffect(() => {
     getPlans(idGroup)
@@ -23,11 +25,12 @@ const AllPlans = ({ idGroup }: AllPlansProps) => {
       reverseButtons: true,
     })
     if(result.isConfirmed) {
-      checkPlanAsCompleted(id, idGroup)
+      checkPlanAsCompleted(idGroup, id)
     }
   }
 
   return (
+    <>
     <div className="relative p-px rounded-2xl bg-linear-to-br from-[#10B981]/20 via-white/4 to-[#3B82F6]/15 shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
       <div className="relative rounded-[15px] bg-[#0A1020]/85 backdrop-blur-2xl p-6 md:p-8 overflow-hidden">
 
@@ -43,11 +46,20 @@ const AllPlans = ({ idGroup }: AllPlansProps) => {
               </div>
               <h2 className="text-white font-semibold">Planes</h2>
             </div>
-            {!loading.fetchLoading && (
-              <span className="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-white/40 text-xs">
-                {plans.length} {plans.length === 1 ? "plan" : "planes"}
-              </span>
-            )}
+            <div className="flex items-center gap-2">
+              {!loading.fetchLoading && (
+                <span className="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-white/40 text-xs">
+                  {plans.length} {plans.length === 1 ? "plan" : "planes"}
+                </span>
+              )}
+              <button
+                onClick={() => setIsHistoryOpen(true)}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-white/50 text-xs font-medium hover:-translate-y-0.5 hover:bg-white/8 hover:border-white/20 hover:text-white/70 active:translate-y-0 active:scale-[0.97] transition-all duration-200 cursor-pointer"
+              >
+                <i className="bi bi-clock-history" />
+                <span className="hidden sm:inline">Historial</span>
+              </button>
+            </div>
           </div>
 
           <div className="w-full h-px bg-linear-to-r from-transparent via-white/8 to-transparent" />
@@ -76,6 +88,11 @@ const AllPlans = ({ idGroup }: AllPlansProps) => {
         </div>
       </div>
     </div>
+
+      {isHistoryOpen && (
+        <PlanHistory idGroup={idGroup} onClose={() => setIsHistoryOpen(false)} />
+      )}
+    </>
   )
 }
 

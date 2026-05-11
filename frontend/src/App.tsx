@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import { GroupProvider } from "./context/GroupContext";
 import { PlanProvider } from "./context/PlanContext";
+import { ExpenseProvider } from "./context/ExpenseContext";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ConfirmUser from "./pages/ConfirmUser";
@@ -17,6 +18,7 @@ function App() {
     <AuthProvider>
       <GroupProvider>
         <PlanProvider>
+          <ExpenseProvider>
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Login />} />
@@ -29,6 +31,7 @@ function App() {
               <Route path="/invitacion/:token" element={<VerifyAuth><AcceptInvitation /></VerifyAuth>} />
             </Routes>
           </BrowserRouter>
+          </ExpenseProvider>
         </PlanProvider>
       </GroupProvider>
     </AuthProvider>

@@ -30,3 +30,11 @@ export const acceptInvitationService = (token: string) => {
 export const deleteMemberService = (idGroup: string, idUser: string) => {
     return api.delete(`/groups/${idGroup}/members/${idUser}`);
 };
+
+export const getAdminRoleService = (idGroup: string, userId: string) => {
+    return api.patch(`/groups/${idGroup}/members/${userId}/admin`);
+};
+
+export const leaveGroupService = (idGroup: string) => {
+    return api.delete(`/groups/${idGroup}/leave`);
+}

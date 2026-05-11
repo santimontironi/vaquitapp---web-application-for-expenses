@@ -1,6 +1,6 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import type { GroupMember, LoadingGroups, Group, Members, AddMemberData } from "../types/groups.types";
-import { getUserGroupsService, createGroupService, getGroupDetailsService, getGroupMembersService, inviteMemberService, acceptInvitationService, deleteMemberService } from "../services/groups.service";
+import { getUserGroupsService, createGroupService, getGroupDetailsService, getGroupMembersService, inviteMemberService, acceptInvitationService, deleteMemberService, getAdminRoleService, leaveGroupService } from "../services/groups.service";
 
 export interface GroupContextType {
     groups: GroupMember[] | null;
@@ -14,6 +14,8 @@ export interface GroupContextType {
     inviteMember: (idGroup: string, data: AddMemberData) => Promise<void>;
     acceptInvitation: (token: string) => Promise<void>;
     deleteMember: (idGroup: string, idUser: string) => Promise<void>;
+    getAdminRole: (idGroup: string, userId: string) => Promise<void>;
+    leaveGroup: (idGroup: string) => Promise<void>;
 }
 
 export const GroupContext = createContext<GroupContextType | undefined>(undefined);
@@ -28,6 +30,10 @@ export const GroupProvider = ({ children }: { children: React.ReactNode }) => {
         createLoading: false,
         invitationLoading: false,
     });
+
+    useEffect(() => {
+        getMyGroups();
+    }, []);
 
     async function getMyGroups() {
         setLoading(prev => ({ ...prev, fetchLoading: true }));
@@ -112,9 +118,27 @@ export const GroupProvider = ({ children }: { children: React.ReactNode }) => {
         }
     }
 
+    async function leaveGroup(idGroup: string) {
+        try {
+            await leaveGroupService(idGroup);
+            await getMyGroups();
+        } catch (error) {
+            console.error("Error al abandonar el grupo:", error);
+            throw error;
+        }
+    }
+
+    async function getAdminRole(idGroup: string, userId: string) {
+        try {
+            await getAdminRoleService(idGroup, userId);    
+        } catch (error) {
+            console.error("Error al obtener el rol de administrador:", error);
+            throw error;
+        }
+    }
 
     return (
-        <GroupContext.Provider value={{ groups, getMyGroups, loading, createGroup, groupById, getGroupById, members, getMembersByGroup, inviteMember, acceptInvitation, deleteMember }}>
+        <GroupContext.Provider value={{ groups, getMyGroups, loading, createGroup, groupById, getGroupById, members, getMembersByGroup, inviteMember, acceptInvitation, deleteMember, getAdminRole, leaveGroup }}>
             {children}
         </GroupContext.Provider>
     )

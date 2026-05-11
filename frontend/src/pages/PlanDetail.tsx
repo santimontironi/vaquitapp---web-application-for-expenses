@@ -1,17 +1,23 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import usePlan from "../hooks/usePlan"
+import useExpense from "../hooks/useExpense"
 import Loader from "../components/ui/Loader"
 import { formatJoinedDate } from "../utils/date"
+import CreateExpense from "../components/expenses/CreateExpense"
+import ExpenseCard from "../components/expenses/ExpenseCard"
 
 const PlanDetail = () => {
     const { idGroup, idPlan } = useParams<{ idGroup: string; idPlan: string }>()
     const { getPlanById, planById, loading } = usePlan()
+    const { getExpenses, expenses, completeExpense, loading: expenseLoading } = useExpense()
     const navigate = useNavigate()
+    const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false)
 
     useEffect(() => {
         if (idGroup && idPlan) {
             getPlanById(idGroup, idPlan)
+            getExpenses(idGroup, idPlan)
         }
     }, [idGroup, idPlan])
 
@@ -32,6 +38,7 @@ const PlanDetail = () => {
     }
 
     return (
+        <>
         <div className="min-h-screen bg-[#0A1020] text-white">
 
             <div className="relative border-b border-white/6 bg-[#0A1020]/90 backdrop-blur-xl px-4 py-4 flex items-center gap-4">
@@ -42,10 +49,6 @@ const PlanDetail = () => {
                     <i className="bi bi-arrow-left" />
                 </button>
                 <h1 className="text-white font-semibold truncate">{planById.name}</h1>
-                <span className="ml-auto flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-xs shrink-0 bg-[#10B981]/10 border-[#10B981]/25 text-[#10B981]">
-                    <i className="bi bi-play-circle" style={{ fontSize: "11px" }} />
-                    Activo
-                </span>
             </div>
 
             <div className="max-w-5xl mx-auto px-4 py-8 flex flex-col gap-6">
@@ -66,11 +69,11 @@ const PlanDetail = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                    <div className="p-px rounded-2xl bg-linear-to-br from-[#10B981]/20 via-white/4 to-[#3B82F6]/15">
-                        <div className="rounded-[15px] bg-[#0A1020]/85 backdrop-blur-2xl p-6 flex flex-col gap-5 h-full">
+                    <div className="p-px rounded-2xl bg-linear-to-br from-[#10B981]/20 via-white/4 to-[#3B82F6]/15 xl:h-50 2xl:h-55 h-40">
+                        <div className="rounded-[15px] bg-[#0A1020]/85 backdrop-blur-2xl p-5 flex flex-col gap-4 h-full">
 
                             <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 rounded-xl bg-[#10B981]/10 border border-[#10B981]/20 flex items-center justify-center">
+                                <div className="w-8 h-8 rounded-xl bg-[#10B981]/10 border border-[#10B981]/20 flex items-center justify-center shrink-0">
                                     <i className="bi bi-info-circle text-[#10B981]" />
                                 </div>
                                 <h2 className="text-white font-semibold">Detalles</h2>
@@ -79,17 +82,26 @@ const PlanDetail = () => {
                             <div className="w-full h-px bg-linear-to-r from-transparent via-white/8 to-transparent" />
 
                             {planById.description && (
-                                <p className="text-white/55 leading-relaxed">{planById.description}</p>
+                                <div className="flex gap-3">
+                                    <div className="w-0.5 rounded-full bg-[#10B981]/40 shrink-0" />
+                                    <p className="text-white/55 leading-relaxed">{planById.description}</p>
+                                </div>
                             )}
 
-                            <div className="grid grid-cols-2 gap-4 mt-auto">
-                                <div className="flex flex-col gap-1">
-                                    <span className="text-white/30 text-xs">Creado por</span>
-                                    <span className="text-white/70 text-sm font-medium">{planById.created_by.username}</span>
+                            <div className="flex items-center gap-3 mt-auto">
+                                <div className="flex items-center gap-2 flex-1 min-w-0 px-3 py-2.5 rounded-xl bg-white/4 border border-white/8">
+                                    <i className="bi bi-person text-white/30 shrink-0" />
+                                    <div className="flex flex-col min-w-0">
+                                        <span className="text-white/30 leading-none mb-0.5" style={{ fontSize: "10px" }}>Creado por</span>
+                                        <span className="text-white/70 font-medium truncate">{planById.created_by.username}</span>
+                                    </div>
                                 </div>
-                                <div className="flex flex-col gap-1">
-                                    <span className="text-white/30 text-xs">Fecha de creación</span>
-                                    <span className="text-white/70 text-sm">{formatJoinedDate(planById.created_at)}</span>
+                                <div className="flex items-center gap-2 flex-1 min-w-0 px-3 py-2.5 rounded-xl bg-white/4 border border-white/8">
+                                    <i className="bi bi-calendar3 text-white/30 shrink-0" />
+                                    <div className="flex flex-col min-w-0">
+                                        <span className="text-white/30 leading-none mb-0.5" style={{ fontSize: "10px" }}>Creación</span>
+                                        <span className="text-white/70 truncate">{formatJoinedDate(planById.created_at)}</span>
+                                    </div>
                                 </div>
                             </div>
 
@@ -144,6 +156,7 @@ const PlanDetail = () => {
                                     <h2 className="text-white font-semibold">Gastos</h2>
                                 </div>
                                 <button
+                                    onClick={() => setIsExpenseModalOpen(true)}
                                     className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#10B981]/10 border border-[#10B981]/25 text-[#10B981] text-xs font-medium
                                                hover:-translate-y-0.5 hover:bg-[#10B981]/18 hover:border-[#10B981]/45 hover:shadow-[0_4px_16px_rgba(16,185,129,0.25)]
                                                active:translate-y-0 active:scale-[0.97]
@@ -157,12 +170,28 @@ const PlanDetail = () => {
 
                             <div className="w-full h-px bg-linear-to-r from-transparent via-white/8 to-transparent" />
 
-                            <div className="flex flex-col items-center justify-center gap-3 py-6 text-center">
-                                <div className="w-12 h-12 rounded-2xl bg-[#3B82F6]/10 border border-[#3B82F6]/20 flex items-center justify-center">
-                                    <i className="bi bi-receipt text-[#3B82F6]" />
+                            {expenseLoading.fetchLoading ? (
+                                <div className="flex justify-center py-6">
+                                    <Loader />
                                 </div>
-                                <p className="text-white/30 text-sm max-w-xs">Los gastos de este plan aparecerán aquí.</p>
-                            </div>
+                            ) : expenses.length > 0 ? (
+                                <div className="flex flex-col gap-3">
+                                    {expenses.map(expense => (
+                                        <ExpenseCard
+                                            key={expense._id}
+                                            expense={expense}
+                                            onDelete={() => completeExpense(idGroup!, idPlan!, expense._id)}
+                                        />
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="flex flex-col items-center justify-center gap-3 py-6 text-center">
+                                    <div className="w-12 h-12 rounded-2xl bg-[#3B82F6]/10 border border-[#3B82F6]/20 flex items-center justify-center">
+                                        <i className="bi bi-receipt text-[#3B82F6]" />
+                                    </div>
+                                    <p className="text-white/30 text-sm max-w-xs">Los gastos de este plan aparecerán aquí.</p>
+                                </div>
+                            )}
 
                         </div>
                     </div>
@@ -170,6 +199,16 @@ const PlanDetail = () => {
                 </div>
             </div>
         </div>
+
+        {isExpenseModalOpen && (
+            <CreateExpense
+                idGroup={idGroup!}
+                idPlan={idPlan!}
+                members={planById.members}
+                onClose={() => setIsExpenseModalOpen(false)}
+            />
+        )}
+        </>
     )
 }
 

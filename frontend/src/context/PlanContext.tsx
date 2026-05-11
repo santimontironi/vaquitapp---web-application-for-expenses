@@ -1,15 +1,17 @@
 import { createContext, useState } from "react";
 import type { Plans, LoadingPlans } from "../types/plans.types";
-import { createPlanService, getAllPlansService, checkPlanAsCompletedService, getPlanService } from "../services/plans.service";
+import { createPlanService, getAllPlansService, checkPlanAsCompletedService, getPlanService, getPlanHistoryService } from "../services/plans.service";
 
 interface PlanContextType {
     plans: Plans[];
-    planById: Plans | null
+    planById: Plans | null;
+    planHistory: Plans[];
     createPlan: (data: FormData, idGroup: string) => Promise<void>;
     checkPlanAsCompleted: (idGroup: string, idPlan: string) => Promise<void>;
     loading: LoadingPlans;
     getPlans: (idGroup: string) => Promise<void>;
-    getPlanById: (idGroup: string, idPlan: string) => Promise<void>
+    getPlanById: (idGroup: string, idPlan: string) => Promise<void>;
+    getPlanHistory: (idGroup: string) => Promise<void>;
 }
 
 export const PlanContext = createContext<PlanContextType | undefined>(undefined);
@@ -17,8 +19,8 @@ export const PlanContext = createContext<PlanContextType | undefined>(undefined)
 export const PlanProvider = ({children}: {children: React.ReactNode}) => {
 
     const [plans, setPlans] = useState<Plans[]>([]);
-
-    const [planById, setPlanById] = useState<Plans | null>(null)
+    const [planById, setPlanById] = useState<Plans | null>(null);
+    const [planHistory, setPlanHistory] = useState<Plans[]>([]);
 
     const [loading, setLoading] = useState<LoadingPlans>({
         fetchLoading: false,
@@ -67,6 +69,16 @@ export const PlanProvider = ({children}: {children: React.ReactNode}) => {
         }
     }
 
+    async function getPlanHistory(idGroup: string) {
+        try {
+            const response = await getPlanHistoryService(idGroup);
+            setPlanHistory(response.data.plans);
+        } catch (error) {
+            console.error("Error al obtener el historial de planes:", error);
+            throw error;
+        }
+    }
+
     async function checkPlanAsCompleted(idGroup: string, idPlan: string) {
         try {
             await checkPlanAsCompletedService(idGroup, idPlan);
@@ -78,7 +90,7 @@ export const PlanProvider = ({children}: {children: React.ReactNode}) => {
     }
 
     return (
-        <PlanContext.Provider value={{plans, createPlan, getPlans, loading, checkPlanAsCompleted, getPlanById, planById  }}>
+        <PlanContext.Provider value={{ plans, planById, planHistory, createPlan, getPlans, getPlanById, getPlanHistory, loading, checkPlanAsCompleted }}>
             {children}
         </PlanContext.Provider>
     )

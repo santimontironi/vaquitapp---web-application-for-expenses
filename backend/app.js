@@ -4,6 +4,7 @@ import cors from "cors";
 import {router as authRouter} from "./routes/auth.routes.js";
 import {router as groupRouter} from "./routes/group.routes.js";
 import {router as planRouter} from "./routes/plan.routes.js";
+import {router as expenseRouter} from "./routes/expense.routes.js";
 import cookieParser from "cookie-parser";
 
 dotenv.config();
@@ -21,5 +22,6 @@ app.use(cors({
 app.use("", authRouter);
 app.use("", groupRouter);
 app.use("", planRouter);
+app.use("", expenseRouter);
 
 export default app;

@@ -16,3 +16,7 @@ export const checkPlanAsCompletedService = (idGroup: string, idPlan: string) => 
 export const getPlanService = (idGroup:string, idPlan: string) => {
     return api.get<GetPlanByIdResponse>(`/${idGroup}/plans/${idPlan}`)
 }
+
+export const getPlanHistoryService = (idGroup: string) => {
+    return api.get<GetPlansResponse>(`/${idGroup}/plans/history`);
+}

@@ -62,7 +62,11 @@ class GroupRepository {
     async deleteMemberFromGroup(groupId, userId) {
         return await GroupMember.findOneAndDelete({ group: groupId, user: userId });
     }
+
+    async leaveGroup(groupId, userId) {
+        return await GroupMember.findOneAndDelete({ group: groupId, user: userId });
+    }
 }
 
-const groupRepository = new GroupRepository();
+const groupRepository = new GroupRepository();  
 export default groupRepository;

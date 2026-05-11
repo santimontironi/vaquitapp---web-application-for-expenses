@@ -262,6 +262,25 @@ class GroupController {
             res.status(500).json({ message: error.message });
         }
     }
+
+    async leaveGroup(req, res) {
+        try{
+            const { idGroup } = req.params;
+
+            const user = req.user;
+
+            const leftGroup = await groupRepository.leaveGroup(idGroup, user._id);
+
+            if(!leftGroup) {
+                return res.status(404).json({ message: 'No se encontró el grupo o el usuario no es miembro' });
+            }
+
+            res.status(200).json({ message: 'Saliste del grupo exitosamente' });
+        }
+        catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    }
 }
 
 const groupController = new GroupController();

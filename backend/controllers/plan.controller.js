@@ -20,6 +20,16 @@ class PlanController {
         }
     }
 
+    async getPlanHistory(req, res) {
+        try {
+            const { idGroup } = req.params;
+            const plans = await planRepository.getPlanHistory(idGroup);
+            res.status(200).json({ message: 'Historial de planes obtenido exitosamente', plans });
+        } catch (error) {
+            res.status(500).json({ message: 'Error obteniendo historial de planes', error: error.message });
+        }
+    }
+
     async createPlan(req, res) {
         try{
             const { name, description, members } = req.body;

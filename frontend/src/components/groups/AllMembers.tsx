@@ -5,11 +5,36 @@ import MemberItem from "./MemberItem"
 import Swal from "sweetalert2"
 
 const AllMembers = ({ idGroup }: AllMembersProps) => {
-  const { members, getMembersByGroup, deleteMember } = useGroup()
+  const { members, getMembersByGroup, deleteMember, groups, getAdminRole } = useGroup()
+
+  const isAdmin = groups?.find(g => g.group._id === idGroup)?.role === "admin"
 
   useEffect(() => {
     getMembersByGroup(idGroup)
   }, [idGroup])
+
+  const handleGrantAdmin = async (idUser: string) => {
+    try {
+      const result = await Swal.fire({
+        title: "¿Dar rol de admin?",
+        text: "Este miembro pasará a ser administrador del grupo.",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#10B981",
+        cancelButtonColor: "#6B7280",
+        confirmButtonText: "Sí, dar admin",
+        cancelButtonText: "Cancelar",
+      })
+      if (result.isConfirmed) {
+        await getAdminRole(idGroup, idUser)
+        await getMembersByGroup(idGroup)
+      }
+    } catch (error: any) {
+      if(error.response?.data?.message) {
+        console.log(error.response.data.message)
+      }
+    }
+  }
 
   const handleDeleteMember = async (idUser: string) => {
     try {
@@ -58,7 +83,7 @@ const AllMembers = ({ idGroup }: AllMembersProps) => {
           {members && members.length > 0 ? (
             <div className="flex flex-col gap-2">
               {members.map((member) => (
-                <MemberItem key={member._id} member={member} onDeleteMember={() => handleDeleteMember(member.user._id)} />
+                <MemberItem isAdmin={isAdmin} key={member._id} member={member} onDeleteMember={() => handleDeleteMember(member.user._id)} onGrantAdmin={() => handleGrantAdmin(member.user._id)} />
               ))}
             </div>
           ) : (

@@ -32,6 +32,13 @@ class PlanRepository {
         return plans;
     }
 
+    async getPlanHistory(groupId) {
+        return await Plan.find({ group: groupId, state: { $in: ['completed', 'cancelled'] } })
+            .populate('created_by', 'username')
+            .populate('members', 'username')
+            .sort({ updatedAt: -1 });
+    }
+
     async checkPlanAsCompleted(planId) {
         const plan = await Plan.findOneAndUpdate({ _id: planId, state: 'active' }, { state: 'completed' }, { new: true });
         return plan;

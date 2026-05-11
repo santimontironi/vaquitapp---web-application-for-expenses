@@ -8,11 +8,12 @@ import { validateObjectId } from "../middlewares/validate-object-id.js";
 export const router = Router();
 
 // Grupos
+router.post('/groups', verifyToken, upload.single('image'), groupController.createGroup);
 router.get('/groups', verifyToken, groupController.getAllGroupsByUser);
 router.get('/groups/:idGroup', verifyToken, validateObjectId('idGroup'), verifyRole, groupController.getGroupById);
 router.patch('/groups/:idGroup', verifyToken, validateObjectId('idGroup'), verifyRole, upload.single('image'), groupController.editGroup);
 router.delete('/groups/:idGroup', verifyToken, validateObjectId('idGroup'), verifyRole, groupController.deleteGroup);
-router.post('/groups', verifyToken, upload.single('image'), groupController.createGroup);
+router.delete('/groups/:idGroup/leave', verifyToken, validateObjectId('idGroup'), verifyRole, groupController.leaveGroup);
 
 // Miembros
 router.get('/groups/:idGroup/members', verifyToken, validateObjectId('idGroup'), verifyRole, groupController.getGroupMembers);

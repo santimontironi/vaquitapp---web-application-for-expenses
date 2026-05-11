@@ -51,3 +51,8 @@ export interface AllPlansProps {
 export interface CreatePlanProps {
     idGroup: string;
 }
+
+export interface PlanHistoryModalProps {
+    idGroup: string;
+    onClose: () => void;
+}

@@ -8,6 +8,7 @@ import { validateObjectId } from "../middlewares/validate-object-id.js";
 export const router = Router();
 
 router.get('/:idGroup/plans', verifyToken, validateObjectId('idGroup'), verifyRole, planController.getAllPlansByGroup);
+router.get('/:idGroup/plans/history', verifyToken, validateObjectId('idGroup'), verifyRole, planController.getPlanHistory);
 router.get('/:idGroup/plans/:idPlan', verifyToken, validateObjectId('idGroup', 'idPlan'), verifyRole, planController.getPlanByIdAndGroup);
 router.post('/:idGroup/plans', verifyToken, validateObjectId('idGroup'), verifyRole, upload.single('image'), planController.createPlan);
 router.patch('/:idGroup/plans/:idPlan/complete', verifyToken, validateObjectId('idGroup', 'idPlan'), verifyRole, planController.checkPlanAsCompleted);

@@ -24,7 +24,12 @@ const expenseSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User'
         }
-    ]
+    ],
+    state: {
+        type: String,
+        enum: ['active', 'completed'],
+        default: 'active'
+    }
 }, {
     timestamps: true
 });
