@@ -181,7 +181,7 @@ VaquitApp/
 
 ## Modelos de datos
 
-> Ver diagrama ERD en Excalidraw: https://excalidraw.com/#json=GB2u9-cVO38I6sMG-OJ14,ro9xQoW4ZtJdoO9Glr0FqQ
+> Ver diagrama ERD en Excalidraw: https://excalidraw.com/#json=vc5fWIwlJfAf7iPN9qJFk,e5022-Z9FdQ8V72jHIoBAQ
 
 ### User (Usuario)
 
@@ -516,7 +516,7 @@ Vite inicia el servidor de desarrollo, generalmente en `http://localhost:5173`.
 
 ## Lógica de cálculo de gastos
 
-> Ver diagrama en Excalidraw: https://excalidraw.com/#json=URqLR5kXBbuJ9yStkF76q,-cKpUvem2BcRXDJ8-rv2rw
+> Ver diagrama en Excalidraw: https://excalidraw.com/#json=svEqfM0Xw3O7Tn6S2HYhu,vluJKqZjsbLDmekYWVkGRg
 
 El algoritmo de balances se ejecuta en el servidor en `expense.controller.js → getBalances` cuando el cliente solicita `GET .../expenses/balances`. Funciona en tres etapas:
 
