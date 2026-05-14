@@ -25,6 +25,7 @@ export interface LoadingGroups {
     fetchLoading: boolean;
     createLoading: boolean;
     invitationLoading: boolean;
+    editLoading: boolean;
 }
 
 export interface CreateGroupData {
@@ -89,4 +90,19 @@ export interface MemberItemProps {
 
 export interface AllMembersProps {
     idGroup: string;
+}
+
+export interface EditGroupData {
+    name: string;
+    description: string;
+    image?: FileList;
+}
+
+export interface EditGroupResponse {
+    groupEdited: Group;
+}
+
+export interface EditGroupModalProps {
+    group: Group;
+    onClose: () => void;
 }

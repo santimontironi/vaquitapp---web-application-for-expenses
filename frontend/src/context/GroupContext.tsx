@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from "react";
-import type { GroupMember, LoadingGroups, Group, Members, AddMemberData } from "../types/groups.types";
-import { getUserGroupsService, createGroupService, getGroupDetailsService, getGroupMembersService, inviteMemberService, acceptInvitationService, deleteMemberService, getAdminRoleService, leaveGroupService } from "../services/groups.service";
+import type { GroupMember, LoadingGroups, Group, Members, AddMemberData, EditGroupData } from "../types/groups.types";
+import { getUserGroupsService, createGroupService, getGroupDetailsService, getGroupMembersService, inviteMemberService, acceptInvitationService, deleteMemberService, getAdminRoleService, leaveGroupService, editGroupService } from "../services/groups.service";
 
 export interface GroupContextType {
     groups: GroupMember[] | null;
@@ -9,6 +9,7 @@ export interface GroupContextType {
     getMyGroups: () => Promise<void>;
     loading: LoadingGroups;
     createGroup: (data: FormData) => Promise<void>;
+    editGroup: (idGroup: string, data: EditGroupData) => Promise<void>;
     getGroupById: (idGroup: string) => Promise<void>;
     getMembersByGroup: (idGroup: string) => Promise<void>;
     inviteMember: (idGroup: string, data: AddMemberData) => Promise<void>;
@@ -29,6 +30,7 @@ export const GroupProvider = ({ children }: { children: React.ReactNode }) => {
         fetchLoading: false,
         createLoading: false,
         invitationLoading: false,
+        editLoading: false,
     });
 
     useEffect(() => {
@@ -60,6 +62,25 @@ export const GroupProvider = ({ children }: { children: React.ReactNode }) => {
         }
         finally {
             setLoading(prev => ({ ...prev, createLoading: false }));
+        }
+    }
+
+    async function editGroup(idGroup: string, data: EditGroupData) {
+        setLoading(prev => ({ ...prev, editLoading: true }));
+        try {
+            const formData = new FormData();
+            formData.append('name', data.name);
+            formData.append('description', data.description);
+            if (data.image && data.image.length > 0) {
+                formData.append('image', data.image[0]);
+            }
+            await editGroupService(idGroup, formData);
+            await getMyGroups();
+        } catch (error) {
+            console.error("Error al editar el grupo:", error);
+            throw error;
+        } finally {
+            setLoading(prev => ({ ...prev, editLoading: false }));
         }
     }
 
@@ -138,7 +159,7 @@ export const GroupProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     return (
-        <GroupContext.Provider value={{ groups, getMyGroups, loading, createGroup, groupById, getGroupById, members, getMembersByGroup, inviteMember, acceptInvitation, deleteMember, getAdminRole, leaveGroup }}>
+        <GroupContext.Provider value={{ groups, getMyGroups, loading, createGroup, editGroup, groupById, getGroupById, members, getMembersByGroup, inviteMember, acceptInvitation, deleteMember, getAdminRole, leaveGroup }}>
             {children}
         </GroupContext.Provider>
     )

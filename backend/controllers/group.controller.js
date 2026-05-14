@@ -175,26 +175,24 @@ class GroupController {
         try {
             const { idGroup } = req.params;
             const { name, description } = req.body;
-
-            if(!name || !description) {
-                return res.status(400).json({ message: 'Nombre y descripción son requeridos' });
-            }
-
             const member = req.member;
 
             if(member.role !== 'admin') {
                 return res.status(403).json({ message: 'Solo los administradores pueden editar el grupo' });
             }
 
-            let imageUrl = null;
+            const updates = {};
+            if (name) updates.name = name;
+            if (description) updates.description = description;
 
             if(req.file){
-                const b64 = Buffer.from(req.file.buffer).toString('base64')
-                const dataURI = `data:${req.file.mimetype};base64,${b64}`
-                imageUrl = dataURI;
+                const b64 = Buffer.from(req.file.buffer).toString('base64');
+                const dataURI = `data:${req.file.mimetype};base64,${b64}`;
+                const uploadResult = await cloudinaryConfig.uploader.upload(dataURI, { folder: 'vaquitapp/groups' });
+                updates.image = uploadResult.secure_url;
             }
 
-            const updatedGroup = await groupRepository.editGroup(idGroup, imageUrl, name, description);
+            const updatedGroup = await groupRepository.editGroup(idGroup, updates);
 
             res.status(200).json({ message: 'Grupo actualizado exitosamente', updatedGroup });
         } catch (error) {

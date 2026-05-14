@@ -54,10 +54,10 @@ const AllPlans = ({ idGroup }: AllPlansProps) => {
               )}
               <button
                 onClick={() => setIsHistoryOpen(true)}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-white/50 text-xs font-medium hover:-translate-y-0.5 hover:bg-white/8 hover:border-white/20 hover:text-white/70 active:translate-y-0 active:scale-[0.97] transition-all duration-200 cursor-pointer"
+                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#10B981]/15 border border-[#10B981]/35 text-[#10B981] text-sm font-medium hover:-translate-y-0.5 hover:bg-[#10B981]/25 hover:border-[#10B981]/55 hover:shadow-[0_4px_16px_rgba(16,185,129,0.20)] active:translate-y-0 active:scale-[0.97] transition-all duration-200 cursor-pointer"
               >
                 <i className="bi bi-clock-history" />
-                <span className="hidden sm:inline">Historial</span>
+                <span>Historial</span>
               </button>
             </div>
           </div>

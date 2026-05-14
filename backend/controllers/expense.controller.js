@@ -134,6 +134,7 @@ class ExpenseController {
                 }
             }
 
+
             // separar usuarios en acreedores (balance > 0) y deudores (balance < 0)
             // los que quedaron en 0 ya están saldados, no se incluyen
             const creditors = [];
@@ -158,6 +159,7 @@ class ExpenseController {
                 const creditor = creditors[0]; // quien más le deben
                 const debtor = debtors[0];     // quien más debe
 
+                //Math.round se usa para evitar errores de punto flotante, redondeando a 2 decimales. Math.min se usa para no transferir más de lo que el deudor debe o el acreedor tiene para recibir. El resultado se redondea a 2 decimales para evitar problemas de precisión. Math.abs se usa para convertir el balance del deudor a positivo, ya que su balance es negativo (lo que debe). Esto asegura que no se intente transferir una cantidad negativa.
                 const amount = Math.round(Math.min(creditor.balance, Math.abs(debtor.balance)) * 100) / 100;
 
                 transactions.push({

@@ -1,5 +1,5 @@
 import { api } from "./auth.service";
-import type { CreateGroupResponse, GroupMemberResponse, GroupDetailsResponse, MembersResponse, AddMemberData } from "../types/groups.types";
+import type { CreateGroupResponse, GroupMemberResponse, GroupDetailsResponse, MembersResponse, AddMemberData, EditGroupResponse } from "../types/groups.types";
 
 export const getUserGroupsService = () => {
     return api.get<GroupMemberResponse>(`/groups`);
@@ -37,4 +37,10 @@ export const getAdminRoleService = (idGroup: string, userId: string) => {
 
 export const leaveGroupService = (idGroup: string) => {
     return api.delete(`/groups/${idGroup}/leave`);
+}
+
+export const editGroupService = (idGroup: string, data: FormData) => {
+    return api.patch<EditGroupResponse>(`/groups/${idGroup}`, data, {
+        headers: { "Content-Type": "multipart/form-data" },
+    });
 }

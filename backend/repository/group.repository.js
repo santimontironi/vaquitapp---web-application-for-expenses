@@ -36,10 +36,10 @@ class GroupRepository {
         return newMember;
     }
 
-    async editGroup(groupId, photo, name, description) {
+    async editGroup(groupId, updates) {
         const updatedGroup = await Group.findOneAndUpdate(
             { _id: groupId, active: true },
-            { image: photo, name, description },
+            { $set: updates },
             { new: true }
         );
         return updatedGroup;
