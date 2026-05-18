@@ -33,6 +33,18 @@ export interface LoadingExpenses {
     createLoading: boolean;
     fetchLoading: boolean;
     deleteLoading: boolean;
+    balancesLoading: boolean;
+}
+
+export interface Transaction {
+    from: { _id: string; username: string };
+    to: { _id: string; username: string };
+    amount: number;
+}
+
+export interface GetBalancesResponse {
+    message: string;
+    transactions: Transaction[];
 }
 
 export interface CreateExpenseModalProps {

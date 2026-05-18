@@ -10,7 +10,7 @@ import ExpenseCard from "../components/expenses/ExpenseCard"
 const PlanDetail = () => {
     const { idGroup, idPlan } = useParams<{ idGroup: string; idPlan: string }>()
     const { getPlanById, planById, loading } = usePlan()
-    const { getExpenses, expenses, completeExpense, loading: expenseLoading } = useExpense()
+    const { getExpenses, expenses, completeExpense, getBalanceData, balances, loading: expenseLoading } = useExpense()
     const navigate = useNavigate()
     const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false)
 
@@ -18,6 +18,7 @@ const PlanDetail = () => {
         if (idGroup && idPlan) {
             getPlanById(idGroup, idPlan)
             getExpenses(idGroup, idPlan)
+            getBalanceData(idGroup, idPlan)
         }
     }, [idGroup, idPlan])
 
@@ -123,6 +124,8 @@ const PlanDetail = () => {
                                 </span>
                             </div>
 
+
+                            
                             <div className="w-full h-px bg-linear-to-r from-transparent via-white/8 to-transparent" />
 
                             {planById.members.length > 0 ? (
@@ -195,6 +198,56 @@ const PlanDetail = () => {
 
                         </div>
                     </div>
+                        
+                    {expenses.length > 0 && <div className="md:col-span-2 p-px rounded-2xl bg-linear-to-br from-[#F59E0B]/15 via-white/4 to-[#10B981]/10">
+                        <div className="rounded-[15px] bg-[#0A1020]/85 backdrop-blur-2xl p-6 flex flex-col gap-5">
+
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-xl bg-[#F59E0B]/10 border border-[#F59E0B]/20 flex items-center justify-center">
+                                    <i className="bi bi-arrow-left-right text-[#F59E0B]" />
+                                </div>
+                                <h2 className="text-white font-semibold">Balances</h2>
+                            </div>
+
+                            <div className="w-full h-px bg-linear-to-r from-transparent via-white/8 to-transparent" />
+
+                            {expenseLoading.balancesLoading ? (
+                                <div className="flex justify-center py-6">
+                                    <Loader />
+                                </div>
+                            ) : balances.length > 0 ? (
+                                <div className="flex flex-col gap-3">
+                                    {balances.map((tx, i) => (
+                                        <div key={i} className="flex items-center gap-3 p-4 rounded-xl bg-white/3 border border-white/6">
+                                            <div className="w-9 h-9 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center shrink-0">
+                                                <span className="text-red-400 font-semibold text-xs">
+                                                    {tx.from.username.slice(0, 2).toUpperCase()}
+                                                </span>
+                                            </div>
+                                            <div className="flex flex-col flex-1 min-w-0">
+                                                <span className="text-white/80 text-sm font-medium truncate">
+                                                    <span className="text-red-400">{tx.from.username}</span>
+                                                    <span className="text-white/40 mx-1">le debe a</span>
+                                                    <span className="text-[#10B981]">{tx.to.username}</span>
+                                                </span>
+                                            </div>
+                                            <span className="text-[#F59E0B] font-semibold text-sm shrink-0">
+                                                ${tx.amount.toFixed(2)}
+                                            </span>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="flex flex-col items-center justify-center gap-3 py-6 text-center">
+                                    <div className="w-12 h-12 rounded-2xl bg-[#10B981]/10 border border-[#10B981]/20 flex items-center justify-center">
+                                        <i className="bi bi-check2-circle text-[#10B981] text-xl" />
+                                    </div>
+                                    <p className="text-white/30 text-sm max-w-xs">Todos están al día. No hay deudas pendientes.</p>
+                                </div>
+                            )}
+
+                        </div>
+                    </div>}
 
                 </div>
             </div>
