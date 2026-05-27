@@ -64,6 +64,10 @@ class ExpenseController {
 
             const expenses = await expenseRepository.getExpensesByPlan(idPlan);
 
+            if (expenses.length === 0) {
+                return res.status(200).json({ message: 'No hay gastos activos en este plan', expenses: [] });
+            }
+
             res.status(200).json({ message: 'Gastos obtenidos exitosamente', expenses });
         } catch (error) {
             res.status(500).json({ message: 'Error obteniendo gastos', error: error.message });
@@ -134,7 +138,6 @@ class ExpenseController {
                 }
             }
 
-
             // separar usuarios en acreedores (balance > 0) y deudores (balance < 0)
             // los que quedaron en 0 ya están saldados, no se incluyen
             const creditors = [];
@@ -183,7 +186,7 @@ class ExpenseController {
         }
     }
 
-    async completeExpense(req, res) {
+    async deleteExpense(req, res) {
         try {
             const { idPlan, idExpense } = req.params;
 
@@ -194,11 +197,7 @@ class ExpenseController {
             }
 
             if (expense.plan.toString() !== idPlan) {
-                return res.status(404).json({ message: 'El gasto no pertenece a este plan' });
-            }
-
-            if (expense.state === 'completed') {
-                return res.status(400).json({ message: 'El gasto ya fue completado' });
+                return res.status(400).json({ message: 'El gasto no pertenece a este plan' });
             }
 
             const isPaidBy = expense.paid_by.toString() === req.user.id;
@@ -208,13 +207,32 @@ class ExpenseController {
                 return res.status(403).json({ message: 'No tenés permiso para eliminar este gasto' });
             }
 
-            await expenseRepository.completeExpense(idExpense);
+            await expenseRepository.deleteExpense(idExpense);
 
             res.status(200).json({ message: 'Gasto eliminado exitosamente' });
         } catch (error) {
             res.status(500).json({ message: 'Error eliminando gasto', error: error.message });
         }
     }
+
+    async completeAllExpenses(req, res) {
+        try {
+            const { idGroup, idPlan } = req.params;
+
+            const plan = await planRepository.getPlanByIdAndGroup(idPlan, idGroup);
+
+            if (!plan) {
+                return res.status(404).json({ message: 'Plan no encontrado o no pertenece a este grupo' });
+            }
+
+            await expenseRepository.completeAllExpenses(idPlan);
+
+            res.status(200).json({ message: 'Todos los gastos fueron saldados exitosamente' });
+        } catch (error) {
+            res.status(500).json({ message: 'Error saldando gastos', error: error.message });
+        }
+    }
+
 }
 
 const expenseController = new ExpenseController();

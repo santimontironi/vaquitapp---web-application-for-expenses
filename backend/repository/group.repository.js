@@ -63,6 +63,10 @@ class GroupRepository {
         return await GroupMember.findOneAndDelete({ group: groupId, user: userId });
     }
 
+    async countAdminsByGroup(groupId) {
+        return await GroupMember.countDocuments({ group: groupId, role: 'admin' });
+    }
+
     async leaveGroup(groupId, userId) {
         return await GroupMember.findOneAndDelete({ group: groupId, user: userId });
     }

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
+import Swal from "sweetalert2"
 import usePlan from "../hooks/usePlan"
 import useExpense from "../hooks/useExpense"
 import Loader from "../components/ui/Loader"
@@ -10,7 +11,7 @@ import ExpenseCard from "../components/expenses/ExpenseCard"
 const PlanDetail = () => {
     const { idGroup, idPlan } = useParams<{ idGroup: string; idPlan: string }>()
     const { getPlanById, planById, loading } = usePlan()
-    const { getExpenses, expenses, completeExpense, getBalanceData, balances, loading: expenseLoading } = useExpense()
+    const { getExpenses, expenses, deleteExpense, completeAllExpenses, getBalanceData, balances, loading: expenseLoading, completedExpenses, getCompletedExpenses } = useExpense()
     const navigate = useNavigate()
     const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false)
 
@@ -19,6 +20,7 @@ const PlanDetail = () => {
             getPlanById(idGroup, idPlan)
             getExpenses(idGroup, idPlan)
             getBalanceData(idGroup, idPlan)
+            getCompletedExpenses(idGroup, idPlan)
         }
     }, [idGroup, idPlan])
 
@@ -183,7 +185,7 @@ const PlanDetail = () => {
                                         <ExpenseCard
                                             key={expense._id}
                                             expense={expense}
-                                            onDelete={() => completeExpense(idGroup!, idPlan!, expense._id)}
+                                            onDelete={() => deleteExpense(idGroup!, idPlan!, expense._id)}
                                         />
                                     ))}
                                 </div>
@@ -194,6 +196,39 @@ const PlanDetail = () => {
                                     </div>
                                     <p className="text-white/30 text-sm max-w-xs">Los gastos de este plan aparecerán aquí.</p>
                                 </div>
+                            )}
+
+                            {expenses.length > 0 && (
+                                <>
+                                    <div className="w-full h-px bg-linear-to-r from-transparent via-white/8 to-transparent" />
+                                    <button
+                                        onClick={async () => {
+                                            const result = await Swal.fire({
+                                                title: "¿Saldar todos los gastos?",
+                                                text: "Hacé esto cuando ya cobraste tu parte a todos. Los gastos activos del plan desaparecerán del balance.",
+                                                icon: "warning",
+                                                showCancelButton: true,
+                                                confirmButtonText: "Sí, saldar todo",
+                                                cancelButtonText: "Cancelar",
+                                                background: "#0d1526",
+                                                color: "#ffffff",
+                                                confirmButtonColor: "#10B981",
+                                                cancelButtonColor: "#1e2d45",
+                                            })
+                                            if (result.isConfirmed) {
+                                                completeAllExpenses(idGroup!, idPlan!)
+                                            }
+                                        }}
+                                        className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl
+                                                   bg-[#10B981]/10 border border-[#10B981]/25 text-[#10B981] font-medium
+                                                   hover:-translate-y-0.5 hover:bg-[#10B981]/18 hover:border-[#10B981]/45 hover:shadow-[0_4px_20px_rgba(16,185,129,0.25)]
+                                                   active:translate-y-0 active:scale-[0.98]
+                                                   transition-all duration-200 cursor-pointer"
+                                    >
+                                        <i className="bi bi-check2-all" />
+                                        <span>Saldar todos los gastos</span>
+                                    </button>
+                                </>
                             )}
 
                         </div>
@@ -248,6 +283,62 @@ const PlanDetail = () => {
 
                         </div>
                     </div>}
+
+                    {completedExpenses.length > 0 && (
+                        <div className="md:col-span-2 p-px rounded-2xl bg-linear-to-br from-white/5 via-white/3 to-white/5">
+                            <div className="rounded-[15px] bg-[#0A1020]/85 backdrop-blur-2xl p-6 flex flex-col gap-5">
+
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-8 h-8 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
+                                            <i className="bi bi-clock-history text-[#6B7280]" />
+                                        </div>
+                                        <h2 className="text-white font-semibold">Historial de gastos saldados</h2>
+                                    </div>
+                                    <span className="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-white/40 text-xs">
+                                        {completedExpenses.length}
+                                    </span>
+                                </div>
+
+                                <div className="w-full h-px bg-linear-to-r from-transparent via-white/8 to-transparent" />
+
+                                <div className="flex flex-col gap-2">
+                                    {completedExpenses.map((expense) => (
+                                        <div
+                                            key={expense._id}
+                                            className="flex items-center gap-3 p-3.5 rounded-xl bg-white/2 border border-white/4"
+                                        >
+                                            <div className="shrink-0 w-8 h-8 rounded-full bg-[#10B981]/8 border border-[#10B981]/15 flex items-center justify-center">
+                                                <i className="bi bi-check-circle-fill text-[#10B981]" />
+                                            </div>
+
+                                            <div className="flex flex-col flex-1 min-w-0 gap-0.5">
+                                                <span className="text-white/60 truncate">
+                                                    {expense.description
+                                                        ? expense.description
+                                                        : <span className="text-white/30 italic">Sin descripción</span>
+                                                    }
+                                                </span>
+                                                <span className="text-white/30" style={{ fontSize: "11px" }}>
+                                                    Pagó: <span className="text-white/45">{expense.paid_by.username}</span>
+                                                </span>
+                                            </div>
+
+                                            <div className="flex flex-col items-end shrink-0 gap-0.5">
+                                                <span className="text-white/50 font-medium">
+                                                    ${expense.amount.toFixed(2)}
+                                                </span>
+                                                <span className="text-white/25" style={{ fontSize: "10px" }}>
+                                                    {formatJoinedDate(expense.createdAt)}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+
+                            </div>
+                        </div>
+                    )}
 
                 </div>
             </div>

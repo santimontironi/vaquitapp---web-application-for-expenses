@@ -22,8 +22,12 @@ class ExpenseRepository {
         return await Expense.findById(expenseId);
     }
 
-    async completeExpense(expenseId) {
-        return await Expense.findByIdAndUpdate(expenseId, { state: 'completed' }, { new: true });
+    async completeAllExpenses(planId) {
+        return await Expense.updateMany({ plan: planId, state: 'active' }, { state: 'completed' });
+    }
+
+    async deleteExpense(expenseId) {
+        return await Expense.findByIdAndDelete(expenseId);
     }
 }
 

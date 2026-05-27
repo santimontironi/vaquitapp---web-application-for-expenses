@@ -8,7 +8,28 @@
       "mcp__excalidraw__save_checkpoint",
       "mcp__excalidraw__create_view",
       "mcp__excalidraw__read_checkpoint",
-      "Bash(Get-ChildItem *)"
+      "Bash(Get-ChildItem *)",
+      "Bash(Select-Object Name, Mode)",
+      "Bash(dir C:\\\\Users\\\\nn\\\\Desktop\\\\VaquitApp *)",
+      "Bash(dir \"C:\\\\Users\\\\nn\\\\Desktop\\\\VaquitApp\\\\backend\")",
+      "Bash(dir \"C:\\\\Users\\\\nn\\\\Desktop\\\\VaquitApp\\\\frontend\")",
+      "Bash(dir \"C:\\\\Users\\\\nn\\\\Desktop\\\\VaquitApp\\\\backend\\\\controllers\")",
+      "Bash(dir \"C:\\\\Users\\\\nn\\\\Desktop\\\\VaquitApp\\\\backend\\\\routes\")",
+      "Bash(dir \"C:\\\\Users\\\\nn\\\\Desktop\\\\VaquitApp\\\\backend\\\\models\")",
+      "Bash(dir \"C:\\\\Users\\\\nn\\\\Desktop\\\\VaquitApp\\\\backend\\\\middlewares\")",
+      "Bash(dir \"C:\\\\Users\\\\nn\\\\Desktop\\\\VaquitApp\\\\backend\\\\repository\")",
+      "Bash(dir \"C:\\\\Users\\\\nn\\\\Desktop\\\\VaquitApp\\\\frontend\\\\src\")",
+      "Bash(dir \"C:\\\\Users\\\\nn\\\\Desktop\\\\VaquitApp\\\\frontend\\\\src\\\\pages\")",
+      "Bash(dir \"C:\\\\Users\\\\nn\\\\Desktop\\\\VaquitApp\\\\frontend\\\\src\\\\components\")",
+      "Bash(dir \"C:\\\\Users\\\\nn\\\\Desktop\\\\VaquitApp\\\\frontend\\\\src\\\\context\")",
+      "Bash(dir \"C:\\\\Users\\\\nn\\\\Desktop\\\\VaquitApp\\\\frontend\\\\src\\\\components\\\\groups\")",
+      "Bash(dir \"C:\\\\Users\\\\nn\\\\Desktop\\\\VaquitApp\\\\frontend\\\\src\\\\components\\\\plans\")",
+      "Bash(dir \"C:\\\\Users\\\\nn\\\\Desktop\\\\VaquitApp\\\\frontend\\\\src\\\\components\\\\expenses\")",
+      "Bash(dir \"C:\\\\Users\\\\nn\\\\Desktop\\\\VaquitApp\\\\frontend\\\\src\\\\components\\\\layout\")",
+      "Bash(dir \"C:\\\\Users\\\\nn\\\\Desktop\\\\VaquitApp\\\\frontend\\\\src\\\\components\\\\ui\")",
+      "Bash(dir \"C:\\\\Users\\\\nn\\\\Desktop\\\\VaquitApp\\\\frontend\\\\src\\\\services\")",
+      "Bash(dir \"C:\\\\Users\\\\nn\\\\Desktop\\\\VaquitApp\\\\frontend\\\\src\\\\hooks\")",
+      "Bash(dir \"C:\\\\Users\\\\nn\\\\Desktop\\\\VaquitApp\\\\frontend\\\\src\\\\utils\")"
     ]
   }
 }

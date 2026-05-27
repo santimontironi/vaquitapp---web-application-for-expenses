@@ -267,7 +267,14 @@ class GroupController {
 
             const user = req.user;
 
-            const leftGroup = await groupRepository.leaveGroup(idGroup, user._id);
+            if (req.member.role === 'admin') {
+                const adminCount = await groupRepository.countAdminsByGroup(idGroup);
+                if (adminCount === 1) {
+                    return res.status(400).json({ message: 'Sos el único administrador. Promové otro miembro antes de salir.' });
+                }
+            }
+
+            const leftGroup = await groupRepository.leaveGroup(idGroup, user.id);
 
             if(!leftGroup) {
                 return res.status(404).json({ message: 'No se encontró el grupo o el usuario no es miembro' });

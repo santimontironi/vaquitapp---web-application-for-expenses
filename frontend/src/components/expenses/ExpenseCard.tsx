@@ -12,10 +12,10 @@ const ExpenseCard = ({ expense, onDelete }: ExpenseCardProps) => {
     const handleDelete = async () => {
         const result = await Swal.fire({
             title: "¿Eliminar gasto?",
-            text: expense.description ? `"${expense.description}"` : "Esta acción no se puede deshacer.",
+            text: "Usá esto si el gasto no ocurrió o fue un error. Se eliminará permanentemente.",
             icon: "warning",
             showCancelButton: true,
-            confirmButtonText: "Eliminar",
+            confirmButtonText: "Sí, eliminar",
             cancelButtonText: "Cancelar",
             background: "#0d1526",
             color: "#ffffff",
@@ -50,6 +50,7 @@ const ExpenseCard = ({ expense, onDelete }: ExpenseCardProps) => {
                 <span className="text-white/40 text-xs">Pagó: {expense.paid_by.username}</span>
                 <button
                     onClick={handleDelete}
+                    title="Eliminar gasto"
                     className="flex items-center justify-center w-7 h-7 rounded-lg bg-[#EF4444]/8 border border-[#EF4444]/20 text-[#EF4444]/60 hover:bg-[#EF4444]/15 hover:border-[#EF4444]/40 hover:text-[#EF4444] transition-all duration-200 cursor-pointer"
                 >
                     <i className="bi bi-trash3 text-xs" />

@@ -14,6 +14,9 @@ router.get('/groups/:idGroup/plans/:idPlan/expenses/all', verifyToken, validateO
 
 router.get('/groups/:idGroup/plans/:idPlan/expenses/balances', verifyToken, validateObjectId('idGroup', 'idPlan'), verifyRole, expenseController.getBalances);
 
-router.patch('/groups/:idGroup/plans/:idPlan/expenses/:idExpense/complete', verifyToken, validateObjectId('idGroup', 'idPlan', 'idExpense'), verifyRole, expenseController.completeExpense);
+router.patch('/groups/:idGroup/plans/:idPlan/expenses/complete-all', verifyToken, validateObjectId('idGroup', 'idPlan'), verifyRole, expenseController.completeAllExpenses);
+
+
+router.delete('/groups/:idGroup/plans/:idPlan/expenses/:idExpense', verifyToken, validateObjectId('idGroup', 'idPlan', 'idExpense'), verifyRole, expenseController.deleteExpense);
 
 

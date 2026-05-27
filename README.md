@@ -30,7 +30,7 @@ VaquitApp es una aplicación web para organizar gastos compartidos entre grupos 
 | Hash de contraseñas | bcryptjs | 3.x |
 | Subida de archivos | Multer (almacenamiento en memoria) | 2.x |
 | Hosting de imágenes | Cloudinary | 2.x |
-| Correo electrónico | Nodemailer | 8.x |
+| Correo electrónico | Nodemailer (Gmail SMTP) | 8.x |
 | Framework frontend | React + TypeScript | React 19, TS 5.9 |
 | Herramienta de build | Vite | 8.x |
 | Estilos | Tailwind CSS | 4.x |
@@ -91,13 +91,18 @@ VaquitApp/
         │   ├── groups/
         │   │   ├── AddMember.tsx
         │   │   ├── AllMembers.tsx
+        │   │   ├── EditGroupModal.tsx
         │   │   ├── MemberItem.tsx
+        │   │   ├── MyGroupCard.tsx
+        │   │   ├── MyGroups.tsx
         │   │   └── SideNavGroup.tsx
         │   ├── layout/
+        │   │   ├── HeaderDashboard.tsx
         │   │   └── VerifyAuth.tsx
         │   ├── plans/
         │   │   ├── AllPlans.tsx
         │   │   ├── CreatePlan.tsx
+        │   │   ├── MemberOption.tsx
         │   │   ├── PlanHistory.tsx
         │   │   └── PlanItem.tsx
         │   └── ui/
@@ -143,47 +148,48 @@ VaquitApp/
 - Registro de usuario con confirmación por correo electrónico (enlace JWT, vencimiento de 24 h)
 - Inicio de sesión con nombre de usuario o correo + contraseña; sesión almacenada en cookie `httpOnly` (vencimiento de 7 días)
 - La cuenta debe estar confirmada antes de poder iniciar sesión
-- El cierre de sesión elimina la cookie de sesión
+- El cierre de sesión elimina la cookie de sesión del servidor
 
 ### Grupos
 - Crear un grupo con nombre, descripción e imagen opcional (subida a Cloudinary)
 - Ver todos los grupos a los que pertenece el usuario autenticado
-- Ver los detalles de un grupo
+- Ver los detalles de un grupo específico
 - Editar nombre, descripción e imagen del grupo (solo admin)
 - Eliminar un grupo de forma suave (`active: false`) (solo admin)
-- Abandonar un grupo — bloqueado si el usuario es el único admin
+- Abandonar un grupo — bloqueado con SweetAlert si el usuario es el único admin
 
 ### Miembros del grupo
 - Ver todos los miembros con su rol y fecha de ingreso
 - Invitar a un miembro por correo electrónico; envía un enlace de invitación firmado con JWT (vencimiento de 7 días, incluye el rol)
-- Aceptar una invitación mediante token (requiere sesión activa en el frontend)
-- Promover a cualquier miembro al rol de admin (solo admin)
+- Aceptar una invitación mediante token (el frontend exige sesión activa antes de mostrar la página)
+- Promover a cualquier miembro al rol de admin (solo admin; el botón no aparece si el miembro ya es admin)
 - Eliminar a un miembro del grupo (solo admin)
 
 ### Planes
 - Crear un plan dentro de un grupo con nombre, descripción opcional, imagen opcional y lista inicial de miembros
 - El creador del plan siempre se agrega automáticamente a la lista de miembros
 - Ver todos los planes activos de un grupo
-- Ver el historial de planes (planes completados y cancelados)
+- Ver el historial de planes (planes completados y cancelados) con badge de estado
 - Obtener un plan específico por ID con detalles completos de miembros y creador
 - Marcar un plan como completado (cualquier miembro del grupo)
 - Agregar nuevos miembros a un plan existente (los miembros deben pertenecer al grupo)
 
 ### Gastos
 - Registrar un gasto dentro de un plan: monto, descripción opcional, quién pagó y entre quiénes se divide
-- Todas las partes (`paid_by`, cada usuario en `split_among`) deben ser miembros del plan
-- Listar los gastos activos de un plan (estado = `active`)
-- Listar todos los gastos de un plan sin importar el estado
-- Marcar un gasto como completado/saldado — permitido únicamente al usuario que pagó o a un admin del grupo
-- Calcular los balances de liquidación: devuelve la lista mínima de transferencias para saldar todas las deudas
+- Todas las partes (`paid_by` y cada usuario en `split_among`) deben ser miembros del plan
+- Listar los gastos activos de un plan (`state: active`)
+- Listar todos los gastos de un plan sin filtrar por estado
+- Eliminar un gasto permanentemente — permitido únicamente al usuario que pagó (`paid_by`) o a un admin del grupo
+- Marcar todos los gastos activos de un plan como completados/saldados de una vez (`complete-all`) — disponible para cualquier miembro del grupo
+- Calcular los balances de liquidación: devuelve la lista mínima de transferencias para saldar todas las deudas (algoritmo greedy)
 
 ---
 
 ## Modelos de datos
 
-> Ver diagrama ERD en Excalidraw: https://excalidraw.com/#json=vc5fWIwlJfAf7iPN9qJFk,e5022-Z9FdQ8V72jHIoBAQ
+> Ver diagrama ERD: https://excalidraw.com/#json=olVvOO9Dz1VEKoHjjlyeW,eFgPh8Lhb2sxh2lJpGRoVA
 
-### User (Usuario)
+### User
 
 | Campo | Tipo | Requerido | Descripción |
 |---|---|---|---|
@@ -193,7 +199,7 @@ VaquitApp/
 | `password` | String | sí | Hash de bcrypt |
 | `isConfirmed` | Boolean | — | `false` hasta que se hace clic en el enlace de confirmación |
 
-### Group (Grupo)
+### Group
 
 | Campo | Tipo | Requerido | Descripción |
 |---|---|---|---|
@@ -205,7 +211,7 @@ VaquitApp/
 | `active` | Boolean | — | `false` = eliminado de forma suave (por defecto `true`) |
 | `created_at` | Date | — | Fecha y hora de creación |
 
-### GroupMember (Miembro del grupo)
+### GroupMember
 
 | Campo | Tipo | Requerido | Descripción |
 |---|---|---|---|
@@ -229,7 +235,7 @@ VaquitApp/
 | `state` | String | — | `active`, `completed` o `cancelled` (por defecto `active`) |
 | `created_at` | Date | — | Fecha y hora de creación |
 
-### Expense (Gasto)
+### Expense
 
 | Campo | Tipo | Requerido | Descripción |
 |---|---|---|---|
@@ -238,10 +244,10 @@ VaquitApp/
 | `amount` | Number | sí | Monto total pagado; debe ser > 0 |
 | `plan` | ObjectId → Plan | sí | Plan al que pertenece este gasto |
 | `paid_by` | ObjectId → User | sí | Usuario que pagó el monto completo |
-| `split_among` | [ObjectId → User] | — | Usuarios que comparten el costo |
+| `split_among` | [ObjectId → User] | — | Usuarios entre los que se divide el costo |
 | `state` | String | — | `active` o `completed` (por defecto `active`) |
-| `createdAt` | Date | — | Establecido automáticamente por los timestamps de Mongoose |
-| `updatedAt` | Date | — | Establecido automáticamente por los timestamps de Mongoose |
+| `createdAt` | Date | — | Establecido automáticamente por Mongoose timestamps |
+| `updatedAt` | Date | — | Establecido automáticamente por Mongoose timestamps |
 
 ---
 
@@ -250,34 +256,37 @@ VaquitApp/
 Todos los endpoints se sirven relativos a la URL base del backend (por ejemplo, `http://localhost:3000`).
 
 **Cadena de middlewares para rutas protegidas de grupo/plan/gasto:**
-`verifyToken` → `validateObjectId(...)` → `verifyRole` → controlador
 
-`verifyRole` puebla `req.group` y `req.member` (el documento GroupMember del solicitante). Las verificaciones de rol (`admin` vs. `member`) se aplican dentro de cada controlador.
+```
+verifyToken  →  validateObjectId(...)  →  verifyRole  →  controlador
+```
+
+`verifyRole` carga `req.group` y `req.member` (el documento GroupMember del solicitante). Las verificaciones de rol (`admin` vs. `member`) se aplican dentro de cada controlador.
 
 ### Autenticación
 
-| Método | Endpoint | Requiere autenticación | Descripción |
+| Método | Endpoint | Auth requerida | Descripción |
 |---|---|---|---|
 | POST | `/register` | No | Registrar un nuevo usuario; envía correo de confirmación |
-| POST | `/login` | No | Iniciar sesión con `identifier` (nombre de usuario o correo) + `password`; establece la cookie de sesión |
+| POST | `/login` | No | Iniciar sesión con `identifier` (username o email) + `password`; establece la cookie de sesión |
 | GET | `/confirm/:token` | No | Confirmar la dirección de correo electrónico mediante token JWT |
 | GET | `/dashboard` | Sí | Devuelve el perfil del usuario autenticado |
 | POST | `/logout` | No | Elimina la cookie de sesión |
 
 ### Grupos
 
-| Método | Endpoint | Requiere autenticación | Descripción |
+| Método | Endpoint | Auth requerida | Descripción |
 |---|---|---|---|
-| POST | `/groups` | Sí | Crear un nuevo grupo (multipart/form-data para imagen opcional) |
+| POST | `/groups` | Sí | Crear un nuevo grupo (`multipart/form-data` para imagen opcional) |
 | GET | `/groups` | Sí | Listar todos los grupos a los que pertenece el usuario autenticado |
 | GET | `/groups/:idGroup` | Sí + miembro | Obtener los detalles del grupo |
 | PATCH | `/groups/:idGroup` | Sí + admin | Editar nombre, descripción e imagen del grupo |
-| DELETE | `/groups/:idGroup` | Sí + admin | Eliminar el grupo de forma suave |
+| DELETE | `/groups/:idGroup` | Sí + admin | Eliminar el grupo de forma suave (`active: false`) |
 | DELETE | `/groups/:idGroup/leave` | Sí + miembro | Abandonar el grupo |
 
 ### Miembros del grupo
 
-| Método | Endpoint | Requiere autenticación | Descripción |
+| Método | Endpoint | Auth requerida | Descripción |
 |---|---|---|---|
 | GET | `/groups/:idGroup/members` | Sí + miembro | Listar todos los miembros con rol y fecha de ingreso |
 | POST | `/groups/:idGroup/invite` | Sí + admin | Enviar una invitación por correo con token firmado |
@@ -287,26 +296,27 @@ Todos los endpoints se sirven relativos a la URL base del backend (por ejemplo, 
 
 ### Planes
 
-> Nota: las rutas de planes usan el prefijo `/:idGroup/plans`, no `/groups/:idGroup/plans`.
+> Las rutas de planes usan el prefijo `/:idGroup/plans`, no `/groups/:idGroup/plans`.
 
-| Método | Endpoint | Requiere autenticación | Descripción |
+| Método | Endpoint | Auth requerida | Descripción |
 |---|---|---|---|
 | GET | `/:idGroup/plans` | Sí + miembro | Listar todos los planes activos del grupo |
 | GET | `/:idGroup/plans/history` | Sí + miembro | Listar planes completados y cancelados |
 | GET | `/:idGroup/plans/:idPlan` | Sí + miembro | Obtener un plan activo por ID |
-| POST | `/:idGroup/plans` | Sí + miembro | Crear un nuevo plan (multipart/form-data) |
+| POST | `/:idGroup/plans` | Sí + miembro | Crear un nuevo plan (`multipart/form-data`) |
 | PATCH | `/:idGroup/plans/:idPlan/complete` | Sí + miembro | Marcar un plan como completado |
 | PATCH | `/:idGroup/plans/:idPlan/addMembers` | Sí + miembro | Agregar miembros del grupo a un plan existente |
 
 ### Gastos
 
-| Método | Endpoint | Requiere autenticación | Descripción |
+| Método | Endpoint | Auth requerida | Descripción |
 |---|---|---|---|
 | POST | `/groups/:idGroup/plans/:idPlan/expenses` | Sí + miembro | Registrar un nuevo gasto |
-| GET | `/groups/:idGroup/plans/:idPlan/expenses` | Sí + miembro | Listar los gastos activos de un plan |
-| GET | `/groups/:idGroup/plans/:idPlan/expenses/all` | Sí + miembro | Listar todos los gastos de un plan (todos los estados) |
+| GET | `/groups/:idGroup/plans/:idPlan/expenses` | Sí + miembro | Listar gastos activos del plan |
+| GET | `/groups/:idGroup/plans/:idPlan/expenses/all` | Sí + miembro | Listar todos los gastos del plan (todos los estados) |
 | GET | `/groups/:idGroup/plans/:idPlan/expenses/balances` | Sí + miembro | Calcular y devolver la lista de transacciones de liquidación |
-| PATCH | `/groups/:idGroup/plans/:idPlan/expenses/:idExpense/complete` | Sí + miembro | Marcar un gasto como completado (solo el usuario que pagó o un admin) |
+| PATCH | `/groups/:idGroup/plans/:idPlan/expenses/complete-all` | Sí + miembro | Marcar todos los gastos activos del plan como completados |
+| DELETE | `/groups/:idGroup/plans/:idPlan/expenses/:idExpense` | Sí + miembro | Eliminar un gasto permanentemente (solo `paid_by` o admin) |
 
 ---
 
@@ -329,16 +339,16 @@ Todos los endpoints se sirven relativos a la URL base del backend (por ejemplo, 
 ### POST `/login`
 
 ```json
-// Cuerpo de la solicitud — acepta nombre de usuario o correo en "identifier"
+// Cuerpo de la solicitud — acepta username o email en "identifier"
 {
   "identifier": "ana",
   "password": "secreto123"
 }
 
-// Respuesta 200 — establece la cookie httpOnly "token"
+// Respuesta 200 — establece la cookie httpOnly "token" (7 días)
 {
   "message": "Login exitoso",
-  "user": { "id": "...", "username": "ana", "email": "ana@ejemplo.com" }
+  "user": { "_id": "...", "username": "ana", "email": "ana@ejemplo.com" }
 }
 ```
 
@@ -355,7 +365,7 @@ Todos los endpoints se sirven relativos a la URL base del backend (por ejemplo, 
 { "message": "Invitación enviada exitosamente" }
 ```
 
-El endpoint de invitación firma un JWT `{ groupId, email, role }` con vencimiento de 7 días y envía por correo un enlace a `FRONTEND_URL/invitacion/<token>`. El frontend requiere una sesión activa antes de mostrar la página de aceptación.
+El endpoint firma un JWT `{ groupId, email, role }` con vencimiento de 7 días y envía por correo un enlace a `FRONTEND_URL/invitacion/<token>`. El frontend exige sesión activa antes de mostrar la página de aceptación.
 
 ### POST `/groups/:idGroup/plans/:idPlan/expenses`
 
@@ -406,11 +416,11 @@ El endpoint de invitación firma un JWT `{ groupId, email, role }` con vencimien
 |---|---|---|
 | `PORT` | Puerto en el que escucha el servidor | `3000` |
 | `MONGO_URI` | Cadena de conexión a MongoDB | `mongodb+srv://usuario:pass@cluster/db` |
-| `JWT_SECRET` | Secreto utilizado para firmar todos los tokens JWT | `una_cadena_aleatoria_larga` |
+| `JWT_SECRET` | Secreto para firmar todos los tokens JWT | `una_cadena_aleatoria_larga` |
 | `FRONTEND_URL` | Origen del frontend para CORS y enlaces de correo | `http://localhost:5173` |
 | `NODE_ENV` | Entorno (`development` o `production`) | `development` |
-| `EMAIL_USER` | Dirección de correo del remitente SMTP | `noreply@vaquitapp.com` |
-| `EMAIL_PASS` | Contraseña / contraseña de aplicación del remitente SMTP | `contrasena_smtp_app` |
+| `EMAIL_USER` | Dirección de correo del remitente SMTP (Gmail) | `noreply@vaquitapp.com` |
+| `EMAIL_PASS` | Contraseña de aplicación del remitente SMTP | `contrasena_smtp_app` |
 | `CLOUDINARY_CLOUD_NAME` | Identificador de la nube en Cloudinary | `mi_nube` |
 | `CLOUDINARY_API_KEY` | Clave de API de Cloudinary | `123456789` |
 | `CLOUDINARY_API_SECRET` | Secreto de API de Cloudinary | `abc123secreto` |
@@ -428,9 +438,9 @@ El endpoint de invitación firma un JWT `{ groupId, email, role }` con vencimien
 ### Requisitos previos
 
 - Node.js 18+
-- Una instancia de MongoDB en ejecución (local o Atlas)
+- Una instancia de MongoDB (local o Atlas)
 - Una cuenta de Cloudinary
-- Un proveedor de correo SMTP
+- Una cuenta de Gmail con contraseña de aplicación para SMTP
 
 ### Backend
 
@@ -439,7 +449,7 @@ cd backend
 npm install
 ```
 
-Crear `backend/.env` usando las variables descritas arriba, luego:
+Crear `backend/.env` con todas las variables listadas arriba, luego:
 
 ```bash
 npm run dev
@@ -466,7 +476,7 @@ Luego:
 npm run dev
 ```
 
-Vite inicia el servidor de desarrollo, generalmente en `http://localhost:5173`.
+Vite inicia el servidor de desarrollo en `http://localhost:5173`.
 
 ---
 
@@ -477,14 +487,14 @@ Vite inicia el servidor de desarrollo, generalmente en `http://localhost:5173`.
 | Comando | Descripción |
 |---|---|
 | `npm start` | Iniciar el servidor con `node index.js` |
-| `npm run dev` | Iniciar con `nodemon` (reinicio automático al cambiar archivos) |
+| `npm run dev` | Iniciar con `nodemon` (reinicio automático al guardar archivos) |
 
 ### Frontend
 
 | Comando | Descripción |
 |---|---|
 | `npm run dev` | Iniciar el servidor de desarrollo de Vite con HMR |
-| `npm run build` | Verificar tipos y generar el bundle de producción en `dist/` |
+| `npm run build` | Verificar tipos TypeScript y generar el bundle de producción en `dist/` |
 | `npm run preview` | Servir el build de producción de forma local |
 | `npm run lint` | Ejecutar ESLint en todo el árbol de fuentes |
 
@@ -507,33 +517,36 @@ Vite inicia el servidor de desarrollo, generalmente en `http://localhost:5173`.
 | Marcar un plan como completado | sí | sí |
 | Agregar miembros a un plan | sí | sí |
 | Crear gasto | sí | sí |
-| Ver gastos | sí | sí |
-| Obtener balance/liquidación | sí | sí |
-| Completar (saldar) cualquier gasto | sí | no |
-| Completar el propio gasto (`paid_by`) | sí | sí |
+| Ver gastos activos / todos los gastos | sí | sí |
+| Obtener balance de liquidación | sí | sí |
+| Marcar todos los gastos del plan como completados (`complete-all`) | sí | sí |
+| Eliminar cualquier gasto | sí | no |
+| Eliminar el propio gasto (`paid_by`) | sí | sí |
 
 ---
 
 ## Lógica de cálculo de gastos
 
-> Ver diagrama en Excalidraw: https://excalidraw.com/#json=svEqfM0Xw3O7Tn6S2HYhu,vluJKqZjsbLDmekYWVkGRg
+> Ver diagrama del algoritmo: https://excalidraw.com/#json=qoECKn3HLa9Gni1yvAjYI,ygP05CRQwO31HcxBt1XcgQ
 
-El algoritmo de balances se ejecuta en el servidor en `expense.controller.js → getBalances` cuando el cliente solicita `GET .../expenses/balances`. Funciona en tres etapas:
+El algoritmo se ejecuta en el servidor dentro de `expense.controller.js → getBalances` cuando el cliente solicita `GET .../expenses/balances`. Opera únicamente sobre gastos con `state: 'active'`. Funciona en tres etapas:
 
 **Etapa 1 — Construir el mapa de balances.**
 Para cada gasto activo del plan:
 - El balance del usuario `paid_by` aumenta en el `amount` total (se le debe ese dinero).
 - El balance de cada usuario en `split_among` disminuye en `amount / split_among.length` (su parte proporcional del costo).
 
-Los usuarios con balance final positivo son *acreedores* (otros les deben dinero). Los usuarios con balance negativo son *deudores*.
+Los usuarios con balance positivo son *acreedores* (otros les deben dinero). Los usuarios con balance negativo son *deudores*.
 
-**Etapa 2 — Emparejamiento voraz.**
-Los acreedores se ordenan del balance más alto al más bajo; los deudores se ordenan del más negativo al menos negativo. En cada iteración, el deudor más grande se empareja con el acreedor más grande. El monto de transferencia es `min(balance del acreedor, |balance del deudor|)`. Ambos balances se reducen en ese monto; cualquier parte que llegue a cero se elimina de su lista. Esto continúa hasta que todos los balances estén saldados.
+**Etapa 2 — Clasificación y ordenamiento.**
+Los acreedores se ordenan de mayor a menor balance; los deudores se ordenan del más negativo al menos negativo. Esto garantiza que el emparejamiento sea óptimo desde el primer ciclo.
 
-Este enfoque voraz garantiza el **número mínimo de transacciones** necesarias para saldar todas las deudas.
+**Etapa 3 — Emparejamiento greedy.**
+En cada iteración, el mayor deudor se empareja con el mayor acreedor. El monto de transferencia es `min(balance del acreedor, |balance del deudor|)`. Ambos balances se reducen en ese monto; cualquier parte que llegue a cero se elimina de su lista. El proceso continúa hasta que todos los balances estén saldados.
 
-**Etapa 3 — Redondeo.**
-Cada monto intermedio y final se redondea a 2 decimales usando `Math.round(value * 100) / 100` para evitar errores de punto flotante.
+Este enfoque greedy garantiza el **número mínimo de transacciones** para saldar todas las deudas (complejidad O(n log n)).
+
+**Redondeo:** cada monto intermedio y final se redondea a 2 decimales con `Math.round(value * 100) / 100` para evitar errores de punto flotante.
 
 ### Ejemplo
 
@@ -544,6 +557,6 @@ Cada monto intermedio y final se redondea a 2 decimales usando `Math.round(value
 
 Balances finales: Ana +60, Bob +30, Carol -90.
 
-Liquidación (2 transacciones — óptimo):
+Liquidación (2 transacciones — mínimo posible):
 - Carol le paga a Ana $60
 - Carol le paga a Bob $30
