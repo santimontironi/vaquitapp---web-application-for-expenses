@@ -6,11 +6,13 @@ import {router as groupRouter} from "./routes/group.routes.js";
 import {router as planRouter} from "./routes/plan.routes.js";
 import {router as expenseRouter} from "./routes/expense.routes.js";
 import cookieParser from "cookie-parser";
+import { globalLimiter } from "./middlewares/rate-limit.js";
 
 dotenv.config();
 
 const app = express();
 
+app.use(globalLimiter);
 app.use(express.json());
 app.use(cookieParser());
 

@@ -29,7 +29,8 @@
       "Bash(dir \"C:\\\\Users\\\\nn\\\\Desktop\\\\VaquitApp\\\\frontend\\\\src\\\\components\\\\ui\")",
       "Bash(dir \"C:\\\\Users\\\\nn\\\\Desktop\\\\VaquitApp\\\\frontend\\\\src\\\\services\")",
       "Bash(dir \"C:\\\\Users\\\\nn\\\\Desktop\\\\VaquitApp\\\\frontend\\\\src\\\\hooks\")",
-      "Bash(dir \"C:\\\\Users\\\\nn\\\\Desktop\\\\VaquitApp\\\\frontend\\\\src\\\\utils\")"
+      "Bash(dir \"C:\\\\Users\\\\nn\\\\Desktop\\\\VaquitApp\\\\frontend\\\\src\\\\utils\")",
+      "Bash(del *)"
     ]
   }
 }
