@@ -46,55 +46,56 @@ const SideNavGroup = ({ itemSelected, setSelectedItem, groupId }: SideNavGroupPr
   }
 
   const sideActiveClass = "relative flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-left cursor-pointer transition-all duration-200 bg-[#10B981]/12 border border-[#10B981]/30 text-[#10B981] shadow-[0_2px_12px_rgba(16,185,129,0.1)]"
+  const sideActiveBlueClass = "relative flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-left cursor-pointer transition-all duration-200 bg-[#3B82F6]/12 border border-[#3B82F6]/30 text-[#3B82F6] shadow-[0_2px_12px_rgba(59,130,246,0.1)]"
   const sideInactiveClass = "relative flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-left cursor-pointer transition-all duration-200 border border-transparent text-white/50 hover:bg-white/5 hover:border-white/10 hover:text-white/80"
 
   return (
     <>
-      <div className="md:hidden w-full p-px rounded-2xl bg-linear-to-br from-[#10B981]/25 via-white/5 to-[#3B82F6]/15 shadow-[0_8px_30px_rgba(0,0,0,0.4)]">
+      <div className="md:hidden w-full p-px rounded-2xl bg-linear-to-br from-[#10B981]/35 via-white/5 to-[#3B82F6]/15 shadow-[0_8px_30px_rgba(0,0,0,0.4)]">
         <div className="rounded-[15px] bg-[#0A1020]/90 backdrop-blur-2xl overflow-hidden">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-linear-to-r from-transparent via-white/10 to-transparent pointer-events-none" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-linear-to-r from-transparent via-[#3B82F6]/15 to-transparent pointer-events-none" />
           <nav className="flex overflow-x-auto scrollbar-none gap-1 p-2">
 
             <button
               onClick={() => setSelectedItem("members")}
-              className={`flex-1 min-w-0 flex flex-col items-center gap-1.5 px-3 py-2.5 rounded-xl cursor-pointer transition-all duration-200 whitespace-nowrap ${itemSelected === "members" ? "bg-[#10B981]/12 border border-[#10B981]/30 text-[#10B981] shadow-[0_2px_12px_rgba(16,185,129,0.1)]" : "border border-transparent text-white/50 hover:bg-white/5 hover:border-white/10 hover:text-white/80"}`}
+              title="Miembros"
+              className={`flex-1 flex items-center justify-center p-3 rounded-xl cursor-pointer transition-all duration-200 ${itemSelected === "members" ? "bg-[#10B981]/12 border border-[#10B981]/30 text-[#10B981] shadow-[0_2px_12px_rgba(16,185,129,0.1)]" : "border border-transparent text-white/50 hover:bg-white/5 hover:border-white/10 hover:text-white/80"}`}
             >
-              <i className={`bi bi-people ${itemSelected === "members" ? "text-[#10B981]" : "text-white/40"}`} />
-              <span className="truncate w-full text-center">Miembros</span>
+              <i className={`bi bi-people text-lg ${itemSelected === "members" ? "text-[#10B981]" : "text-white/40"}`} />
             </button>
 
             {isAdmin && (
               <button
                 onClick={() => setSelectedItem("add-member")}
-                className={`flex-1 min-w-0 flex flex-col items-center gap-1.5 px-3 py-2.5 rounded-xl cursor-pointer transition-all duration-200 whitespace-nowrap ${itemSelected === "add-member" ? "bg-[#10B981]/12 border border-[#10B981]/30 text-[#10B981] shadow-[0_2px_12px_rgba(16,185,129,0.1)]" : "border border-transparent text-white/50 hover:bg-white/5 hover:border-white/10 hover:text-white/80"}`}
+                title="Agregar miembro"
+                className={`flex-1 flex items-center justify-center p-3 rounded-xl cursor-pointer transition-all duration-200 ${itemSelected === "add-member" ? "bg-[#10B981]/12 border border-[#10B981]/30 text-[#10B981] shadow-[0_2px_12px_rgba(16,185,129,0.1)]" : "border border-transparent text-white/50 hover:bg-white/5 hover:border-white/10 hover:text-white/80"}`}
               >
-                <i className={`bi bi-person-plus ${itemSelected === "add-member" ? "text-[#10B981]" : "text-white/40"}`} />
-                <span className="truncate w-full text-center">Agregar</span>
+                <i className={`bi bi-person-plus text-lg ${itemSelected === "add-member" ? "text-[#10B981]" : "text-white/40"}`} />
               </button>
             )}
 
             <button
               onClick={() => setSelectedItem("view-plans")}
-              className={`flex-1 min-w-0 flex flex-col items-center gap-1.5 px-3 py-2.5 rounded-xl cursor-pointer transition-all duration-200 whitespace-nowrap ${itemSelected === "view-plans" ? "bg-[#10B981]/12 border border-[#10B981]/30 text-[#10B981] shadow-[0_2px_12px_rgba(16,185,129,0.1)]" : "border border-transparent text-white/50 hover:bg-white/5 hover:border-white/10 hover:text-white/80"}`}
+              title="Ver planes"
+              className={`flex-1 flex items-center justify-center p-3 rounded-xl cursor-pointer transition-all duration-200 ${itemSelected === "view-plans" ? "bg-[#3B82F6]/12 border border-[#3B82F6]/30 text-[#3B82F6] shadow-[0_2px_12px_rgba(59,130,246,0.1)]" : "border border-transparent text-white/50 hover:bg-white/5 hover:border-white/10 hover:text-white/80"}`}
             >
-              <i className={`bi bi-card-list ${itemSelected === "view-plans" ? "text-[#10B981]" : "text-white/40"}`} />
-              <span className="truncate w-full text-center">Planes</span>
+              <i className={`bi bi-card-list text-lg ${itemSelected === "view-plans" ? "text-[#3B82F6]" : "text-white/40"}`} />
             </button>
 
             <button
               onClick={() => setSelectedItem("create-plan")}
-              className={`flex-1 min-w-0 flex flex-col items-center gap-1.5 px-3 py-2.5 rounded-xl cursor-pointer transition-all duration-200 whitespace-nowrap ${itemSelected === "create-plan" ? "bg-[#10B981]/12 border border-[#10B981]/30 text-[#10B981] shadow-[0_2px_12px_rgba(16,185,129,0.1)]" : "border border-transparent text-white/50 hover:bg-white/5 hover:border-white/10 hover:text-white/80"}`}
+              title="Nuevo plan"
+              className={`flex-1 flex items-center justify-center p-3 rounded-xl cursor-pointer transition-all duration-200 ${itemSelected === "create-plan" ? "bg-[#3B82F6]/12 border border-[#3B82F6]/30 text-[#3B82F6] shadow-[0_2px_12px_rgba(59,130,246,0.1)]" : "border border-transparent text-white/50 hover:bg-white/5 hover:border-white/10 hover:text-white/80"}`}
             >
-              <i className={`bi bi-plus-circle ${itemSelected === "create-plan" ? "text-[#10B981]" : "text-white/40"}`} />
-              <span className="truncate w-full text-center">Nuevo</span>
+              <i className={`bi bi-plus-circle text-lg ${itemSelected === "create-plan" ? "text-[#3B82F6]" : "text-white/40"}`} />
             </button>
 
             <button
               onClick={handleLeaveGroup}
-              className="flex-1 min-w-0 flex flex-col items-center gap-1.5 px-3 py-2.5 rounded-xl cursor-pointer transition-all duration-200 whitespace-nowrap border border-red-500/20 bg-red-500/10 text-red-400 hover:bg-red-500/20 hover:border-red-500/40 hover:text-red-300"
+              title="Abandonar grupo"
+              className="flex-1 flex items-center justify-center p-3 rounded-xl cursor-pointer transition-all duration-200 border border-red-500/20 bg-red-500/10 text-red-400 hover:bg-red-500/20 hover:border-red-500/40 hover:text-red-300"
             >
-              <i className="bi bi-box-arrow-left text-red-400" />
-              <span className="truncate w-full text-center">Abandonar</span>
+              <i className="bi bi-box-arrow-left text-lg text-red-400" />
             </button>
 
           </nav>
@@ -102,9 +103,9 @@ const SideNavGroup = ({ itemSelected, setSelectedItem, groupId }: SideNavGroupPr
       </div>
 
       {/* ── Desktop: vertical sidebar ── */}
-      <aside className="hidden md:flex w-64 shrink-0 flex-col gap-2 p-px rounded-2xl bg-linear-to-br from-[#10B981]/30 via-white/5 to-[#3B82F6]/20 shadow-[0_20px_60px_rgba(0,0,0,0.4)] self-start sticky top-28">
+      <aside className="hidden md:flex w-64 shrink-0 flex-col gap-2 p-px rounded-2xl bg-linear-to-br from-[#10B981]/40 via-white/5 to-[#3B82F6]/20 shadow-[0_20px_60px_rgba(0,0,0,0.4)] self-start sticky top-28">
         <div className="rounded-[15px] bg-[#0A1020]/90 backdrop-blur-2xl overflow-hidden">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-linear-to-r from-transparent via-white/10 to-transparent pointer-events-none" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-linear-to-r from-transparent via-[#10B981]/25 to-transparent pointer-events-none" />
           <nav className="flex flex-col gap-1 p-2">
 
             <button onClick={() => setSelectedItem("members")} className={itemSelected === "members" ? sideActiveClass : sideInactiveClass}>
@@ -121,13 +122,13 @@ const SideNavGroup = ({ itemSelected, setSelectedItem, groupId }: SideNavGroupPr
               </button>
             )}
 
-            <button onClick={() => setSelectedItem("view-plans")} className={itemSelected === "view-plans" ? sideActiveClass : sideInactiveClass}>
-              <i className={`bi bi-card-list ${itemSelected === "view-plans" ? "text-[#10B981]" : "text-white/40"}`} />
+            <button onClick={() => setSelectedItem("view-plans")} className={itemSelected === "view-plans" ? sideActiveBlueClass : sideInactiveClass}>
+              <i className={`bi bi-card-list ${itemSelected === "view-plans" ? "text-[#3B82F6]" : "text-white/40"}`} />
               <span>Ver planes</span>
             </button>
 
-            <button onClick={() => setSelectedItem("create-plan")} className={itemSelected === "create-plan" ? sideActiveClass : sideInactiveClass}>
-              <i className={`bi bi-plus-circle ${itemSelected === "create-plan" ? "text-[#10B981]" : "text-white/40"}`} />
+            <button onClick={() => setSelectedItem("create-plan")} className={itemSelected === "create-plan" ? sideActiveBlueClass : sideInactiveClass}>
+              <i className={`bi bi-plus-circle ${itemSelected === "create-plan" ? "text-[#3B82F6]" : "text-white/40"}`} />
               <span>Nuevo plan</span>
             </button>
 
@@ -142,7 +143,7 @@ const SideNavGroup = ({ itemSelected, setSelectedItem, groupId }: SideNavGroupPr
             </button>
 
           </nav>
-          <div className="absolute bottom-0 right-0 w-24 h-24 bg-[#10B981]/4 rounded-full blur-2xl pointer-events-none translate-x-1/3 translate-y-1/3" />
+          <div className="absolute bottom-0 right-0 w-24 h-24 bg-[#3B82F6]/5 rounded-full blur-2xl pointer-events-none translate-x-1/3 translate-y-1/3" />
         </div>
       </aside>
     </>

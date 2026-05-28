@@ -37,16 +37,17 @@ const Group = () => {
 
       <button
         onClick={() => navigate('/inicio')}
-        className="fixed cursor-pointer top-4 left-4 z-50 flex items-center gap-2 px-3 py-2 rounded-xl bg-[#0A1020]/80 border border-white/10 text-white/70 backdrop-blur-md shadow-[0_2px_12px_rgba(0,0,0,0.4)] transition-all duration-200 hover:bg-white/8 hover:border-[#10B981]/40 hover:text-white active:scale-95 md:top-5 md:left-6 xl:left-10"
+        className="fixed cursor-pointer top-4 left-4 z-50 flex items-center gap-2 px-3 py-2 rounded-xl bg-[#0A1020]/80 border border-white/10 text-white/60 backdrop-blur-md shadow-[0_2px_12px_rgba(0,0,0,0.4)] transition-all duration-200 hover:bg-[#10B981]/8 hover:border-[#10B981]/50 hover:text-[#10B981]/90 active:scale-95 md:top-5 md:left-6 xl:left-10"
         aria-label="Volver atrás"
       >
         <i className="bi bi-arrow-left" />
         <span className="hidden sm:inline">Volver</span>
       </button>
 
-      <div className="absolute top-0 left-0 w-96 h-96 rounded-full bg-[#10B981]/5 blur-[130px] pointer-events-none -translate-x-1/2 -translate-y-1/3" />
-      <div className="absolute top-1/3 right-0 w-80 h-80 rounded-full bg-[#3B82F6]/4 blur-[120px] pointer-events-none translate-x-1/2" />
-      
+      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 75% 55% at 0% 0%, rgba(16,185,129,0.28) 0%, transparent 65%)" }} />
+      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 60% 50% at 100% 100%, rgba(59,130,246,0.20) 0%, transparent 65%)" }} />
+      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 50% 40% at 100% 0%, rgba(59,130,246,0.12) 0%, transparent 65%)" }} />
+
       <div className="relative w-full overflow-hidden">
 
         {groupById?.image ? (
@@ -87,10 +88,11 @@ const Group = () => {
                 <div className="flex items-center justify-center gap-2">
                   <div className="w-1 h-1 rounded-full bg-[#10B981] shadow-[0_0_6px_rgba(16,185,129,0.8)]" />
                   <span className="text-[#10B981]/70 uppercase tracking-widest">Grupo</span>
+                  <div className="w-1 h-1 rounded-full bg-[#3B82F6] shadow-[0_0_6px_rgba(59,130,246,0.8)]" />
                 </div>
                 <h1 className="text-4xl md:text-5xl xl:text-6xl font-bold text-white">{groupById?.name}</h1>
                 <p className="text-xl text-white/50">{groupById?.description}</p>
-                <div className="w-24 h-px bg-linear-to-r from-transparent via-[#10B981]/50 to-transparent mx-auto mt-1" />
+                <div className="w-24 h-px bg-linear-to-r from-transparent via-[#10B981]/40 via-[#3B82F6]/30 to-transparent mx-auto mt-1" />
               </div>
             </div>
 

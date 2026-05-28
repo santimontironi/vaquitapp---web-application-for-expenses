@@ -31,8 +31,8 @@ const PlanItem = ({ plan, idGroup, onCheckCompleted }: PlanItemProps) => {
       ) : (
         <div className="relative w-full h-36 bg-linear-to-br from-[#10B981]/15 via-[#0A1020] to-[#3B82F6]/15 flex flex-col items-center justify-center gap-2 overflow-hidden">
           <div className="absolute inset-0 bg-linear-to-br from-[#10B981]/8 to-[#3B82F6]/8" />
-          <div className="relative w-12 h-12 rounded-2xl bg-[#10B981]/10 border border-[#10B981]/20 flex items-center justify-center">
-            <i className="bi bi-calendar-event text-[#10B981]" />
+          <div className="relative w-12 h-12 rounded-2xl bg-[#3B82F6]/10 border border-[#3B82F6]/20 flex items-center justify-center">
+            <i className="bi bi-calendar-event text-[#3B82F6]" />
           </div>
           <span className="relative text-white/40 truncate max-w-[80%] text-center">{plan.name}</span>
         </div>
@@ -115,7 +115,7 @@ const PlanItem = ({ plan, idGroup, onCheckCompleted }: PlanItemProps) => {
         {plan.state === "active" && (
           <button
             onClick={(e) => { e.stopPropagation(); onCheckCompleted(); }}
-            className="w-full flex items-center justify-center gap-2 py-2 rounded-xl border border-[#10B981]/20 bg-[#10B981]/8 text-[#10B981]/70 text-xs font-medium transition-all duration-200 hover:bg-[#10B981]/15 hover:border-[#10B981]/40 hover:text-[#10B981] cursor-pointer"
+            className="w-full flex items-center justify-center gap-2 py-2 rounded-xl border border-[#3B82F6]/20 bg-[#3B82F6]/8 text-[#3B82F6]/70 text-xs font-medium transition-all duration-200 hover:bg-[#3B82F6]/15 hover:border-[#3B82F6]/40 hover:text-[#3B82F6] cursor-pointer"
           >
             <i className="bi bi-check-circle" style={{ fontSize: "13px" }} />
             Marcar como completado

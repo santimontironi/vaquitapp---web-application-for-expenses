@@ -44,9 +44,10 @@ const NewGroup = () => {
   return (
     <main className="relative min-h-screen bg-[#0F172A] overflow-hidden flex items-center justify-center px-4 py-12">
 
-      <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-[#10B981]/6 blur-[130px] pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full bg-[#3B82F6]/5 blur-[130px] pointer-events-none" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-75 rounded-full bg-[#10B981]/3 blur-[130px] pointer-events-none" />
+      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 80% 60% at 100% 0%, rgba(16,185,129,0.30) 0%, transparent 65%)" }} />
+      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 60% 50% at 0% 100%, rgba(16,185,129,0.20) 0%, transparent 65%)" }} />
+      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 55% 45% at 0% 0%, rgba(59,130,246,0.20) 0%, transparent 65%)" }} />
+      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 45% 35% at 100% 100%, rgba(59,130,246,0.14) 0%, transparent 65%)" }} />
 
       <div className="relative z-10 w-full max-w-lg">
 
@@ -58,13 +59,13 @@ const NewGroup = () => {
           Volver al dashboard
         </Link>
 
-        <div className="relative p-px rounded-3xl bg-linear-to-br from-[#10B981]/45 via-white/5 to-[#3B82F6]/30 shadow-[0_25px_60px_rgba(0,0,0,0.6)]">
+        <div className="relative p-px rounded-3xl bg-linear-to-br from-[#10B981]/45 via-white/5 to-[#3B82F6]/40 shadow-[0_25px_60px_rgba(0,0,0,0.6)]">
 
           <div className="absolute inset-px rounded-[23px] border border-white/5 pointer-events-none z-10" />
 
           <div className="relative bg-[#0A1020]/85 backdrop-blur-3xl rounded-[23px] p-8 md:p-10 overflow-hidden">
 
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-linear-to-r from-transparent via-[#10B981]/35 to-transparent pointer-events-none" />
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-linear-to-r from-transparent via-[#10B981]/30 via-[#3B82F6]/25 to-transparent pointer-events-none" />
 
             <div className="absolute top-0 left-0 w-40 h-40 bg-[#10B981]/4 rounded-full blur-2xl pointer-events-none -translate-x-1/3 -translate-y-1/3" />
             <div className="absolute bottom-0 right-0 w-40 h-40 bg-[#3B82F6]/5 rounded-full blur-3xl pointer-events-none translate-x-1/3 translate-y-1/3" />

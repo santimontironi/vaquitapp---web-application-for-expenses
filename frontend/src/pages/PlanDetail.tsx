@@ -42,9 +42,14 @@ const PlanDetail = () => {
 
     return (
         <>
-        <div className="min-h-screen bg-[#0A1020] text-white">
+        <div className="relative min-h-screen bg-[#0A1020] text-white">
 
-            <div className="relative border-b border-white/6 bg-[#0A1020]/90 backdrop-blur-xl px-4 py-4 flex items-center gap-4">
+            <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 70% 50% at 100% 0%, rgba(59,130,246,0.22) 0%, transparent 65%)" }} />
+            <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 55% 45% at 0% 100%, rgba(16,185,129,0.20) 0%, transparent 65%)" }} />
+            <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 50% 40% at 0% 0%, rgba(16,185,129,0.14) 0%, transparent 65%)" }} />
+
+            <div className="relative z-10 border-b border-white/6 bg-[#0A1020]/90 backdrop-blur-xl px-4 py-4 flex items-center gap-4">
+                <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-[#3B82F6]/25 to-transparent pointer-events-none" />
                 <button
                     onClick={() => navigate(`/grupo/${idGroup}`)}
                     className="flex items-center justify-center w-9 h-9 rounded-xl border border-white/10 bg-white/5 text-white/60 hover:bg-white/10 hover:text-white transition-all duration-200 cursor-pointer"
@@ -54,7 +59,7 @@ const PlanDetail = () => {
                 <h1 className="text-white font-semibold truncate">{planById.name}</h1>
             </div>
 
-            <div className="max-w-5xl mx-auto px-4 py-8 flex flex-col gap-6">
+            <div className="relative z-10 max-w-5xl mx-auto px-4 py-8 flex flex-col gap-6">
 
                 {planById.image ? (
                     <div className="relative w-full h-52 rounded-2xl overflow-hidden border border-white/8">

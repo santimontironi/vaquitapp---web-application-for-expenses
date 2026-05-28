@@ -17,9 +17,9 @@ const Dashboard = () => {
   return (
     <main className="relative min-h-screen bg-[#0F172A] overflow-hidden">
 
-      <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-[#10B981]/6 blur-[130px] pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full bg-[#3B82F6]/5 blur-[130px] pointer-events-none" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-75 rounded-full bg-[#10B981]/3 blur-[130px] pointer-events-none" />
+      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 65% 50% at 100% 0%, rgba(16,185,129,0.18) 0%, transparent 70%)" }} />
+      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 50% 40% at 0% 100%, rgba(16,185,129,0.12) 0%, transparent 70%)" }} />
+      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 40% 30% at 100% 100%, rgba(59,130,246,0.07) 0%, transparent 70%)" }} />
 
       <section className="relative z-10">
         {user && <HeaderDashboard user={user} />}
@@ -28,26 +28,59 @@ const Dashboard = () => {
           {groups && groups.length > 0 ? (
             <MyGroups myGroups={groups} loading={loading} />
           ) : (
-            <div className="flex items-center justify-center mt-16 md:mt-24 px-4">
-              <div className="relative p-px rounded-3xl bg-linear-to-br from-[#10B981]/45 via-white/5 to-[#3B82F6]/30 shadow-[0_25px_60px_rgba(0,0,0,0.6)] w-full max-w-sm md:max-w-md">
+            <div className="flex items-center justify-center mt-12 md:mt-20 px-4">
+              <div className="relative p-px rounded-3xl bg-linear-to-br from-[#10B981]/40 via-white/5 to-[#3B82F6]/25 shadow-[0_30px_80px_rgba(0,0,0,0.7)] w-full max-w-sm md:max-w-md">
 
                 <div className="absolute inset-px rounded-[23px] border border-white/5 pointer-events-none z-10" />
 
-                <div className="relative bg-[#0A1020]/85 backdrop-blur-3xl rounded-[23px] p-8 md:p-12 overflow-hidden flex flex-col items-center gap-6 text-center">
+                <div className="relative bg-[#0A1020]/90 backdrop-blur-3xl rounded-[23px] px-8 pt-10 pb-10 md:px-12 md:pt-12 md:pb-12 overflow-hidden flex flex-col items-center gap-7 text-center">
 
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-linear-to-r from-transparent via-[#10B981]/35 to-transparent pointer-events-none" />
+                  {/* Shine line top */}
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-linear-to-r from-transparent via-[#10B981]/40 to-transparent pointer-events-none" />
 
-                  <div className="absolute top-0 left-0 w-40 h-40 bg-[#10B981]/4 rounded-full blur-2xl pointer-events-none -translate-x-1/3 -translate-y-1/3" />
-                  <div className="absolute bottom-0 right-0 w-40 h-40 bg-[#3B82F6]/5 rounded-full blur-3xl pointer-events-none translate-x-1/3 translate-y-1/3" />
+                  {/* Ambient blobs */}
+                  <div className="absolute top-0 left-0 w-48 h-48 bg-[#10B981]/5 rounded-full blur-3xl pointer-events-none -translate-x-1/2 -translate-y-1/2" />
+                  <div className="absolute bottom-0 right-0 w-48 h-48 bg-[#3B82F6]/6 rounded-full blur-3xl pointer-events-none translate-x-1/2 translate-y-1/2" />
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-32 bg-[#10B981]/3 rounded-full blur-3xl pointer-events-none" />
 
-                  <div className="flex flex-col gap-2">
+                  {/* Icon block */}
+                  <div className="relative flex items-center justify-center">
+                    {/* Outer glow ring */}
+                    <div className="absolute w-28 h-28 rounded-full bg-[#10B981]/10 blur-2xl" />
+                    {/* Mid ring */}
+                    <div className="absolute w-20 h-20 rounded-full border border-[#10B981]/20" />
+                    {/* Icon container */}
+                    <div className="relative z-10 flex items-center justify-center w-16 h-16 rounded-2xl bg-linear-to-br from-[#10B981]/20 to-[#10B981]/5 border border-[#10B981]/30 shadow-[0_0_30px_rgba(16,185,129,0.20)]">
+                      <i className="bi bi-people text-[#10B981] text-3xl" />
+                    </div>
+                  </div>
+
+                  {/* Text block */}
+                  <div className="flex flex-col gap-3">
                     <h3 className="text-white">Todavía no estás en ningún grupo</h3>
-                    <p className="text-white/40 max-w-xs">
+                    <p className="text-white/40 max-w-xs mx-auto">
                       Creá tu primer grupo e invitá a tus amigos para empezar a dividir gastos juntos.
                     </p>
                   </div>
 
-                  <div className="flex items-center gap-2 w-full opacity-20" aria-hidden="true">
+                  {/* Pill hints */}
+                  <div className="flex items-center gap-3 flex-wrap justify-center">
+                    <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/4 border border-white/8 text-white/35">
+                      <i className="bi bi-person-plus" />
+                      Invitá amigos
+                    </span>
+                    <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/4 border border-white/8 text-white/35">
+                      <i className="bi bi-cash-coin" />
+                      Dividí gastos
+                    </span>
+                    <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/4 border border-white/8 text-white/35">
+                      <i className="bi bi-check2-circle" />
+                      Saldá deudas
+                    </span>
+                  </div>
+
+                  {/* Divider */}
+                  <div className="flex items-center gap-2 w-full opacity-15" aria-hidden="true">
                     <div className="h-px flex-1 bg-white/40" />
                     <div className="w-1 h-1 rounded-full bg-white" />
                     <div className="w-1 h-1 rounded-full bg-white" />
@@ -55,6 +88,7 @@ const Dashboard = () => {
                     <div className="h-px flex-1 bg-white/40" />
                   </div>
 
+                  {/* CTA button */}
                   <div className="relative group/btn w-full">
                     <div className="absolute -inset-1 rounded-xl bg-linear-to-r from-[#10B981]/50 to-[#3B82F6]/25 blur-lg opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300 pointer-events-none" />
                     <Link

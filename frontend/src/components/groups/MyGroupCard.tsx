@@ -25,11 +25,11 @@ const MyGroupCard = ({ myGroup }: MyGroupCardProps) => {
     <>
     <Link to={`/grupo/${myGroup.group._id}`} className="w-full">
     
-      <div className="relative p-px rounded-2xl bg-linear-to-br from-[#10B981]/45 via-white/5 to-[#3B82F6]/30 shadow-[0_0_40px_rgba(16,185,129,0.06),0_20px_60px_rgba(0,0,0,0.50)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_60px_rgba(16,185,129,0.12),0_30px_70px_rgba(0,0,0,0.65)] cursor-pointer group/card">
+      <div className="relative p-px rounded-2xl bg-linear-to-br from-[#10B981]/60 via-white/5 to-[#3B82F6]/30 shadow-[0_0_40px_rgba(16,185,129,0.06),0_20px_60px_rgba(0,0,0,0.50)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_60px_rgba(16,185,129,0.20),0_30px_70px_rgba(0,0,0,0.65)] cursor-pointer group/card">
 
         <div className="relative rounded-[15px] bg-[#0A1020]/90 backdrop-blur-2xl overflow-hidden h-full flex flex-col">
 
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-linear-to-r from-transparent via-[#10B981]/25 to-transparent pointer-events-none z-10" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-linear-to-r from-transparent via-[#10B981]/40 to-transparent pointer-events-none z-10" />
           <div className="absolute bottom-0 right-0 w-32 h-32 bg-[#3B82F6]/5 rounded-full blur-2xl pointer-events-none translate-x-1/3 translate-y-1/3" />
 
           {myGroup.group.image ? (
@@ -43,7 +43,7 @@ const MyGroupCard = ({ myGroup }: MyGroupCardProps) => {
             </div>
           ) : (
             <div className="flex items-center px-5 pt-5 md:px-6 md:pt-6">
-              <div className="w-10 h-10 rounded-xl bg-[#10B981]/10 border border-[#10B981]/20 flex items-center justify-center shrink-0 transition-all duration-300 group-hover/card:bg-[#10B981]/15 group-hover/card:border-[#10B981]/35">
+              <div className="w-10 h-10 rounded-xl bg-[#10B981]/15 border border-[#10B981]/30 flex items-center justify-center shrink-0 shadow-[0_0_12px_rgba(16,185,129,0.12)] transition-all duration-300 group-hover/card:bg-[#10B981]/20 group-hover/card:border-[#10B981]/45">
                 <i className="bi bi-people text-[#10B981]" />
               </div>
             </div>

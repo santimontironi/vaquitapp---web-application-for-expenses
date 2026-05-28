@@ -35,13 +35,10 @@ const Register = () => {
   return (
     <main className="relative min-h-screen bg-[#0F172A] flex items-center justify-center py-5 md:py-6 xl:py-10 2xl:py-15 px-4 overflow-hidden">
 
-      {/* Fondo aurora multicapa */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-150 h-75 rounded-full bg-[#3B82F6]/6 blur-[130px] pointer-events-none" />
-      <div className="absolute top-[-5%] left-[-8%] w-96 h-96 rounded-full bg-[#3B82F6]/8 blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-[-8%] right-[-6%] w-80 h-80 rounded-full bg-[#10B981]/7 blur-[110px] pointer-events-none" />
-      <div className="absolute top-1/2 right-[-10%] w-64 h-64 rounded-full bg-[#3B82F6]/4 blur-[90px] pointer-events-none" />
-      <div className="absolute bottom-[10%] left-[5%] w-72 h-72 rounded-full bg-[#10B981]/5 blur-[120px] pointer-events-none" />
-      <div className="absolute top-[30%] left-[-5%] w-48 h-48 rounded-full bg-[#3B82F6]/5 blur-[80px] pointer-events-none" />
+      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 80% 65% at 0% 0%, rgba(59,130,246,0.30) 0%, transparent 65%)" }} />
+      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 60% 55% at 100% 100%, rgba(59,130,246,0.22) 0%, transparent 65%)" }} />
+      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 55% 45% at 100% 0%, rgba(16,185,129,0.18) 0%, transparent 65%)" }} />
+      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 45% 35% at 0% 100%, rgba(16,185,129,0.12) 0%, transparent 65%)" }} />
 
       <section className="relative z-10 w-full max-w-sm md:max-w-md">
 

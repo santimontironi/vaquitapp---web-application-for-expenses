@@ -38,16 +38,16 @@ const AddMember = ({ idGroup }: { idGroup: string | undefined }) => {
   }
 
   return (
-    <div className="relative p-px rounded-2xl bg-linear-to-br from-[#10B981]/20 via-white/4 to-[#3B82F6]/15 shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
+    <div className="relative p-px rounded-2xl bg-[#10B981]/30 shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
       <div className="relative rounded-[15px] bg-[#0A1020]/85 backdrop-blur-2xl p-6 md:p-8 overflow-hidden">
 
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-linear-to-r from-transparent via-[#10B981]/20 to-transparent pointer-events-none" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-linear-to-r from-transparent via-[#10B981]/30 to-transparent pointer-events-none" />
         <div className="absolute bottom-0 right-0 w-40 h-40 bg-[#3B82F6]/4 rounded-full blur-2xl pointer-events-none translate-x-1/3 translate-y-1/3" />
 
         <div className="relative flex flex-col gap-6">
 
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl bg-[#10B981]/10 border border-[#10B981]/20 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-[#10B981]/15 border border-[#10B981]/30 flex items-center justify-center">
               <i className="bi bi-person-plus text-[#10B981]" />
             </div>
             <h2 className="text-white font-semibold">Agregar miembro</h2>
@@ -123,7 +123,7 @@ const AddMember = ({ idGroup }: { idGroup: string | undefined }) => {
 
             <button
               type="submit"
-              className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-[#10B981] hover:bg-[#0ea271] active:bg-[#0d9167] text-white font-medium transition-all duration-200 shadow-[0_4px_20px_rgba(16,185,129,0.25)] hover:shadow-[0_6px_28px_rgba(16,185,129,0.35)] cursor-pointer"
+              className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-[#10B981] hover:bg-[#0ea271] active:bg-[#0d9167] text-white font-medium transition-all duration-200 shadow-[0_4px_20px_rgba(16,185,129,0.35)] hover:shadow-[0_6px_28px_rgba(16,185,129,0.50)] cursor-pointer"
             >
               Enviar invitación
             </button>

@@ -65,7 +65,7 @@ const CreatePlan = ({ idGroup }: CreatePlanProps) => {
   return (
     <section className="w-full">
 
-      <div className="relative p-px rounded-3xl bg-linear-to-br from-[#10B981]/45 via-white/5 to-[#3B82F6]/30 shadow-[0_25px_60px_rgba(0,0,0,0.6)]">
+      <div className="relative p-px rounded-3xl bg-[#3B82F6]/35 shadow-[0_25px_60px_rgba(0,0,0,0.6)]">
 
         <div className="absolute inset-px rounded-[23px] border border-white/5 pointer-events-none z-10" />
 
@@ -235,7 +235,7 @@ const CreatePlan = ({ idGroup }: CreatePlanProps) => {
                   "relative flex items-center justify-center gap-2 w-full py-3.5 px-6 rounded-xl text-white",
                   "bg-linear-to-r from-[#10B981] via-[#0fca8a] to-[#0ea371]",
                   "border border-[#10B981]/25 shadow-[0_4px_24px_rgba(16,185,129,0.30),inset_0_1px_0_rgba(255,255,255,0.12)]",
-                  "transition-all duration-200",
+                  "transition-all duration-200 cursor-pointer",
                   loading.createLoading
                     ? "opacity-60 cursor-not-allowed"
                     : "hover:-translate-y-0.5 hover:shadow-[0_10px_40px_rgba(16,185,129,0.50),inset_0_1px_0_rgba(255,255,255,0.15)] active:translate-y-0 active:scale-[0.98] active:shadow-[0_2px_12px_rgba(16,185,129,0.25)]",
