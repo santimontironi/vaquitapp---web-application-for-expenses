@@ -12,6 +12,7 @@ const Dashboard = () => {
   const { groups, getMyGroups, loading } = useGroup()
 
   useEffect(() => {
+    if(!user) return
     getMyGroups()
   }, [])
 

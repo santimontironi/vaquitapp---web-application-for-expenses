@@ -81,6 +81,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 const response = await dashboardService();
                 setUser(response.data.user);
             }
+            catch {
+                setUser(null);
+            }
             finally {
                 setLoadingAuth(prev => ({ ...prev, dashboardLoading: false }));
             }

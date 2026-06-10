@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useState } from "react";
 import type { GroupMember, LoadingGroups, Group, Members, AddMemberData, EditGroupData } from "../types/groups.types";
 import { getUserGroupsService, createGroupService, getGroupDetailsService, getGroupMembersService, inviteMemberService, acceptInvitationService, deleteMemberService, getAdminRoleService, leaveGroupService, editGroupService } from "../services/groups.service";
 
@@ -32,10 +32,6 @@ export const GroupProvider = ({ children }: { children: React.ReactNode }) => {
         invitationLoading: false,
         editLoading: false,
     });
-
-    useEffect(() => {
-        getMyGroups();
-    }, []);
 
     async function getMyGroups() {
         setLoading(prev => ({ ...prev, fetchLoading: true }));
