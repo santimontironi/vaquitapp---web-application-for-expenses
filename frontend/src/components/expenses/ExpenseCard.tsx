@@ -17,10 +17,14 @@ const ExpenseCard = ({ expense, onDelete }: ExpenseCardProps) => {
             showCancelButton: true,
             confirmButtonText: "Sí, eliminar",
             cancelButtonText: "Cancelar",
-            background: "#0d1526",
-            color: "#ffffff",
-            confirmButtonColor: "#EF4444",
-            cancelButtonColor: "#1e2d45",
+            buttonsStyling: false,
+            customClass: {
+                popup: "va-swal-popup",
+                title: "va-swal-title",
+                htmlContainer: "va-swal-text",
+                confirmButton: "va-swal-confirm va-swal-confirm-danger",
+                cancelButton: "va-swal-cancel",
+            },
         });
 
         if (result.isConfirmed) {
@@ -29,34 +33,33 @@ const ExpenseCard = ({ expense, onDelete }: ExpenseCardProps) => {
     };
 
     return (
-        <div className="flex items-start gap-4 p-4 rounded-xl bg-white/3 border border-white/6 transition-all duration-200 hover:bg-white/5 hover:border-white/10">
+        <div className="flex items-start gap-3 bg-white/4 border border-white/[0.07] rounded-xl px-4 py-3.5 hover:bg-white/[0.07] transition-colors duration-150">
 
-            <div className="w-10 h-10 rounded-xl bg-[#3B82F6]/10 border border-[#3B82F6]/20 flex items-center justify-center shrink-0">
-                <i className="bi bi-receipt text-[#3B82F6]" />
+            <div className="w-8 h-8 rounded-xl bg-[#FFD166]/10 flex items-center justify-center shrink-0 mt-0.5">
+                <i className="bi bi-receipt text-[#FFD166] text-sm" />
             </div>
 
-            <div className="flex-1 min-w-0 flex flex-col gap-1">
-                <span className="text-white font-medium truncate">
+            <div className="flex-1 min-w-0">
+                <span className="text-[#FFD166]/80 font-medium text-sm block truncate">
                     {expense.description ?? "Sin descripción"}
                 </span>
-                <span className="text-white/40 text-xs">
-                    Dividido entre: {expense.split_among.map(u => u.username).join(", ")}
+                <span className="text-white/30 text-xs block mt-0.5 truncate">
+                    Dividido entre: <span className="text-white/50">{expense.split_among.map(u => u.username).join(", ")}</span>
                 </span>
-                <span className="text-white/30 text-xs">{formatJoinedDate(expense.createdAt)}</span>
+                <span className="text-white/20 text-xs block mt-0.5">{formatJoinedDate(expense.createdAt)}</span>
             </div>
 
-            <div className="flex flex-col items-end gap-2 shrink-0">
-                <span className="text-[#10B981] font-semibold">${expense.amount.toFixed(2)}</span>
-                <span className="text-white/40 text-xs">Pagó: {expense.paid_by.username}</span>
+            <div className="flex flex-col items-end gap-1.5 shrink-0">
+                <span className="text-[#FFD166] font-bold text-base tabular-nums">${expense.amount.toFixed(2)}</span>
+                <span className="text-white/30 text-xs">Pagó: <span className="text-[#FFD166]/60">{expense.paid_by.username}</span></span>
                 <button
                     onClick={handleDelete}
                     title="Eliminar gasto"
-                    className="flex items-center justify-center w-7 h-7 rounded-lg bg-[#EF4444]/8 border border-[#EF4444]/20 text-[#EF4444]/60 hover:bg-[#EF4444]/15 hover:border-[#EF4444]/40 hover:text-[#EF4444] transition-all duration-200 cursor-pointer"
+                    className="w-7 h-7 flex items-center justify-center rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-all duration-150 cursor-pointer mt-1"
                 >
                     <i className="bi bi-trash3 text-xs" />
                 </button>
             </div>
-
         </div>
     );
 };

@@ -1,7 +1,170 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
 @import "tailwindcss";
 
 body{
-    font-family: "Manrope", sans-serif;
+    font-family: "Outfit", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
+::selection {
+    background-color: rgba(188, 150, 230, 0.35);
+    color: #ffffff;
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(188, 150, 230, 0.35) transparent;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1b0924;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(188, 150, 230, 0.30);
+    border-radius: 999px;
+    border: 2px solid #1b0924;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(188, 150, 230, 0.50);
+}
+
+.va-swal-popup {
+    background: #210B2C !important;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1rem !important;
+    box-shadow: 0 24px 60px -16px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(188, 150, 230, 0.04);
+    font-family: "Outfit", sans-serif;
+    padding-bottom: 1.75rem !important;
+}
+
+.va-swal-title {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    font-size: 1.25rem !important;
+    letter-spacing: -0.01em;
+    padding-top: 1.75rem !important;
+}
+
+.va-swal-text {
+    color: rgba(255, 255, 255, 0.6) !important;
+    font-size: 0.9rem !important;
+    line-height: 1.5;
+}
+
+.swal2-container.swal2-backdrop-show,
+.swal2-container.swal2-noanimation {
+    background: rgba(33, 11, 44, 0.85) !important;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+
+.va-swal-popup .swal2-icon {
+    border-color: currentColor;
+}
+
+.va-swal-popup .swal2-icon.swal2-warning {
+    border-color: rgba(255, 209, 102, 0.35);
+    color: #FFD166;
+}
+
+.va-swal-popup .swal2-icon.swal2-error {
+    border-color: rgba(239, 68, 68, 0.35);
+    color: #EF4444;
+}
+
+.va-swal-popup .swal2-icon.swal2-question {
+    border-color: rgba(188, 150, 230, 0.35);
+    color: #BC96E6;
+}
+
+.va-swal-popup .swal2-icon.swal2-success {
+    border-color: rgba(110, 231, 183, 0.35);
+    color: #6EE7B7;
+}
+
+.va-swal-popup .swal2-icon.swal2-success [class^='swal2-success-line'] {
+    background-color: #6EE7B7;
+}
+
+.va-swal-popup .swal2-icon.swal2-success .swal2-success-ring {
+    border-color: rgba(110, 231, 183, 0.35);
+}
+
+.va-swal-popup .swal2-actions {
+    gap: 0.625rem;
+    margin-top: 1.5rem !important;
+}
+
+.va-swal-confirm,
+.va-swal-cancel {
+    font-family: "Outfit", sans-serif;
+    font-weight: 600;
+    font-size: 0.875rem;
+    border-radius: 0.75rem;
+    padding: 0.625rem 1.375rem;
+    border: 1px solid transparent;
+    transition: all 150ms ease;
+    cursor: pointer;
+    box-shadow: none !important;
+}
+
+.va-swal-confirm:focus,
+.va-swal-cancel:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(188, 150, 230, 0.35) !important;
+}
+
+.va-swal-confirm:active,
+.va-swal-cancel:active {
+    transform: scale(0.98);
+}
+
+.va-swal-confirm {
+    background-color: #BC96E6;
+    color: #210B2C;
+}
+
+.va-swal-confirm:hover {
+    background-color: rgba(188, 150, 230, 0.9);
+}
+
+.va-swal-confirm-amber {
+    background-color: #FFD166;
+    color: #210B2C;
+}
+
+.va-swal-confirm-amber:hover {
+    background-color: rgba(255, 209, 102, 0.9);
+}
+
+.va-swal-confirm-danger {
+    background-color: #EF4444;
+    color: #ffffff;
+}
+
+.va-swal-confirm-danger:hover {
+    background-color: rgba(239, 68, 68, 0.88);
+}
+
+.va-swal-cancel {
+    background-color: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.75);
+    border-color: rgba(255, 255, 255, 0.16);
+}
+
+.va-swal-cancel:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.28);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.va-swal-popup .swal2-timer-progress-bar {
+    background: rgba(188, 150, 230, 0.55);
+}

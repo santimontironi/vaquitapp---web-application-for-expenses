@@ -22,7 +22,7 @@ class PlanRepository {
         const planUpdated = await Plan.findOneAndUpdate(
             { _id: planId, state: 'active' },
             { $addToSet: { members: { $each: userIds } } }, //addToSet sirve para evitar duplicados, y each para agregar varios elementos al array
-            { new: true }
+            { returnDocument: 'after' }
         );
         return planUpdated;
     }
@@ -40,7 +40,7 @@ class PlanRepository {
     }
 
     async checkPlanAsCompleted(planId) {
-        const plan = await Plan.findOneAndUpdate({ _id: planId, state: 'active' }, { state: 'completed' }, { new: true });
+        const plan = await Plan.findOneAndUpdate({ _id: planId, state: 'active' }, { state: 'completed' }, { returnDocument: 'after' });
         return plan;
     }
 }

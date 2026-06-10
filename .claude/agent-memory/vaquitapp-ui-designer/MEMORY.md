@@ -1,0 +1,8 @@
+- [Design System Patterns](design-system-patterns.md) — Established Tailwind class patterns for all core VaquitApp components
+- [Color Usage Decisions](color-usage-decisions.md) — Specific color assignments for financial data, badges, states, and surfaces
+- [Component Variants](component-variants.md) — Active/inactive nav states, role badges, balance displays, picker buttons
+- [Color Rebalance Decisions](color-rebalance-decisions.md) — Final 60/30/10 split rules: lavender restored broadly, amber stays financial-only, neutral for structure
+- [Login Hero Pattern](login-hero-pattern.md) — Premium gradient card hero block with logo glow, decorative dots, and amber/lavender separator
+- [Group Cover Banner Pattern](group-cover-banner-pattern.md) — LinkedIn-style cover banner for Group.tsx: two variants (image/no-image), back button floating inside
+- [Swal Theming Pattern](swal-theming-pattern.md) — Global SweetAlert2 dark panel + button variant classes (.va-swal-confirm/-amber/-danger/-cancel) in index.css
+- [Email Template Pattern](email-template-pattern.md) — Inline-styled HTML transactional emails in backend/utils/emailTemplates.js, table layout, brand colors, 🐄 mascot

@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { motion } from "motion/react";
+import { fadeUp } from "../utils/motion";
 import useGroup from "../hooks/useGroup";
 import Loader from "../components/ui/Loader";
 
@@ -28,101 +30,72 @@ const AcceptInvitation = () => {
   }, [token]);
 
   return (
-    <main className="relative min-h-screen bg-[#0F172A] flex items-center justify-center py-5 md:py-6 xl:py-10 2xl:py-15 px-4 overflow-hidden">
-      <div className="absolute top-0 left-0 w-96 h-96 rounded-full bg-[#10B981]/6 blur-[130px] pointer-events-none -translate-x-1/3 -translate-y-1/3" />
-      <div className="absolute bottom-0 right-0 w-96 h-96 rounded-full bg-[#3B82F6]/5 blur-[130px] pointer-events-none translate-x-1/3 translate-y-1/3" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full bg-[#10B981]/4 blur-[100px] pointer-events-none" />
+    <main className="min-h-screen bg-[#210B2C] flex items-center justify-center px-4 relative">
+      {/* Decorative lines */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden hidden xl:block">
+        <div className="absolute top-14 left-0 w-72 h-px bg-linear-to-r from-[#BC96E6]/62 to-transparent" />
+        <div className="absolute top-26 left-0 w-48 h-px bg-linear-to-r from-[#FFD166]/50 to-transparent" />
+        <div className="absolute top-40 left-0 w-28 h-px bg-linear-to-r from-[#BC96E6]/35 to-transparent" />
+        <div className="absolute bottom-16 right-0 w-68 h-px bg-linear-to-l from-[#BC96E6]/58 to-transparent" />
+        <div className="absolute bottom-28 right-0 w-44 h-px bg-linear-to-l from-[#FFD166]/44 to-transparent" />
+        <div className="absolute bottom-42 right-0 w-26 h-px bg-linear-to-l from-[#BC96E6]/32 to-transparent" />
+        <div className="absolute top-1/2 right-10 w-px h-32 bg-linear-to-b from-transparent via-[#BC96E6]/52 to-transparent" />
+        <div className="absolute top-[28%] left-12 w-px h-28 bg-linear-to-b from-transparent via-[#FFD166]/44 to-transparent" />
+        <div className="absolute top-[68%] left-28 w-px h-24 bg-linear-to-b from-transparent via-[#BC96E6]/35 to-transparent" />
+        <div className="absolute top-[42%] right-32 w-px h-20 bg-linear-to-b from-transparent via-[#FFD166]/32 to-transparent" />
+      </div>
 
-      <section className="relative z-10 w-full max-w-sm md:max-w-md">
+      <section className="w-full max-w-md">
         {loading.invitationLoading ? (
-          <div className="flex flex-col items-center gap-4">
+          <div className="bg-white/6 border border-white/10 rounded-2xl p-10 text-center backdrop-blur-sm">
             <Loader />
-            <p className="text-white/40">Procesando tu invitación...</p>
+            <p className="text-white/50 text-sm mt-4">Procesando tu invitación...</p>
           </div>
         ) : (
-          <div className="relative p-px rounded-3xl bg-linear-to-br from-[#10B981]/30 via-white/5 to-[#3B82F6]/20 shadow-[0_0_60px_rgba(16,185,129,0.08),0_25px_60px_rgba(0,0,0,0.6)]">
-            <div className="absolute inset-px rounded-[23px] border border-white/5 pointer-events-none z-10" />
+          <motion.div {...fadeUp()} className="bg-white/6 border border-white/10 rounded-2xl p-8 md:p-10 text-center backdrop-blur-sm">
+            {successResponse && (
+              <>
+                <div className="w-16 h-16 rounded-full bg-[#BC96E6]/15 border border-[#BC96E6]/30 flex items-center justify-center mx-auto mb-5">
+                  <i className="bi bi-check-circle-fill text-[#BC96E6] text-3xl" />
+                </div>
 
-            <div className="relative bg-[#0A1020]/85 backdrop-blur-3xl rounded-[23px] p-6 md:p-9 overflow-hidden flex flex-col items-center text-center gap-6">
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-linear-to-r from-transparent via-[#10B981]/30 to-transparent pointer-events-none" />
+                <div className="mb-7">
+                  <h2 className="text-white font-semibold text-xl mb-2">¡Bienvenido al grupo!</h2>
+                  <p className="text-white/50 text-sm">{successResponse}</p>
+                </div>
 
-              <div className="absolute bottom-0 right-0 w-52 h-52 bg-[#3B82F6]/5 rounded-full blur-3xl pointer-events-none translate-x-1/3 translate-y-1/3" />
-              <div className="absolute top-0 left-0 w-40 h-40 bg-[#10B981]/4 rounded-full blur-2xl pointer-events-none -translate-x-1/3 -translate-y-1/3" />
+                <button
+                  onClick={() => navigate("/inicio")}
+                  className="inline-flex items-center gap-2 bg-[#BC96E6] text-[#210B2C] font-semibold rounded-xl px-6 py-3 hover:bg-[#FFD166] active:scale-[0.98] transition-all duration-150 cursor-pointer"
+                >
+                  <i className="bi bi-people" />
+                  Ver mis grupos
+                  <i className="bi bi-arrow-right" />
+                </button>
+              </>
+            )}
 
-              {successResponse && (
-                <>
-                  <div className="relative flex items-center justify-center mt-2">
-                    <div className="absolute inset-0 rounded-full bg-[#10B981]/20 blur-2xl scale-150 pointer-events-none" />
-                    <div className="relative z-10 w-20 h-20 rounded-full bg-[#10B981]/10 border border-[#10B981]/25 flex items-center justify-center">
-                      <i
-                        className="bi bi-check-circle-fill text-[#10B981] drop-shadow-[0_0_16px_rgba(16,185,129,0.70)]"
-                        style={{ fontSize: "2rem" }}
-                      />
-                    </div>
-                  </div>
+            {errorResponse && (
+              <>
+                <div className="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-5">
+                  <i className="bi bi-x-circle-fill text-red-400 text-3xl" />
+                </div>
 
-                  <div className="flex flex-col gap-2">
-                    <h2 className="text-white">¡Bienvenido al grupo!</h2>
-                    <p className="text-white/50">{successResponse}</p>
-                  </div>
+                <div className="mb-7">
+                  <h2 className="text-white font-semibold text-xl mb-2">No se pudo procesar la invitación</h2>
+                  <p className="text-white/50 text-sm">{errorResponse}</p>
+                </div>
 
-                  <div className="w-full relative group/btn">
-                    <div className="absolute -inset-1 rounded-xl bg-linear-to-r from-[#10B981]/50 to-[#3B82F6]/25 blur-lg opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300 pointer-events-none" />
-                    <button
-                      onClick={() => navigate("/my-groups")}
-                      className={[
-                        "relative flex items-center justify-center gap-2 w-full py-3.5 px-6 rounded-xl text-white",
-                        "bg-linear-to-r from-[#10B981] via-[#0fca8a] to-[#0ea371]",
-                        "border border-[#10B981]/25 shadow-[0_4px_24px_rgba(16,185,129,0.30),inset_0_1px_0_rgba(255,255,255,0.12)]",
-                        "transition-all duration-200",
-                        "hover:-translate-y-0.5 hover:shadow-[0_10px_40px_rgba(16,185,129,0.50),inset_0_1px_0_rgba(255,255,255,0.15)]",
-                        "active:translate-y-0 active:scale-[0.98]",
-                      ].join(" ")}
-                    >
-                      <i className="bi bi-people opacity-80" />
-                      Ver mis grupos
-                      <i className="bi bi-arrow-right opacity-70 transition-transform duration-200 group-hover/btn:translate-x-0.5" />
-                    </button>
-                  </div>
-                </>
-              )}
-
-              {errorResponse && (
-                <>
-                  <div className="relative flex items-center justify-center mt-2">
-                    <div className="absolute inset-0 rounded-full bg-[#EF4444]/15 blur-2xl scale-150 pointer-events-none" />
-                    <div className="relative z-10 w-20 h-20 rounded-full bg-[#EF4444]/10 border border-[#EF4444]/25 flex items-center justify-center">
-                      <i
-                        className="bi bi-x-circle-fill text-[#EF4444] drop-shadow-[0_0_16px_rgba(239,68,68,0.55)]"
-                        style={{ fontSize: "2rem" }}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col gap-2">
-                    <h2 className="text-white">
-                      No se pudo procesar la invitación
-                    </h2>
-                    <p className="text-white/50">{errorResponse}</p>
-                  </div>
-
-                  <button
-                    onClick={() => navigate("/")}
-                    className={[
-                      "flex cursor-pointer items-center justify-center gap-2 w-full py-3.5 px-6 rounded-xl text-white",
-                      "bg-transparent border border-[#EF4444]/40",
-                      "transition-all duration-200",
-                      "hover:bg-[#EF4444]/8 hover:border-[#EF4444]/70 hover:-translate-y-0.5 hover:shadow-[0_4px_20px_rgba(239,68,68,0.18)]",
-                      "active:translate-y-0 active:scale-[0.97]",
-                    ].join(" ")}
-                  >
-                    <i className="bi bi-arrow-left opacity-70" />
-                    Ingresar
-                  </button>
-                </>
-              )}
-            </div>
-          </div>
+                <button
+                  onClick={() => navigate("/")}
+                  className="inline-flex items-center gap-2 border border-[#BC96E6]/25 text-[#BC96E6]/70 rounded-xl px-6 py-3 hover:bg-[#BC96E6]/8 hover:border-[#BC96E6]/40 transition-all duration-150 cursor-pointer"
+                >
+                  <i className="bi bi-arrow-left" />
+                  Ingresar
+                </button>
+              </>
+            )}
+          </motion.div>
         )}
       </section>
     </main>

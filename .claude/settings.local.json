@@ -30,7 +30,21 @@
       "Bash(dir \"C:\\\\Users\\\\nn\\\\Desktop\\\\VaquitApp\\\\frontend\\\\src\\\\services\")",
       "Bash(dir \"C:\\\\Users\\\\nn\\\\Desktop\\\\VaquitApp\\\\frontend\\\\src\\\\hooks\")",
       "Bash(dir \"C:\\\\Users\\\\nn\\\\Desktop\\\\VaquitApp\\\\frontend\\\\src\\\\utils\")",
-      "Bash(del *)"
+      "Bash(del *)",
+      "Bash(npm list *)",
+      "Bash(node -e \"require\\('jest'\\)\")",
+      "Bash(npm config *)",
+      "Bash(npm test *)",
+      "Bash(Select-Object Name)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\Usuario\\\\Desktop\\\\Programacion\\\\PROYECTOS FULLSTACK\\\\vaquitapp---web-application-for-expenses\\\\frontend\\\\src\" -Recurse | Where-Object {$_.Extension -match '\\\\.\\(jsx|js\\)$'} | Select-Object -ExpandProperty FullName)",
+      "Bash(npx tsc *)",
+      "Bash(npm run *)",
+      "WebSearch",
+      "PowerShell(Remove-Item *)",
+      "PowerShell(npm *)",
+      "PowerShell(try { $r = Invoke-WebRequest -Uri \"https://registry.npmjs.org/-/ping\" -UseBasicParsing -TimeoutSec 15; \"PowerShell OK: $\\($r.StatusCode\\)\" } catch { \"PowerShell FAIL: $\\($_.Exception.Message\\)\" })",
+      "Bash(ls -la)",
+      "Bash(cat ../babel.config.cjs)"
     ]
   }
 }

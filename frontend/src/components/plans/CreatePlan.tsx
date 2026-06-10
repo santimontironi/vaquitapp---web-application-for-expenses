@@ -56,207 +56,172 @@ const CreatePlan = ({ idGroup }: CreatePlanProps) => {
       setSelectedIds([])
       setPreviewUrl(null)
     } catch (error: any) {
-      const message =
-        error?.response?.data?.message ?? "Ocurrió un error al crear el plan"
+      const message = error?.response?.data?.message ?? "Ocurrió un error al crear el plan"
       setErrorResponse(message)
     }
   }
 
   return (
-    <section className="w-full">
-
-      <div className="relative p-px rounded-3xl bg-[#3B82F6]/35 shadow-[0_25px_60px_rgba(0,0,0,0.6)]">
-
-        <div className="absolute inset-px rounded-[23px] border border-white/5 pointer-events-none z-10" />
-
-        <div className="relative bg-[#0A1020]/85 backdrop-blur-3xl rounded-[23px] p-6 md:p-8 overflow-hidden">
-
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-linear-to-r from-transparent via-[#10B981]/35 to-transparent pointer-events-none" />
-          <div className="absolute top-0 left-0 w-40 h-40 bg-[#10B981]/4 rounded-full blur-2xl pointer-events-none -translate-x-1/3 -translate-y-1/3" />
-          <div className="absolute bottom-0 right-0 w-40 h-40 bg-[#3B82F6]/5 rounded-full blur-3xl pointer-events-none translate-x-1/3 translate-y-1/3" />
-
-          <div className="relative flex flex-col gap-1 mb-7">
-            <div className="flex items-center gap-3 mb-1">
-              <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-[#10B981]/10 border border-[#10B981]/20">
-                <i className="bi bi-calendar-event text-[#10B981]" />
+    <section className="bg-white/6 border border-white/10 rounded-2xl p-5 hover:border-[#FFD166]/40 transition-colors duration-200">
+      <div>
+    
+        <div className="flex items-start justify-between mb-5">
+          <div>
+            <div className="flex items-center gap-2.5 mb-1">
+              <div className="w-8 h-8 rounded-xl bg-[#BC96E6]/15 flex items-center justify-center shrink-0">
+                <i className="bi bi-calendar-event text-[#BC96E6] text-sm" />
               </div>
-              <h2 className="text-white">Nuevo plan</h2>
+              <h2 className="text-white font-semibold text-base">Nuevo plan</h2>
             </div>
-            <p className="text-white/40">
-              Completá los datos para crear un plan dentro del grupo.
-            </p>
+            <p className="text-white/40 text-xs ml-10.5">Completá los datos para crear un plan dentro del grupo.</p>
+          </div>
+        </div>
+
+        <div className="border-t border-white/[0.07] mb-5" />
+
+        <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5">
+
+          <div className="space-y-1.5">
+            <label className="text-xs font-semibold tracking-wider uppercase text-white/40">
+              Nombre del plan <span className="text-[#BC96E6]">*</span>
+            </label>
+            <input
+              type="text"
+              placeholder="Ej: Asado del domingo"
+              autoComplete="off"
+              className="w-full bg-white/8 border border-white/20 rounded-xl px-4 py-3 text-white placeholder:text-white/30 text-sm focus:outline-none focus:border-[#FFD166] focus:ring-1 focus:ring-[#FFD166]/35 transition-colors duration-150"
+              {...register("name", {
+                required: "El nombre es requerido",
+                minLength: { value: 2, message: "Mínimo 2 caracteres" },
+                maxLength: { value: 60, message: "Máximo 60 caracteres" },
+              })}
+            />
+            {errors.name && (
+              <p className="flex items-center gap-1.5 text-red-400 text-xs">
+                <i className="bi bi-exclamation-circle" />
+                {errors.name.message}
+              </p>
+            )}
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="relative flex flex-col gap-5" noValidate>
+          <div className="space-y-1.5">
+            <label className="text-xs font-semibold tracking-wider uppercase text-white/40">
+              Descripción <span className="text-white/25 normal-case tracking-normal font-normal">(opcional)</span>
+            </label>
+            <textarea
+              placeholder="¿De qué se trata este plan?"
+              rows={3}
+              className="w-full bg-white/8 border border-white/20 rounded-xl px-4 py-3 text-white placeholder:text-white/30 text-sm focus:outline-none focus:border-[#FFD166] focus:ring-1 focus:ring-[#FFD166]/35 transition-colors duration-150 resize-none"
+              {...register("description")}
+            />
+          </div>
 
-            <div className="flex flex-col gap-1.5">
-              <label className="text-white/70">
-                Nombre del plan <span className="text-[#EF4444]">*</span>
-              </label>
-              <input
-                type="text"
-                placeholder="Ej: Asado del domingo"
-                autoComplete="off"
-                {...register("name", {
-                  required: "El nombre es requerido",
-                  minLength: { value: 2, message: "Mínimo 2 caracteres" },
-                  maxLength: { value: 60, message: "Máximo 60 caracteres" },
-                })}
-                className={[ "w-full px-4 py-3 rounded-xl text-white placeholder:text-white/25", "bg-white/5 border", errors.name ? "border-[#EF4444]/60" : "border-white/10", "outline-none transition-all duration-200", "hover:bg-white/7 hover:border-white/25", "focus:bg-[#10B981]/5 focus:border-[#10B981]/60 focus:shadow-[0_0_0_3px_rgba(16,185,129,0.12)]",].join(" ")}
-              />
-              {errors.name && (
-                <p className="flex items-center gap-1.5 text-[#EF4444]">
-                  <i className="bi bi-exclamation-circle" />
-                  {errors.name.message}
-                </p>
-              )}
-            </div>
-
-            <div className="flex flex-col gap-1.5">
-              <label className="text-white/70">
-                Descripción <span className="text-white/30">(opcional)</span>
-              </label>
-              <textarea placeholder="¿De qué se trata este plan?" rows={3} {...register("description")}
-                className={[
-                  "w-full px-4 py-3 rounded-xl text-white placeholder:text-white/25 resize-none",
-                  "bg-white/5 border border-white/10",
-                  "outline-none transition-all duration-200",
-                  "hover:bg-white/7 hover:border-white/25",
-                  "focus:bg-[#10B981]/5 focus:border-[#10B981]/60 focus:shadow-[0_0_0_3px_rgba(16,185,129,0.12)]",
-                ].join(" ")}
-              />
-            </div>
-
-            <div className="flex flex-col gap-1.5">
-              <label className="text-white/70">
-                Imagen del plan <span className="text-white/30">(opcional)</span>
-              </label>
-              <label
-                htmlFor="plan-image"
-                className={[
-                  "relative flex items-center gap-4 px-4 py-4 rounded-xl border border-dashed cursor-pointer",
-                  "bg-white/3 border-white/10 text-white/40",
-                  "transition-all duration-200",
-                  "hover:bg-white/5 hover:border-[#10B981]/40 hover:text-white/60",
-                ].join(" ")}
-              >
-                {previewUrl ? (
-                  <>
-                    <img
-                      src={previewUrl}
-                      alt="Preview"
-                      className="w-12 h-12 rounded-lg object-cover border border-white/10 shrink-0"
-                    />
-                    <div className="flex flex-col gap-0.5 min-w-0">
-                      <span className="text-white/70 truncate">Imagen seleccionada</span>
-                      <span className="text-white/30">Hacé click para cambiarla</span>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-white/5 border border-white/8 shrink-0">
-                      <i className="bi bi-image text-white/40" />
-                    </div>
-                    <div className="flex flex-col gap-0.5">
-                      <span className="text-white/60">Subir imagen</span>
-                      <span className="text-white/30">PNG, JPG o WEBP</span>
-                    </div>
-                  </>
-                )}
-              </label>
-              <input id="plan-image" type="file" accept="image/png,image/jpeg,image/webp" className="sr-only" {...register("image")}
-                onChange={(e) => {
-                  register("image").onChange(e)
-                  handleImageChange(e)
-                }}
-              />
-            </div>
-
-            <div className="flex items-center gap-2 opacity-20" aria-hidden="true">
-              <div className="h-px flex-1 bg-white/40" />
-              <div className="w-1 h-1 rounded-full bg-white" />
-              <div className="w-1 h-1 rounded-full bg-white" />
-              <div className="w-1 h-1 rounded-full bg-white" />
-              <div className="h-px flex-1 bg-white/40" />
-            </div>
-
-            <div className="flex flex-col gap-2.5">
-              <div className="flex items-center justify-between">
-                <label className="text-white/70">
-                  Miembros del plan <span className="text-[#EF4444]">*</span>
-                </label>
-                {selectedMembers.length > 0 && ( 
-                  <span className="flex items-center gap-1 text-[#10B981]">
-                    <i className="bi bi-check-circle" />
-                    {selectedMembers.length} seleccionado{selectedMembers.length !== 1 ? "s" : ""}
-                  </span>
-                )}
-              </div>
-
-              {members && members.filter(m => m.user._id !== user?._id).length > 0 ? (
-                <div className="flex flex-wrap gap-2">
-                  {members.filter(m => m.user._id !== user?._id).map(member => (
-                    <MemberOption
-                      key={member._id}
-                      member={member}
-                      active={selectedMembers.includes(member.user._id)}
-                      onToggle={toggleMember}
-                    />
-                  ))}
-                </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-semibold tracking-wider uppercase text-white/40">
+              Imagen del plan <span className="text-white/25 normal-case tracking-normal font-normal">(opcional)</span>
+            </label>
+            <label
+              htmlFor="plan-image"
+              className="flex items-center gap-4 bg-white/5 border border-[#BC96E6]/25 border-dashed rounded-xl px-5 py-4 cursor-pointer hover:bg-[#BC96E6]/4 hover:border-[#BC96E6]/45 transition-all duration-150"
+            >
+              {previewUrl ? (
+                <>
+                  <img src={previewUrl} alt="Preview" className="w-14 h-14 rounded-xl object-cover shrink-0" />
+                  <div>
+                    <span className="text-white/80 text-sm font-medium block">Imagen seleccionada</span>
+                    <span className="text-white/40 text-xs">Hacé click para cambiarla</span>
+                  </div>
+                </>
               ) : (
-                <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-white/3 border border-white/8">
-                  <i className="bi bi-people text-white/30" />
-                  <span className="text-white/30">No hay miembros en el grupo todavía</span>
-                </div>
+                <>
+                  <div className="w-12 h-12 rounded-xl bg-[#BC96E6]/10 flex items-center justify-center shrink-0">
+                    <i className="bi bi-image text-[#BC96E6]/60 text-xl" />
+                  </div>
+                  <div>
+                    <span className="text-white/60 text-sm font-medium block">Subir imagen</span>
+                    <span className="text-white/30 text-xs">PNG, JPG o WEBP</span>
+                  </div>
+                </>
               )}
+            </label>
+            <input
+              id="plan-image"
+              type="file"
+              accept="image/png,image/jpeg,image/webp"
+              className="hidden"
+              {...register("image")}
+              onChange={(e) => {
+                register("image").onChange(e)
+                handleImageChange(e)
+              }}
+            />
+          </div>
 
-              {membersError && (
-                <p className="flex items-center gap-1.5 text-[#EF4444]">
-                  <i className="bi bi-exclamation-circle" />
-                  {membersError}
-                </p>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-semibold tracking-wider uppercase text-white/40">
+                Miembros del plan <span className="text-[#BC96E6]">*</span>
+              </label>
+              {selectedMembers.length > 0 && (
+                <span className="flex items-center gap-1 bg-[#BC96E6]/15 text-[#BC96E6] text-xs font-semibold px-2.5 py-1 rounded-full">
+                  <i className="bi bi-check-circle text-xs" />
+                  {selectedMembers.length} seleccionado{selectedMembers.length !== 1 ? "s" : ""}
+                </span>
               )}
             </div>
 
-            {errorResponse && (
-              <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-[#EF4444]/8 border border-[#EF4444]/25">
-                <i className="bi bi-exclamation-circle text-[#EF4444]" />
-                <span className="text-[#EF4444]">{errorResponse}</span>
+            {members && members.filter(m => m.user._id !== user?._id).length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {members.filter(m => m.user._id !== user?._id).map(member => (
+                  <MemberOption
+                    key={member._id}
+                    member={member}
+                    active={selectedMembers.includes(member.user._id)}
+                    onToggle={toggleMember}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 bg-white/4 border border-white/[0.07] rounded-xl px-4 py-3">
+                <i className="bi bi-people text-white/20" />
+                <span className="text-white/30 text-sm">No hay miembros en el grupo todavía</span>
               </div>
             )}
 
-            <div className="relative group/btn">
-              <div className="absolute -inset-1 rounded-xl bg-linear-to-r from-[#10B981]/50 to-[#3B82F6]/25 blur-lg opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300 pointer-events-none" />
-              <button
-                type="submit"
-                disabled={loading.createLoading}
-                className={[
-                  "relative flex items-center justify-center gap-2 w-full py-3.5 px-6 rounded-xl text-white",
-                  "bg-linear-to-r from-[#10B981] via-[#0fca8a] to-[#0ea371]",
-                  "border border-[#10B981]/25 shadow-[0_4px_24px_rgba(16,185,129,0.30),inset_0_1px_0_rgba(255,255,255,0.12)]",
-                  "transition-all duration-200 cursor-pointer",
-                  loading.createLoading
-                    ? "opacity-60 cursor-not-allowed"
-                    : "hover:-translate-y-0.5 hover:shadow-[0_10px_40px_rgba(16,185,129,0.50),inset_0_1px_0_rgba(255,255,255,0.15)] active:translate-y-0 active:scale-[0.98] active:shadow-[0_2px_12px_rgba(16,185,129,0.25)]",
-                ].join(" ")}
-              >
-                {loading.createLoading ? (
-                  <>
-                    <span className="w-4 h-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
-                    Creando plan...
-                  </>
-                ) : (
-                  <>
-                    <i className="bi bi-plus-circle" />
-                    Crear plan
-                  </>
-                )}
-              </button>
-            </div>
+            {membersError && (
+              <p className="flex items-center gap-1.5 text-red-400 text-xs">
+                <i className="bi bi-exclamation-circle" />
+                {membersError}
+              </p>
+            )}
+          </div>
 
-          </form>
-        </div>
+          {errorResponse && (
+            <div className="flex items-center gap-2 bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-xl px-4 py-3">
+              <i className="bi bi-exclamation-circle shrink-0" />
+              <span>{errorResponse}</span>
+            </div>
+          )}
+
+          <button
+            type="submit"
+            disabled={loading.createLoading}
+            className="w-full hover:bg-[#BC96E6] text-[#210B2C] font-semibold rounded-xl px-5 py-3 flex items-center justify-center gap-2 bg-[#FFD166] active:scale-[0.98] transition-all duration-150 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            {loading.createLoading ? (
+              <>
+                <span className="w-4 h-4 border-2 border-[#210B2C]/30 border-t-[#210B2C] rounded-full animate-spin" />
+                Creando plan...
+              </>
+            ) : (
+              <>
+                <i className="bi bi-plus-circle" />
+                Crear plan
+              </>
+            )}
+          </button>
+
+        </form>
       </div>
     </section>
   )

@@ -40,7 +40,7 @@ class GroupRepository {
         const updatedGroup = await Group.findOneAndUpdate(
             { _id: groupId, active: true },
             { $set: updates },
-            { new: true }
+            { returnDocument: 'after' }
         );
         return updatedGroup;
     }
@@ -49,7 +49,7 @@ class GroupRepository {
         const updatedMember = await GroupMember.findOneAndUpdate(
             { group: groupId, user: userId },
             { role: 'admin' },
-            { new: true }
+            { returnDocument: 'after' }
         );
         return updatedMember;
     }

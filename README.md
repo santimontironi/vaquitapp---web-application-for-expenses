@@ -18,6 +18,7 @@ Aplicación web para organizar gastos compartidos entre grupos de personas. Cre�
 - [Variables de entorno](#variables-de-entorno)
 - [Instalación y configuración](#instalación-y-configuración)
 - [Scripts](#scripts)
+- [Tests unitarios](#tests-unitarios)
 
 ---
 
@@ -31,11 +32,16 @@ Aplicación web para organizar gastos compartidos entre grupos de personas. Cre�
 | Hash de contraseñas | bcryptjs | 3.x |
 | Subida de archivos | Multer (memoria) + Cloudinary | Multer 2.x / Cloudinary 2.x |
 | Correo electrónico | Nodemailer (Gmail SMTP) | 8.x |
+| Rate limiting | express-rate-limit | 8.x |
 | Frontend | React + TypeScript + Vite | React 19, TS 5.9, Vite 8.x |
 | Estilos | Tailwind CSS | 4.x |
+| Animaciones | Motion (Framer Motion) | 12.x |
+| Tipografía | Google Fonts "Outfit" | — |
 | Cliente HTTP | Axios | 1.x |
 | Alertas / formularios | SweetAlert2 + React Hook Form | 11.x / 7.x |
 | Iconos | Bootstrap Icons | 1.x |
+| Spinners | react-spinners | 0.17.x |
+| Tests backend | Jest + Babel | Jest 30.x |
 
 ---
 
@@ -44,6 +50,11 @@ Aplicación web para organizar gastos compartidos entre grupos de personas. Cre�
 ```
 VaquitApp/
 ├── backend/
+│   ├── __tests__/
+│   │   ├── auth.controller.test.js
+│   │   ├── expense.controller.test.js
+│   │   ├── group.controller.test.js
+│   │   └── plan.controller.test.js
 │   ├── config/
 │   │   ├── cloudinary.config.js
 │   │   ├── db.config.js
@@ -75,6 +86,7 @@ VaquitApp/
 │   │   ├── expense.routes.js
 │   │   ├── group.routes.js
 │   │   └── plan.routes.js
+│   ├── babel.config.cjs
 │   ├── app.js
 │   ├── index.js
 │   └── server.js
@@ -83,16 +95,61 @@ VaquitApp/
     └── src/
         ├── components/
         │   ├── expenses/
+        │   │   ├── CreateExpense.tsx
+        │   │   ├── ExpenseCard.tsx
+        │   │   ├── PaidByPicker.tsx
+        │   │   └── SplitPicker.tsx
         │   ├── groups/
+        │   │   ├── AddMember.tsx
+        │   │   ├── AllMembers.tsx
+        │   │   ├── EditGroupModal.tsx
+        │   │   ├── MemberItem.tsx
+        │   │   ├── MyGroupCard.tsx
+        │   │   ├── MyGroups.tsx
+        │   │   └── SideNavGroup.tsx
         │   ├── layout/
+        │   │   ├── HeaderDashboard.tsx
+        │   │   └── VerifyAuth.tsx
         │   ├── plans/
+        │   │   ├── AllPlans.tsx
+        │   │   ├── CreatePlan.tsx
+        │   │   ├── MemberOption.tsx
+        │   │   ├── PlanHistory.tsx
+        │   │   └── PlanItem.tsx
         │   └── ui/
+        │       └── Loader.tsx
         ├── context/
+        │   ├── AuthContext.tsx
+        │   ├── ExpenseContext.tsx
+        │   ├── GroupContext.tsx
+        │   └── PlanContext.tsx
         ├── hooks/
+        │   ├── useAuth.tsx
+        │   ├── useExpense.tsx
+        │   ├── useGroup.tsx
+        │   └── usePlan.tsx
         ├── pages/
+        │   ├── AcceptInvitation.tsx
+        │   ├── ConfirmUser.tsx
+        │   ├── Dashboard.tsx
+        │   ├── Group.tsx
+        │   ├── Login.tsx
+        │   ├── NewGroup.tsx
+        │   ├── PlanDetail.tsx
+        │   └── Register.tsx
         ├── services/
+        │   ├── auth.service.ts
+        │   ├── expenses.service.ts
+        │   ├── groups.service.ts
+        │   └── plans.service.ts
         ├── types/
+        │   ├── auth.types.ts
+        │   ├── expense.types.ts
+        │   ├── groups.types.ts
+        │   └── plans.types.ts
         └── utils/
+            ├── date.ts
+            └── motion.ts
 ```
 
 ---
@@ -119,7 +176,8 @@ VaquitApp/
 
 ### Grupos
 - Crear grupo con nombre, descripción e imagen opcional (Cloudinary)
-- Ver todos los grupos a los que pertenece el usuario
+- Ver todos los grupos a los que pertenece el usuario con badge de rol y fecha de ingreso
+- Dashboard con empty state: si el usuario no pertenece a ningún grupo, se muestra una tarjeta con CTA para crear el primero
 - Editar nombre, descripción e imagen (solo admin)
 - Eliminar grupo de forma suave — `active: false` (solo admin)
 - Abandonar grupo — bloqueado si el usuario es el único admin
@@ -128,24 +186,42 @@ VaquitApp/
 - Ver todos los miembros con su rol y fecha de ingreso
 - Invitar por email: envía enlace firmado con JWT (7 días, incluye rol)
 - Aceptar invitación mediante token (requiere sesión activa)
-- Promover miembro a admin (solo admin)
+- Promover miembro a admin (solo admin); el botón no aparece si el miembro ya es admin
 - Eliminar miembro (solo admin)
 
 ### Planes
-- Crear plan con nombre, descripción e imagen opcional; el creador se agrega automáticamente
-- Ver planes activos e historial (completados/cancelados) con badge de estado
+- Crear plan con nombre, descripción e imagen opcional; el creador se agrega automáticamente como miembro
+- Ver planes activos del grupo en grid (1-3 columnas según viewport)
+- Ver historial de planes (completados/cancelados) en modal con badge de estado
 - Marcar plan como completado (cualquier miembro)
 - Agregar miembros del grupo a un plan existente
 
 ### Gastos
-- Registrar gasto: monto, descripción, quién pagó y entre quiénes se divide
+- Registrar gasto: monto, descripción opcional, quién pagó (`paid_by`) y entre quiénes se divide (`split_among`)
 - `paid_by` y cada usuario en `split_among` deben ser miembros del plan
-- Ver gastos activos del plan
-- Ver todos los gastos sin filtrar (incluye saldados)
-- Eliminar gasto permanentemente (solo quien pagó o un admin)
-- Saldar todos los gastos activos del plan de una vez (`complete-all`)
-- Ver historial de gastos saldados en la página del plan (solo lectura)
+- Ver gastos activos del plan con detalle de quién pagó, monto y división
+- Eliminar gasto permanentemente con confirmación SweetAlert (solo quien pagó o un admin)
+- Saldar todos los gastos activos del plan de una vez (`complete-all`) con confirmación
+- Ver historial de gastos saldados en la página del plan (solo lectura, sin opción de eliminar)
 - Calcular balance: devuelve la lista mínima de transferencias para saldar todas las deudas
+
+### Diseño visual
+- Tema oscuro con paleta `#210B2C` (fondo), `#BC96E6` (acento lavanda) y `#FFD166` (acento dorado), tipografía "Outfit" (Google Fonts) y glassmorphism (`backdrop-blur`)
+- Animaciones de entrada y transición con **Motion** (`frontend/src/utils/motion.ts`): `fadeUp`, `fadeIn`, `modalBackdrop`, `modalPanel`; `MotionConfig` en `main.tsx` respeta `prefers-reduced-motion`
+- Alertas de SweetAlert2 estilizadas globalmente con clases `va-swal-*` definidas en `index.css`, acordes a la paleta de la app
+- Scrollbar personalizada y selección de texto con los colores de la marca
+
+### Navegación del frontend (React Router)
+| Ruta | Página | Protegida |
+| --- | --- | --- |
+| `/` | Login | No |
+| `/registro` | Register | No |
+| `/confirmar/:token` | ConfirmUser | No |
+| `/inicio` | Dashboard | Sí |
+| `/nuevo-grupo` | NewGroup | Sí |
+| `/grupo/:idGroup` | Group | Sí |
+| `/grupo/:idGroup/planes/:idPlan` | PlanDetail | Sí |
+| `/invitacion/:token` | AcceptInvitation | Sí |
 
 ---
 
@@ -155,57 +231,57 @@ VaquitApp/
 
 ### User
 
-| Campo | Tipo | Descripción |
-| --- | --- | --- |
-| `username` | String (único) | Nombre de usuario |
-| `email` | String (único) | Correo electrónico |
-| `password` | String | Hash bcrypt |
-| `isConfirmed` | Boolean | `false` hasta confirmar el email |
+| Campo | Tipo | Requerido | Descripción |
+| --- | --- | --- | --- |
+| `username` | String (único) | Sí | Nombre de usuario |
+| `email` | String (único) | Sí | Correo electrónico |
+| `password` | String | Sí | Hash bcrypt |
+| `isConfirmed` | Boolean | — | `false` hasta confirmar el email |
 
 ### Group
 
-| Campo | Tipo | Descripción |
-| --- | --- | --- |
-| `name` | String | Nombre del grupo |
-| `description` | String | Descripción |
-| `image` | String | URL de Cloudinary (opcional) |
-| `created_by` | ObjectId → User | Usuario creador |
-| `active` | Boolean | `false` = eliminado suavemente |
-| `created_at` | Date | Fecha de creación |
+| Campo | Tipo | Requerido | Descripción |
+| --- | --- | --- | --- |
+| `name` | String | Sí | Nombre del grupo |
+| `description` | String | Sí | Descripción |
+| `image` | String | No | URL de Cloudinary |
+| `created_by` | ObjectId → User | Sí | Usuario creador |
+| `active` | Boolean | — | `false` = eliminado suavemente |
+| `created_at` | Date | — | Fecha de creación (default: now) |
 
 ### GroupMember
 
-| Campo | Tipo | Descripción |
-| --- | --- | --- |
-| `group` | ObjectId → Group | Referencia al grupo |
-| `user` | ObjectId → User | Referencia al usuario |
-| `role` | String | `admin` o `member` (default: `member`) |
-| `joined_at` | Date | Fecha de ingreso |
+| Campo | Tipo | Requerido | Descripción |
+| --- | --- | --- | --- |
+| `group` | ObjectId → Group | Sí | Referencia al grupo |
+| `user` | ObjectId → User | Sí | Referencia al usuario |
+| `role` | String | — | `admin` o `member` (default: `member`) |
+| `joined_at` | Date | — | Fecha de ingreso (default: now) |
 
 ### Plan
 
-| Campo | Tipo | Descripción |
-| --- | --- | --- |
-| `name` | String | Nombre del plan |
-| `description` | String | Descripción (opcional) |
-| `image` | String | URL de Cloudinary (opcional) |
-| `group` | ObjectId → Group | Grupo al que pertenece |
-| `created_by` | ObjectId → User | Usuario creador |
-| `members` | [ObjectId → User] | Participantes del plan |
-| `state` | String | `active`, `completed` o `cancelled` |
-| `created_at` | Date | Fecha de creación |
+| Campo | Tipo | Requerido | Descripción |
+| --- | --- | --- | --- |
+| `name` | String | Sí | Nombre del plan |
+| `description` | String | No | Descripción |
+| `image` | String | No | URL de Cloudinary |
+| `group` | ObjectId → Group | Sí | Grupo al que pertenece |
+| `created_by` | ObjectId → User | Sí | Usuario creador |
+| `members` | [ObjectId → User] | — | Participantes del plan |
+| `state` | String | — | `active`, `completed` o `cancelled` (default: `active`) |
+| `created_at` | Date | — | Fecha de creación (default: now) |
 
 ### Expense
 
-| Campo | Tipo | Descripción |
-| --- | --- | --- |
-| `description` | String | Etiqueta opcional (ej: "Supermercado") |
-| `amount` | Number | Monto total; debe ser > 0 |
-| `plan` | ObjectId → Plan | Plan al que pertenece |
-| `paid_by` | ObjectId → User | Quién pagó el monto completo |
-| `split_among` | [ObjectId → User] | Entre quiénes se divide el costo |
-| `state` | String | `active` o `completed` |
-| `createdAt` / `updatedAt` | Date | Timestamps automáticos de Mongoose |
+| Campo | Tipo | Requerido | Descripción |
+| --- | --- | --- | --- |
+| `description` | String | No | Etiqueta opcional (ej: "Supermercado") |
+| `amount` | Number (min: 0) | Sí | Monto total; debe ser > 0 |
+| `plan` | ObjectId → Plan | Sí | Plan al que pertenece |
+| `paid_by` | ObjectId → User | Sí | Quién pagó el monto completo |
+| `split_among` | [ObjectId → User] | — | Entre quiénes se divide el costo |
+| `state` | String | — | `active` o `completed` (default: `active`) |
+| `createdAt` / `updatedAt` | Date | — | Timestamps automáticos de Mongoose |
 
 ---
 
@@ -213,21 +289,21 @@ VaquitApp/
 
 > URL base: `http://localhost:3000` (desarrollo)
 
-**Middlewares en rutas protegidas de grupo/plan/gasto:**
+**Cadena de middlewares en rutas protegidas de grupo/plan/gasto:**
 ```
 verifyToken → validateObjectId(...) → verifyRole → controlador
 ```
-`verifyRole` carga `req.group` y `req.member`. Las verificaciones de rol se aplican dentro de cada controlador.
+`verifyRole` carga `req.group` y `req.member` (el GroupMember del usuario autenticado). Las verificaciones de rol específico se realizan dentro de cada controlador.
 
 ### Autenticación
 
-| Método | Endpoint | Auth | Descripción |
-| --- | --- | --- | --- |
-| POST | `/register` | No | Registrar usuario; envía correo de confirmación |
-| POST | `/login` | No | Login con `identifier` + `password`; establece cookie |
-| GET | `/confirm/:token` | No | Confirmar email mediante token JWT |
-| GET | `/dashboard` | Sí | Devuelve el perfil del usuario autenticado |
-| POST | `/logout` | No | Elimina la cookie de sesión |
+| Método | Endpoint | Auth | Rate limit | Descripción |
+| --- | --- | --- | --- | --- |
+| POST | `/register` | No | 5 / hora por IP | Registrar usuario; envía correo de confirmación |
+| POST | `/login` | No | 10 / 15 min por IP | Login con `identifier` + `password`; establece cookie |
+| GET | `/confirm/:token` | No | — | Confirmar email mediante token JWT |
+| GET | `/dashboard` | Sí | — | Devuelve el perfil del usuario autenticado |
+| POST | `/logout` | No | — | Elimina la cookie de sesión |
 
 ### Grupos
 
@@ -236,19 +312,19 @@ verifyToken → validateObjectId(...) → verifyRole → controlador
 | POST | `/groups` | Sí | Crear grupo (`multipart/form-data`) |
 | GET | `/groups` | Sí | Listar grupos del usuario |
 | GET | `/groups/:idGroup` | Sí + miembro | Detalles del grupo |
-| PATCH | `/groups/:idGroup` | Sí + admin | Editar grupo |
-| DELETE | `/groups/:idGroup` | Sí + admin | Eliminar grupo (soft delete) |
+| PATCH | `/groups/:idGroup` | Sí + admin | Editar grupo (nombre, descripción, imagen) |
+| DELETE | `/groups/:idGroup` | Sí + admin | Eliminar grupo (soft delete: `active: false`) |
 | DELETE | `/groups/:idGroup/leave` | Sí + miembro | Abandonar grupo |
 
 ### Miembros
 
 | Método | Endpoint | Auth | Descripción |
 | --- | --- | --- | --- |
-| GET | `/groups/:idGroup/members` | Sí + miembro | Listar miembros con rol y fecha |
-| POST | `/groups/:idGroup/invite` | Sí + admin | Enviar invitación por email |
-| GET | `/groups/invite/accept/:token` | No | Aceptar invitación |
-| PATCH | `/groups/:idGroup/members/:idMember/admin` | Sí + admin | Promover a admin |
-| DELETE | `/groups/:idGroup/members/:idMember` | Sí + admin | Eliminar miembro |
+| GET | `/groups/:idGroup/members` | Sí + miembro | Listar miembros con rol y fecha de ingreso |
+| POST | `/groups/:idGroup/invite` | Sí + admin | Enviar invitación por email (JWT, 7 días) |
+| GET | `/groups/invite/accept/:token` | No | Aceptar invitación; agrega al usuario al grupo |
+| PATCH | `/groups/:idGroup/members/:idMember/admin` | Sí + admin | Promover miembro a admin |
+| DELETE | `/groups/:idGroup/members/:idMember` | Sí + admin | Eliminar miembro del grupo |
 
 ### Planes
 
@@ -282,17 +358,22 @@ verifyToken → validateObjectId(...) → verifyRole → controlador
 - Los tokens se firman con `JWT_SECRET` y expiran a los 7 días
 - Se almacenan en cookie `httpOnly` (no accesible desde JavaScript)
 - En producción la cookie es `secure: true` y `sameSite: 'none'`
+- En desarrollo es `secure: false` y `sameSite: 'lax'`
 - El servidor valida al arrancar que `JWT_SECRET` tenga al menos 32 caracteres
 
 ### Rate Limiting
 
-Implementado en `middlewares/rate-limit.js` con `express-rate-limit`. El conteo es **por IP**. Al superar el límite se responde con **HTTP 429** y un mensaje en español.
+Implementado en `middlewares/rate-limit.js` con `express-rate-limit`. El conteo es **por IP**. Al superar el límite se responde con **HTTP 429** y un mensaje en español. Las respuestas incluyen cabeceras `RateLimit-*` estándar (`standardHeaders: true`).
 
 | Scope | Límite | Ventana | Dónde se aplica |
 | --- | --- | --- | --- |
 | Global | 100 requests | 10 minutos | Todas las rutas (`app.use`) |
 | Login | 10 intentos | 15 minutos | `POST /login` |
 | Registro | 5 intentos | 1 hora | `POST /register` |
+
+### Validación de ObjectId
+
+El middleware `validateObjectId(...paramNames)` valida que cada ID de ruta sea un ObjectId válido de MongoDB antes de llegar al controlador. Si algún ID es inválido, responde con **HTTP 400**.
 
 ---
 
@@ -312,6 +393,7 @@ Implementado en `middlewares/rate-limit.js` con `express-rate-limit`. El conteo 
 | Eliminar cualquier gasto | sí | no |
 | Eliminar propio gasto (`paid_by`) | sí | sí |
 | Ver balance de liquidación | sí | sí |
+| Ver historial de gastos saldados | sí | sí |
 
 ---
 
@@ -319,30 +401,33 @@ Implementado en `middlewares/rate-limit.js` con `express-rate-limit`. El conteo 
 
 > Ver diagrama del algoritmo: https://excalidraw.com/#json=qoECKn3HLa9Gni1yvAjYI,ygP05CRQwO31HcxBt1XcgQ
 
-El cálculo ocurre en `expense.controller.js → getBalances` y opera solo sobre gastos `active`.
+El cálculo ocurre en `expense.controller.js → getBalances` y opera **solo sobre gastos con `state: 'active'`**.
 
 **Etapa 1 — Balance por usuario**
-- El usuario `paid_by` suma el monto total (se le debe ese dinero)
-- Cada usuario en `split_among` resta `amount / split_among.length` (su parte)
+- El usuario `paid_by` suma el monto total (es acreedor)
+- Cada usuario en `split_among` resta `amount / split_among.length` (es deudor)
 
 Resultado: acreedores (balance > 0) y deudores (balance < 0).
 
 **Etapa 2 — Ordenamiento**
-Acreedores de mayor a menor; deudores del más negativo al menos negativo.
+- Acreedores: de mayor a menor balance
+- Deudores: del más negativo al menos negativo
 
 **Etapa 3 — Emparejamiento greedy**
 En cada iteración: el mayor deudor paga al mayor acreedor el mínimo entre lo que debe y lo que le deben. Se repite hasta saldar todo. Garantiza el **número mínimo de transacciones** — O(n log n).
 
 **Redondeo:** `Math.round(value * 100) / 100` en cada paso para evitar errores de punto flotante.
 
+**Historial de gastos saldados:** el frontend obtiene todos los gastos via `/expenses/all` y filtra localmente los que tienen `state === 'completed'`. Estos se muestran en la sección "Historial de gastos saldados" dentro de la página del plan (solo lectura).
+
 ### Ejemplo
 
-| Gasto | Pagó | Dividido entre | Efecto |
+| Gasto | Pagó | Dividido entre | Efecto en balance |
 | --- | --- | --- | --- |
 | $90 | Ana | Ana, Bob, Carol | Ana +60, Bob −30, Carol −30 |
 | $60 | Bob | Bob, Carol | Bob +30, Carol −30 |
 
-Balances: Ana **+60**, Bob **+30**, Carol **−90**
+Balances finales: Ana **+60**, Bob **+30**, Carol **−90**
 
 Liquidación mínima (2 transacciones):
 - Carol → Ana: $60
@@ -407,6 +492,7 @@ npm run dev
 | --- | --- |
 | `npm start` | Producción con `node index.js` |
 | `npm run dev` | Desarrollo con `nodemon` (hot reload) |
+| `npm test` | Ejecutar tests unitarios con Jest |
 
 ### Frontend
 
@@ -416,3 +502,23 @@ npm run dev
 | `npm run build` | Build de producción en `dist/` |
 | `npm run preview` | Servir el build localmente |
 | `npm run lint` | ESLint sobre todo el código fuente |
+
+---
+
+## Tests unitarios
+
+El backend cuenta con una suite de tests unitarios en `backend/__tests__/` usando **Jest** con **Babel** para soporte de ES Modules.
+
+| Archivo | Controller testeado | Alcance |
+| --- | --- | --- |
+| `auth.controller.test.js` | `AuthController` | register, login, confirmUser, logout, dashboardUser |
+| `expense.controller.test.js` | `ExpenseController` | createExpense, getBalances, deleteExpense, completeAllExpenses |
+| `group.controller.test.js` | `GroupController` | createGroup, editGroup, deleteGroup, leaveGroup, miembros, invitaciones |
+| `plan.controller.test.js` | `PlanController` | createPlan, checkPlanAsCompleted, addMembersToPlan, getPlanHistory |
+
+Los repositorios y dependencias externas (bcryptjs, jsonwebtoken, nodemailer, cloudinary) se mockean con `jest.mock()`. Los tests validan códigos de estado HTTP y mensajes de error ante inputs inválidos, usuarios inexistentes y violaciones de permisos.
+
+```bash
+# Ejecutar desde la carpeta backend/
+npm test
+```

@@ -5,62 +5,50 @@ const HeaderDashboard = ({ user }: HeaderDashboardProps) => {
   const { logoutUser } = useAuth();
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-linear-to-b from-[#080E1C]/90 to-[#080E1C]/80 backdrop-blur-2xl backdrop-saturate-150 border-b border-emerald-500/12">
-      <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-emerald-400/65 via-[#3B82F6]/30 to-transparent pointer-events-none" />
+    <header className="bg-[#1b0924] border-b-4 border-[#FFD166] sticky top-0 z-30">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 xl:px-8 h-16 xl:h-18 2xl:h-20 flex items-center justify-between gap-4">
 
-      <div className="relative grid grid-cols-3 items-center py-5 px-4 md:px-8 xl:px-16 2xl:px-24 h-20 xl:h-20">
-        <div className="flex items-center gap-2.5 md:gap-3.5">
-          <div className="w-8 h-8 md:w-10 md:h-10 shrink-0 rounded-full bg-linear-to-br from-[#0A1628] to-[#0E1F3A] border border-emerald-500/40 flex items-center justify-center shadow-[0_0_20px_rgba(16,185,129,0.22),0_0_40px_rgba(16,185,129,0.08),inset_0_1px_0_rgba(255,255,255,0.04)]">
-            <img
-              src="images/logo.png"
-              alt="VaquitApp Logo"
-              className="w-4 h-4 md:w-5 md:h-5 object-contain drop-shadow-[0_0_8px_rgba(16,185,129,0.6)]"
-            />
+        <div className="flex items-center gap-2.5 shrink-0">
+          <div className="w-8 h-8 xl:w-9 xl:h-9 rounded-lg overflow-hidden shrink-0 ring-1 ring-[#FFD166]/30">
+            <img src="images/logo.png" alt="VaquitApp Logo" className="w-full h-full object-cover" />
           </div>
-
-          <div className="flex flex-col leading-none gap-0.5">
-            <span className="text-[13px] md:text-[15px] font-bold tracking-[0.04em] text-white drop-shadow-[0_0_12px_rgba(16,185,129,0.35)]">
-              VaquitApp
-            </span>
-            <span className="text-[9px] md:text-[10px] font-normal tracking-[0.15em] uppercase text-emerald-400/80">
-              Dashboard
-            </span>
+          <div className="hidden md:block">
+            <span className="text-white font-bold text-base xl:text-lg tracking-tight leading-none block">VaquitApp</span>
+            <span className="text-[#FFD166]/60 text-xs xl:text-sm tracking-wide">Dashboard</span>
           </div>
         </div>
 
-        <div className="flex flex-col items-center gap-0.5">
-          <span className="text-[9px] md:text-[10px] font-normal tracking-[0.15em] md:tracking-[0.2em] uppercase text-white/30">
-            Panel de
-          </span>
-          <div className="flex items-center gap-1.5 md:gap-2">
-            <div className="hidden sm:block w-6 md:w-8 h-px bg-linear-to-r from-transparent to-emerald-500/35" />
-            <div className="w-1 h-1 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(16,185,129,1.0)]" />
-            <span className="text-xs md:text-sm font-semibold tracking-[0.04em] md:tracking-[0.06em] text-white truncate max-w-15 sm:max-w-15 md:max-w-none">
-              {user.username}
-            </span>
-            <div className="w-1 h-1 rounded-full bg-[#3B82F6] shadow-[0_0_6px_rgba(59,130,246,0.7)]" />
-            <div className="hidden sm:block w-6 md:w-8 h-px bg-linear-to-l from-transparent to-[#3B82F6]/35" />
+        <div className="flex items-stretch overflow-hidden rounded-2xl border border-[#FFD166]/25 shadow-[0_0_24px_rgba(255,209,102,0.12)]">
+
+          <div className="flex items-center gap-2 bg-[#BC96E6]/12 px-3 md:px-3.5 xl:px-4 md:py-2">
+            <i className="bi bi-person-fill text-[#BC96E6]/70 text-xs xl:text-sm" />
+            <span className="text-[#BC96E6]/80 text-[8px] md:text-[11px] xl:text-xs uppercase tracking-[0.18em] font-bold whitespace-nowrap">Panel de</span>
+          </div>
+
+          <div className="w-px bg-linear-to-b from-[#BC96E6]/30 via-white/15 to-[#FFD166]/30" />
+  
+          <div className="flex items-center gap-2 bg-[#FFD166]/8 px-4 xl:px-5 py-2">
+            <span className="text-[#FFD166] font-bold text-sm xl:text-base tracking-tight whitespace-nowrap">{user.username}</span>
+            <i className="bi bi-star-fill text-[#FFD166]/30 text-[9px] xl:text-[10px]" />
           </div>
         </div>
 
-        <div className="flex items-center justify-end gap-2 md:gap-2.5">
+        <div className="flex items-center gap-3 shrink-0">
           <button
             onClick={logoutUser}
-            className="group/logout flex items-center gap-1.5 px-2.5 md:px-3.5 py-1.5 md:py-1.75 rounded-[10px] bg-red-500/[0.07] border border-red-500/20 text-red-400/75 cursor-pointer text-[11px] md:text-[12.5px] font-medium tracking-[0.02em] transition-all duration-200 hover:bg-red-500/[0.14] hover:border-red-500/40 hover:text-red-400 hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(239,68,68,0.2)] active:translate-y-0 active:scale-[0.97] md:w-auto"
             aria-label="Cerrar sesión"
+            className="flex items-center gap-1.5 border border-[#BC96E6]/20 text-white/60 rounded-xl px-3 py-2 text-sm xl:text-base hover:bg-[#BC96E6]/8 hover:text-[#BC96E6]/80 hover:border-[#BC96E6]/40 transition-all duration-150 cursor-pointer"
           >
-            <i className="bi bi-box-arrow-right text-sm transition-transform duration-200 group-hover/logout:translate-x-0.5" />
-            <span>Cerrar sesión</span>
+            <i className="bi bi-box-arrow-right" />
+            <span className="hidden md:inline">Cerrar sesión</span>
           </button>
-
-          <div className="group/avatar cursor-pointer shrink-0">
-            <div className="w-8 h-8 md:w-9.5 md:h-9.5 rounded-full bg-linear-to-br from-[#10B981] to-[#3B82F6] border-[1.5px] border-[#10B981]/40 flex items-center justify-center shadow-[0_4px_20px_rgba(16,185,129,0.2),0_4px_20px_rgba(59,130,246,0.15)] transition-all duration-200 group-hover/avatar:-translate-y-0.5 group-hover/avatar:shadow-[0_8px_32px_rgba(16,185,129,0.3),0_8px_32px_rgba(59,130,246,0.2)]">
-              <span className="text-xs md:text-sm font-bold text-white uppercase">
-                {user.username.charAt(0)}
-              </span>
+          <div className="shrink-0">
+            <div className="w-9 h-9 xl:w-10 xl:h-10 rounded-full bg-[#BC96E6]/20 flex items-center justify-center border-2 border-[#BC96E6]/40">
+              <span className="text-[#BC96E6] font-bold text-sm xl:text-base">{user.username.charAt(0).toUpperCase()}</span>
             </div>
           </div>
         </div>
+
       </div>
     </header>
   );

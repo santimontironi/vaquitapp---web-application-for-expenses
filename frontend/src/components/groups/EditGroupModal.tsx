@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { motion } from "motion/react";
+import { modalBackdrop, modalPanel } from "../../utils/motion";
 import type { EditGroupModalProps, EditGroupData } from "../../types/groups.types";
 import useGroup from "../../hooks/useGroup";
 
@@ -40,137 +42,128 @@ const EditGroupModal = ({ group, onClose }: EditGroupModalProps) => {
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
 
-            <div
-                className="absolute inset-0 bg-[#0A1020]/80 backdrop-blur-sm"
+            <motion.div
+                {...modalBackdrop}
                 onClick={onClose}
+                className="absolute inset-0 bg-[#210B2C]/80 backdrop-blur-md"
             />
 
-            <div className="relative w-full max-w-xl z-10">
-                <div className="p-px rounded-3xl bg-linear-to-br from-[#10B981]/45 via-white/5 to-[#3B82F6]/20 shadow-[0_25px_60px_rgba(0,0,0,0.6)]">
-                    <div className="bg-[#0A1020]/95 backdrop-blur-3xl rounded-[23px] p-6 flex flex-col gap-5 max-h-[90vh] overflow-y-auto">
+            <motion.div {...modalPanel} className="relative w-full max-w-md z-10">
+                <div className="bg-[#210B2C] border border-white/10 rounded-2xl p-6 shadow-2xl">
 
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                                <div className="w-9 h-9 rounded-xl bg-[#10B981]/10 border border-[#10B981]/20 flex items-center justify-center">
-                                    <i className="bi bi-pencil text-[#10B981]" />
-                                </div>
-                                <h2 className="text-white font-semibold">Editar grupo</h2>
+                    <div className="flex items-center justify-between mb-5">
+                        <div className="flex items-center gap-2.5">
+                            <div className="w-8 h-8 rounded-xl bg-[#BC96E6]/15 flex items-center justify-center">
+                                <i className="bi bi-pencil text-[#FFD166] text-sm" />
                             </div>
-                            <button
-                                onClick={onClose}
-                                className="w-8 h-8 flex items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white/40 hover:text-white hover:bg-white/10 transition-all duration-200 cursor-pointer"
-                            >
-                                <i className="bi bi-x text-lg" />
-                            </button>
+                            <h2 className="text-white font-semibold text-lg">Editar grupo</h2>
+                        </div>
+                        <button
+                            onClick={onClose}
+                            className="w-8 h-8 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 text-white/40 hover:text-[#BC96E6] hover:bg-[#BC96E6]/8 hover:border-[#BC96E6]/20 transition-all duration-150 cursor-pointer"
+                        >
+                            <i className="bi bi-x text-lg" />
+                        </button>
+                    </div>
+
+                    <div className="border-t border-[#FFD166] mb-5" />
+
+                    <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
+
+                        <div className="space-y-1.5">
+                            <label className="text-xs font-semibold tracking-wider uppercase text-white/90">
+                                Nombre <span className="text-[#FFD166] normal-case tracking-normal font-normal">(opcional)</span>
+                            </label>
+                            <input
+                                type="text"
+                                placeholder="Ej: Amigos del barrio"
+                                autoComplete="off"
+                                className="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 text-white placeholder:text-white/30 text-sm focus:outline-none focus:border-[#FFD166] focus:ring-1 focus:ring-[#FFD166] transition-colors duration-150"
+                                {...register("name")}
+                            />
                         </div>
 
-                        <div className="w-full h-px bg-linear-to-r from-transparent via-white/8 to-transparent" />
+                        <div className="space-y-1.5">
+                            <label className="text-xs font-semibold tracking-wider uppercase text-white/90">
+                                Descripción <span className="text-[#FFD166] normal-case tracking-normal font-normal">(opcional)</span>
+                            </label>
+                            <textarea
+                                placeholder="Ej: Grupo para organizar salidas y gastos"
+                                rows={3}
+                                className="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 text-white placeholder:text-white/30 text-sm focus:outline-none focus:border-[#FFD166] focus:ring-1 focus:ring-[#FFD166] transition-colors duration-150 resize-none"
+                                {...register("description")}
+                            />
+                        </div>
 
-                        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5" noValidate>
+                        <div className="space-y-2">
+                            <label className="text-xs font-semibold tracking-wider uppercase text-white/90">
+                                Imagen <span className="text-[#FFD166] normal-case tracking-normal font-normal">(opcional)</span>
+                            </label>
 
-                            <div className="flex flex-col gap-1.5">
-                                <label className="text-white/70 text-sm">
-                                    Nombre <span className="text-white/30">(opcional)</span>
-                                </label>
-                                <input
-                                    type="text"
-                                    placeholder="Ej: Amigos del barrio"
-                                    autoComplete="off"
-                                    {...register("name")}
-                                    className="w-full px-4 py-3 rounded-xl text-white placeholder:text-white/25 bg-white/5 border border-white/10 outline-none transition-all duration-200 hover:bg-white/7 hover:border-white/25 focus:bg-[#10B981]/5 focus:border-[#10B981]/60 focus:shadow-[0_0_0_3px_rgba(16,185,129,0.12)]"
-                                />
-                            </div>
-
-                            <div className="flex flex-col gap-1.5">
-                                <label className="text-white/70 text-sm">
-                                    Descripción <span className="text-white/30">(opcional)</span>
-                                </label>
-                                <textarea
-                                    placeholder="Ej: Grupo para organizar salidas y gastos"
-                                    rows={3}
-                                    {...register("description")}
-                                    className="w-full px-4 py-3 rounded-xl text-white placeholder:text-white/25 bg-white/5 border border-white/10 outline-none transition-all duration-200 hover:bg-white/7 hover:border-white/25 focus:bg-[#10B981]/5 focus:border-[#10B981]/60 focus:shadow-[0_0_0_3px_rgba(16,185,129,0.12)] resize-none"
-                                />
-                            </div>
-
-                            <div className="flex flex-col gap-2">
-                                <label className="text-white/70 text-sm">
-                                    Imagen <span className="text-white/30">(opcional)</span>
-                                </label>
-
-                                {(previewUrl || group.image) && (
-                                    <div className="flex flex-col gap-1.5">
-                                        <span className="text-white/30 text-sm">
-                                            {previewUrl ? "Nueva imagen" : "Imagen actual"}
-                                        </span>
-                                        <div className="w-full h-40 rounded-xl overflow-hidden border border-white/10">
-                                            <img
-                                                src={previewUrl ?? group.image ?? ""}
-                                                alt="Preview"
-                                                className="w-full h-full object-cover"
-                                            />
-                                        </div>
-                                    </div>
-                                )}
-
-                                <label className="flex items-center gap-3 w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/7 hover:border-white/25 transition-all duration-200 cursor-pointer">
-                                    <i className="bi bi-image text-[#10B981]" />
-                                    <span className="text-white/40">
-                                        {imageField && imageField.length > 0
-                                            ? imageField[0].name
-                                            : "Seleccionar imagen"
-                                        }
+                            {(previewUrl || group.image) && (
+                                <div className="space-y-2">
+                                    <span className="text-xs text-white/30">
+                                        {previewUrl ? "Nueva imagen" : "Imagen actual"}
                                     </span>
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        className="hidden"
-                                        {...register("image")}
-                                        onChange={(e) => {
-                                            register("image").onChange(e);
-                                            handleImageChange(e);
-                                        }}
-                                    />
-                                </label>
-                            </div>
-
-                            {errorResponse && (
-                                <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-[#EF4444]/8 border border-[#EF4444]/25">
-                                    <i className="bi bi-exclamation-circle text-[#EF4444]" />
-                                    <span className="text-[#EF4444] text-sm">{errorResponse}</span>
+                                    <div className="w-full h-32 rounded-xl overflow-hidden border border-white/10">
+                                        <img
+                                            src={previewUrl ?? group.image ?? ""}
+                                            alt="Preview"
+                                            className="w-full h-full object-cover"
+                                        />
+                                    </div>
                                 </div>
                             )}
 
-                            <button
-                                type="submit"
-                                disabled={loading.editLoading}
-                                className={[
-                                    "flex items-center justify-center gap-2 w-full py-3.5 px-6 rounded-xl text-white font-medium",
-                                    "bg-linear-to-r from-[#10B981] via-[#0ea572] to-[#059669]",
-                                    "border border-[#10B981]/25 shadow-[0_4px_24px_rgba(16,185,129,0.30),inset_0_1px_0_rgba(255,255,255,0.12)]",
-                                    "transition-all duration-200",
-                                    loading.editLoading
-                                        ? "opacity-60 cursor-not-allowed"
-                                        : "hover:-translate-y-0.5 hover:shadow-[0_10px_40px_rgba(16,185,129,0.50)] active:translate-y-0 active:scale-[0.98]",
-                                ].join(" ")}
-                            >
-                                {loading.editLoading ? (
-                                    <>
-                                        <span className="w-4 h-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
-                                        Guardando...
-                                    </>
-                                ) : (
-                                    <>
-                                        <i className="bi bi-check-circle" />
-                                        Guardar cambios
-                                    </>
-                                )}
-                            </button>
+                            <label className="flex items-center gap-3 bg-white/5 border border-[#BC96E6]/25 border-dashed rounded-xl px-4 py-3 cursor-pointer hover:bg-[#BC96E6]/4 hover:border-[#BC96E6]/45 transition-all duration-150">
+                                <i className="bi bi-image text-[#BC96E6]/60 text-lg" />
+                                <span className="text-white/50 text-sm">
+                                    {imageField && imageField.length > 0
+                                        ? imageField[0].name
+                                        : "Seleccionar imagen"
+                                    }
+                                </span>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    className="hidden"
+                                    {...register("image")}
+                                    onChange={(e) => {
+                                        register("image").onChange(e);
+                                        handleImageChange(e);
+                                    }}
+                                />
+                            </label>
+                        </div>
 
-                        </form>
-                    </div>
+                        {errorResponse && (
+                            <div className="flex items-center gap-2 bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-xl px-4 py-3">
+                                <i className="bi bi-exclamation-circle shrink-0" />
+                                <span>{errorResponse}</span>
+                            </div>
+                        )}
+
+                        <button
+                            type="submit"
+                            disabled={loading.editLoading}
+                            className="w-full hover:bg-[#BC96E6] text-[#210B2C] font-semibold rounded-xl px-5 py-3 flex items-center justify-center gap-2 bg-[#FFD166] active:scale-[0.98] transition-all duration-150 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed mt-2"
+                        >
+                            {loading.editLoading ? (
+                                <>
+                                    <span className="w-4 h-4 border-2 border-[#210B2C]/30 border-t-[#210B2C] rounded-full animate-spin" />
+                                    Guardando...
+                                </>
+                            ) : (
+                                <>
+                                    <i className="bi bi-check-circle" />
+                                    Guardar cambios
+                                </>
+                            )}
+                        </button>
+
+                    </form>
                 </div>
-            </div>
+            </motion.div>
         </div>
     );
 };

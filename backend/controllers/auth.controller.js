@@ -2,6 +2,7 @@ import authRepository from '../repository/auth.repository.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import transporter from '../config/mail.config.js';
+import { getConfirmAccountEmailHtml } from '../utils/emailTemplates.js';
 
 class AuthController {
     async register(req, res) {
@@ -35,7 +36,8 @@ class AuthController {
                 from: process.env.EMAIL_USER,
                 to: newUser.email,
                 subject: 'Bienvenido a VaquitApp',
-                text: `Hola ${newUser.username},\n\nGracias por registrarte en VaquitApp. Para continuar debes de confirmar tu cuenta haciendo click en el siguiente enlace: ${urlConfirmed}`
+                text: `Hola ${newUser.username},\n\nGracias por registrarte en VaquitApp. Para continuar debes de confirmar tu cuenta haciendo click en el siguiente enlace: ${urlConfirmed}\n\nEste enlace expira en 24 horas.`,
+                html: getConfirmAccountEmailHtml(newUser.username, urlConfirmed)
             }
 
             await transporter.sendMail(mailOptions);

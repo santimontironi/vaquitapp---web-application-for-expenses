@@ -109,11 +109,15 @@ export const GroupProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     async function inviteMember(idGroup: string, data: AddMemberData) {
+        setLoading(prev => ({ ...prev, invitationLoading: true }));
         try {
             await inviteMemberService(idGroup, data);
         } catch (error) {
             console.error("Error al invitar al miembro:", error);
             throw error;
+        }
+        finally {           
+            setLoading(prev => ({ ...prev, invitationLoading: false }));
         }
     }
 
@@ -121,6 +125,7 @@ export const GroupProvider = ({ children }: { children: React.ReactNode }) => {
         setLoading(prev => ({ ...prev, invitationLoading: true }));
         try {
             await acceptInvitationService(token);
+            await getMyGroups();
         } catch (error) {
             console.error("Error al aceptar la invitación:", error);
             throw error;

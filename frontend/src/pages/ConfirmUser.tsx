@@ -2,119 +2,97 @@ import useAuth from "../hooks/useAuth";
 import Loader from "../components/ui/Loader";
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import { motion } from "motion/react";
+import { fadeUp } from "../utils/motion";
 
 const ConfirmUser = () => {
-
-    const {token} = useParams()
-
-    const {confirmUser, loadingAuth} = useAuth()
+    const { token } = useParams()
+    const { confirmUser, loadingAuth } = useAuth()
 
     const [errorResponse, setErrorResponse] = useState<string | null>(null)
     const [successResponse, setSuccessResponse] = useState<string | null>(null)
 
     useEffect(() => {
         const confirm = async () => {
-            if(token) {
-                try{
+            if (token) {
+                try {
                     await confirmUser(token)
                     setSuccessResponse("Usuario confirmado exitosamente. Ahora puedes iniciar sesión.")
-                }
-                catch(err: any) {
+                } catch (err: any) {
                     setErrorResponse(err.response?.data?.message || "Error al confirmar el usuario. Inténtalo de nuevo.")
                 }
             }
         }
         confirm()
-    },[token])
+    }, [token])
 
     return (
-        <main className="relative min-h-screen bg-[#0F172A] flex items-center justify-center py-5 md:py-6 xl:py-10 2xl:py-15 px-4 overflow-hidden">
+        <main className="min-h-screen bg-[#210B2C] flex items-center justify-center px-4 relative">
+            {/* Decorative lines */}
+            <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden hidden xl:block">
+                <div className="absolute top-14 left-0 w-72 h-px bg-linear-to-r from-[#BC96E6]/62 to-transparent" />
+                <div className="absolute top-26 left-0 w-48 h-px bg-linear-to-r from-[#FFD166]/50 to-transparent" />
+                <div className="absolute top-40 left-0 w-28 h-px bg-linear-to-r from-[#BC96E6]/35 to-transparent" />
+                <div className="absolute bottom-16 right-0 w-68 h-px bg-linear-to-l from-[#BC96E6]/58 to-transparent" />
+                <div className="absolute bottom-28 right-0 w-44 h-px bg-linear-to-l from-[#FFD166]/44 to-transparent" />
+                <div className="absolute bottom-42 right-0 w-26 h-px bg-linear-to-l from-[#BC96E6]/32 to-transparent" />
+                <div className="absolute top-1/2 right-10 w-px h-32 bg-linear-to-b from-transparent via-[#BC96E6]/52 to-transparent" />
+                <div className="absolute top-[28%] left-12 w-px h-28 bg-linear-to-b from-transparent via-[#FFD166]/44 to-transparent" />
+                <div className="absolute top-[68%] left-28 w-px h-24 bg-linear-to-b from-transparent via-[#BC96E6]/35 to-transparent" />
+                <div className="absolute top-[42%] right-32 w-px h-20 bg-linear-to-b from-transparent via-[#FFD166]/32 to-transparent" />
+            </div>
 
-            <div className="absolute top-20 right-20 rounded-full bg-[#10B981] w-20 h-20 blur-3xl pointer-events-none" />
-            <div className="absolute bottom-20 left-20 rounded-full bg-[#10B981] w-20 h-20 blur-3xl pointer-events-none" />
-
-            <section className="relative z-10 w-full max-w-sm md:max-w-md">
-
+            <section className="w-full max-w-md">
                 {loadingAuth.confirmLoading ? (
-                    <div className="flex flex-col items-center gap-6">
+                    <div className="bg-white/6 border border-white/10 rounded-2xl p-10 text-center backdrop-blur-sm">
                         <Loader />
-                        <p className="text-white/40">Verificando tu cuenta...</p>
+                        <p className="text-white/50 text-sm mt-4">Verificando tu cuenta...</p>
                     </div>
                 ) : (
-                    <div className="relative p-px rounded-3xl bg-linear-to-br from-[#10B981]/45 via-white/5 to-[#3B82F6]/30 shadow-[0_0_60px_rgba(16,185,129,0.10),0_25px_60px_rgba(0,0,0,0.6)]">
+                    <motion.div {...fadeUp()} className="bg-white/6 border border-white/10 rounded-2xl p-8 md:p-10 text-center backdrop-blur-sm">
+                        {successResponse && (
+                            <>
+                                <div className="w-16 h-16 rounded-full bg-emerald-500/10 flex items-center justify-center mx-auto mb-5">
+                                    <i className="bi bi-check-circle-fill text-emerald-400 text-3xl" />
+                                </div>
 
-                        <div className="absolute inset-px rounded-[23px] border border-white/5 pointer-events-none z-10" />
+                                <div className="mb-7">
+                                    <h2 className="text-white font-semibold text-xl mb-2">¡Cuenta confirmada!</h2>
+                                    <p className="text-white/50 text-sm">{successResponse}</p>
+                                </div>
 
-                        <div className="relative bg-[#0A1020]/85 backdrop-blur-3xl rounded-[23px] p-6 md:p-9 overflow-hidden flex flex-col items-center text-center gap-6">
+                                <Link
+                                    to="/"
+                                    className="inline-flex items-center gap-2 bg-[#BC96E6] text-[#210B2C] font-semibold rounded-xl px-6 py-3 hover:bg-[#FFD166] active:scale-[0.98] transition-all duration-150 cursor-pointer"
+                                >
+                                    Iniciar sesión
+                                    <i className="bi bi-arrow-right" />
+                                </Link>
+                            </>
+                        )}
 
-                            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-linear-to-r from-transparent via-[#10B981]/35 to-transparent pointer-events-none" />
-                            <div className="absolute bottom-0 right-0 w-52 h-52 bg-[#3B82F6]/5 rounded-full blur-3xl pointer-events-none translate-x-1/3 translate-y-1/3" />
-                            <div className="absolute top-0 left-0 w-40 h-40 bg-[#10B981]/4 rounded-full blur-2xl pointer-events-none -translate-x-1/3 -translate-y-1/3" />
+                        {errorResponse && (
+                            <>
+                                <div className="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-5">
+                                    <i className="bi bi-x-circle-fill text-red-400 text-3xl" />
+                                </div>
 
-                            {successResponse && (
-                                <>
-                                    <div className="relative">
-                                        <div className="absolute inset-0 rounded-full bg-[#10B981]/20 blur-2xl scale-150 pointer-events-none" />
-                                        <i className="bi bi-check-circle-fill relative z-10 text-[#10B981] text-5xl drop-shadow-[0_0_16px_rgba(16,185,129,0.60)]" />
-                                    </div>
+                                <div className="mb-7">
+                                    <h2 className="text-white font-semibold text-xl mb-2">Error de confirmación</h2>
+                                    <p className="text-white/50 text-sm">{errorResponse}</p>
+                                </div>
 
-                                    <div className="flex flex-col gap-2">
-                                        <h2 className="text-white">¡Cuenta confirmada!</h2>
-                                        <p className="text-white/50">{successResponse}</p>
-                                    </div>
-
-                                    <div className="w-full relative group/btn">
-                                        <div className="absolute -inset-1 rounded-xl bg-linear-to-r from-[#10B981]/50 to-[#3B82F6]/25 blur-lg opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300 pointer-events-none" />
-                                        <Link
-                                            to="/"
-                                            className={[
-                                                "relative flex items-center justify-center gap-2 w-full py-3.5 px-6 rounded-xl text-white",
-                                                "bg-linear-to-r from-[#10B981] via-[#0fca8a] to-[#0ea371]",
-                                                "border border-[#10B981]/25 shadow-[0_4px_24px_rgba(16,185,129,0.30),inset_0_1px_0_rgba(255,255,255,0.12)]",
-                                                "transition-all duration-200",
-                                                "hover:-translate-y-0.5 hover:shadow-[0_10px_40px_rgba(16,185,129,0.50),inset_0_1px_0_rgba(255,255,255,0.15)]",
-                                                "active:shadow-[0_2px_12px_rgba(16,185,129,0.25)]",
-                                            ].join(" ")}
-                                        >
-                                            Iniciar sesión
-                                            <i className="bi bi-arrow-right opacity-70 transition-transform duration-200 group-hover/btn:translate-x-0.5" />
-                                        </Link>
-                                    </div>
-                                </>
-                            )}
-
-                            {errorResponse && (
-                                <>
-                                    <div className="relative">
-                                        <div className="absolute inset-0 rounded-full bg-[#EF4444]/15 blur-2xl scale-150 pointer-events-none" />
-                                        <i className="bi bi-x-circle-fill relative z-10 text-[#EF4444] text-5xl drop-shadow-[0_0_16px_rgba(239,68,68,0.50)]" />
-                                    </div>
-
-                                    <div className="flex flex-col gap-2">
-                                        <h2 className="text-white">Error de confirmación</h2>
-                                        <p className="text-white/50">{errorResponse}</p>
-                                    </div>
-
-                                    <Link
-                                        to="/registro"
-                                        className={[
-                                            "flex items-center justify-center gap-2 w-full py-3.5 px-6 rounded-xl text-white",
-                                            "bg-transparent border border-[#EF4444]/50",
-                                            "shadow-[0_0_0_0_rgba(239,68,68,0)] transition-all duration-200",
-                                            "hover:bg-[#EF4444]/8 hover:border-[#EF4444]/80 hover:-translate-y-0.5 hover:shadow-[0_4px_20px_rgba(239,68,68,0.20)]",
-                                            "active:shadow-none",
-                                        ].join(" ")}
-                                    >
-                                        <i className="bi bi-arrow-left opacity-70" />
-                                        Volver al registro
-                                    </Link>
-                                </>
-                            )}
-
-                        </div>
-                    </div>
+                                <Link
+                                    to="/registro"
+                                    className="inline-flex items-center gap-2 border border-[#BC96E6]/25 text-[#BC96E6]/70 rounded-xl px-6 py-3 hover:bg-[#BC96E6]/8 hover:border-[#BC96E6]/40 transition-all duration-150 cursor-pointer"
+                                >
+                                    <i className="bi bi-arrow-left" />
+                                    Volver al registro
+                                </Link>
+                            </>
+                        )}
+                    </motion.div>
                 )}
-
             </section>
         </main>
     )

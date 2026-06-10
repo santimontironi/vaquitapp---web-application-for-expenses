@@ -1,0 +1,2 @@
+- [Jest + Babel setup decisions](project_test_setup.md) — babel.config.cjs required (not .js) due to "type":"module"; SSL workaround for npm installs
+- [ESM mock patterns](mock_patterns_esm.md) — default-export mocks need __esModule:true; auto-mock works for repositories; res/req helper shapes

@@ -4,20 +4,19 @@ import { Link } from "react-router-dom"
 import { useState, useEffect } from "react"
 import type { LoginData } from "../types/auth.types"
 import { useNavigate } from "react-router-dom"
+import { motion } from "motion/react"
+import { fadeUp, fadeIn } from "../utils/motion"
 
 const Login = () => {
   const { loginUser, loadingAuth, user } = useAuth()
   const { register, handleSubmit, formState: { errors } } = useForm<LoginData>()
-
   const navigate = useNavigate()
-
   const [errorAuth, setErrorAuth] = useState<string | null>(null);
 
   async function submitForm(data: LoginData) {
-    try{
+    try {
       await loginUser(data);
-    }
-    catch(error: any){
+    } catch (error: any) {
       if (error.response?.data?.message) {
         setErrorAuth(error.response.data.message);
       }
@@ -25,192 +24,135 @@ const Login = () => {
   }
 
   useEffect(() => {
-    if (user){
+    if (user) {
       navigate("/inicio")
     }
   }, [user, navigate])
 
   return (
-    <main className="relative min-h-screen bg-[#0F172A] flex items-center justify-center py-5 md:py-6 xl:py-10 2xl:py-15 px-4 overflow-hidden">
+    <main className="min-h-screen bg-[#210B2C] flex items-center justify-center px-4 py-12 relative">
 
-      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 80% 65% at 100% 0%, rgba(16,185,129,0.30) 0%, transparent 65%)" }} />
-      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 60% 55% at 0% 100%, rgba(16,185,129,0.22) 0%, transparent 65%)" }} />
-      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 55% 45% at 0% 0%, rgba(59,130,246,0.20) 0%, transparent 65%)" }} />
-      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 45% 35% at 100% 100%, rgba(59,130,246,0.14) 0%, transparent 65%)" }} />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden hidden xl:block">
+        <div className="absolute top-12 left-0 w-72 h-px bg-linear-to-r from-[#BC96E6]/65 to-transparent" />
+        <div className="absolute top-24 left-0 w-48 h-px bg-linear-to-r from-[#FFD166]/50 to-transparent" />
+        <div className="absolute top-40 left-0 w-28 h-px bg-linear-to-r from-[#BC96E6]/38 to-transparent" />
+        <div className="absolute bottom-14 right-0 w-80 h-px bg-linear-to-l from-[#BC96E6]/60 to-transparent" />
+        <div className="absolute bottom-28 right-0 w-56 h-px bg-linear-to-l from-[#FFD166]/45 to-transparent" />
+        <div className="absolute bottom-44 right-0 w-32 h-px bg-linear-to-l from-[#BC96E6]/32 to-transparent" />
+        <div className="absolute top-1/2 right-8 w-px h-32 bg-linear-to-b from-transparent via-[#BC96E6]/55 to-transparent" />
+        <div className="absolute top-[30%] left-12 w-px h-28 bg-linear-to-b from-transparent via-[#FFD166]/45 to-transparent" />
+        <div className="absolute bottom-[20%] left-28 w-px h-24 bg-linear-to-b from-transparent via-[#BC96E6]/38 to-transparent" />
+        <div className="absolute top-[60%] right-32 w-px h-20 bg-linear-to-b from-transparent via-[#FFD166]/35 to-transparent" />
+      </div>
 
-      <section className="relative z-10 w-full max-w-sm md:max-w-md">
+      <section className="w-full max-w-md xl:max-w-xl 2xl:max-w-2xl">
 
-        <div className="flex flex-col items-center mb-8 gap-4">
-          <div className="relative">
-            <div className="absolute inset-0 rounded-full bg-[#10B981]/25 blur-3xl scale-[2.8] pointer-events-none" />
-            <div className="absolute -inset-1 rounded-full bg-linear-to-br from-[#10B981] via-[#3B82F6]/50 to-[#10B981]/30 animate-spin [animation-duration:7000ms] pointer-events-none" />
-            <div className="absolute -inset-1 rounded-full bg-linear-to-tl from-[#10B981]/40 to-[#3B82F6]/20 pointer-events-none" />
-            <div className="relative z-10 w-25 h-25 rounded-full bg-[#0F172A]/95 backdrop-blur-xl flex items-center justify-center border border-white/8 shadow-[inset_0_1px_0_rgba(255,255,255,0.10),0_0_40px_rgba(16,185,129,0.18)]">
-              <div className="absolute inset-2 rounded-full bg-[#10B981]/6 pointer-events-none" />
-              <img
-                src="images/logo.png"
-                alt="VaquitApp Logo"
-                className="relative z-10 w-14.5 h-14.5 object-contain drop-shadow-[0_0_12px_rgba(16,185,129,0.65)]"
-              />
+        <motion.div {...fadeUp()} className="mb-10">
+          <div className="bg-linear-to-br from-[#BC96E6]/20 via-[#210B2C] to-[#FFD166]/10 border border-[#BC96E6]/30 rounded-2xl px-8 py-7 backdrop-blur-sm flex flex-col items-center text-center">
+
+            <div className="w-16 h-16 rounded-2xl overflow-hidden shrink-0 mb-4 drop-shadow-[0_0_16px_rgba(188,150,230,0.45)]">
+              <img src="images/logo.png" alt="VaquitApp Logo" className="w-full h-full object-cover" />
             </div>
+
+            <div className="flex items-center gap-2.5 mb-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#BC96E6]/60 inline-block" />
+              <h1 className="text-white font-bold text-3xl tracking-tight drop-shadow-[0_0_12px_rgba(188,150,230,0.30)]">VaquitApp</h1>
+              <span className="w-1.5 h-1.5 rounded-full bg-[#FFD166]/60 inline-block" />
+            </div>
+
+            <p className="text-white/50 text-sm tracking-wide">Dividí gastos, no amistades.</p>
+
+            <div className="w-20 h-px bg-linear-to-r from-[#BC96E6]/40 via-[#FFD166]/35 to-[#BC96E6]/40 mt-4" />
           </div>
+        </motion.div>
 
-          <div className="flex flex-col items-center gap-1">
-            <h1 className="text-white font-bold tracking-tight drop-shadow-[0_0_18px_rgba(16,185,129,0.45)]">
-              VaquitApp
-            </h1>
-            <p className="text-white/40">Dividí gastos, no amistades.</p>
-          </div>
-        </div>
+        {/* Card */}
+        <motion.div {...fadeUp(0.08)} className="bg-white/6 border border-[#FFD166]/20 rounded-2xl p-6 md:p-8 backdrop-blur-sm">
+          <h2 className="text-white font-semibold text-xl mb-1">Iniciar sesión</h2>
+          <p className="text-white/50 text-sm mb-6">Ingresá tus datos para continuar.</p>
 
-        {/* Card glassmorphism */}
-        <div className="relative p-px rounded-3xl bg-linear-to-br from-[#10B981]/60 via-white/5 to-[#3B82F6]/30 shadow-[0_0_80px_rgba(16,185,129,0.12),0_25px_80px_rgba(0,0,0,0.7)]">
+          {errorAuth && (
+            <div className="flex items-center gap-2 bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-xl px-4 py-3 mb-5">
+              <i className="bi bi-exclamation-circle shrink-0" />
+              <span>{errorAuth}</span>
+            </div>
+          )}
 
-          <div className="absolute inset-px rounded-[23px] border border-white/5 pointer-events-none z-10" />
+          <form onSubmit={handleSubmit(submitForm)} noValidate className="space-y-4">
 
-          <div className="relative bg-[#0A1020]/85 backdrop-blur-3xl rounded-[23px] p-6 md:p-9 overflow-hidden">
-
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-linear-to-r from-transparent via-[#10B981]/35 to-transparent pointer-events-none" />
-
-            <div className="absolute bottom-0 right-0 w-52 h-52 bg-[#3B82F6]/5 rounded-full blur-3xl pointer-events-none translate-x-1/3 translate-y-1/3" />
-
-            <div className="absolute top-0 left-0 w-40 h-40 bg-[#10B981]/4 rounded-full blur-2xl pointer-events-none -translate-x-1/3 -translate-y-1/3" />
-
-            <h2 className="text-white font-semibold mb-1">Iniciar sesión</h2>
-            <p className="text-white/40 mb-6">Ingresá tus datos para continuar.</p>
-
-            <div className="h-px w-full bg-white/8 mb-7" />
-
-            {errorAuth && (
-              <div className="mb-6 flex items-start gap-2.5 bg-[#EF4444]/8 border border-[#EF4444]/30 rounded-xl px-4 py-3 shadow-[0_0_20px_rgba(239,68,68,0.08)]">
-                <i className="bi bi-exclamation-circle text-[#EF4444] shrink-0 mt-0.5" />
-                <span className="text-[#EF4444]">{errorAuth}</span>
+            <div className="space-y-1.5">
+              <label htmlFor="identifier" className="text-xs font-semibold tracking-wider uppercase text-white/40">
+                Email o usuario
+              </label>
+              <div className="relative">
+                <i className="bi bi-envelope absolute left-3.5 top-1/2 -translate-y-1/2 text-white/30 text-sm pointer-events-none" />
+                <input
+                  id="identifier"
+                  type="text"
+                  autoComplete="username"
+                  placeholder="tu@email.com"
+                  className="w-full bg-white/8 border border-white/20 rounded-xl pl-10 pr-4 py-3 text-white placeholder:text-white/30 text-sm focus:outline-none focus:border-[#FFD166] focus:ring-1 focus:ring-[#FFD166]/35 transition-colors duration-150"
+                  {...register("identifier", { required: "Este campo es obligatorio." })}
+                />
               </div>
-            )}
+              {errors.identifier && (
+                <p className="flex items-center gap-1.5 text-red-400 text-xs mt-1">
+                  <i className="bi bi-exclamation-circle" />
+                  {errors.identifier.message as string}
+                </p>
+              )}
+            </div>
 
-            <form onSubmit={handleSubmit(submitForm)} noValidate className="flex flex-col gap-5">
-
-              <div className="flex flex-col gap-2">
-                <label htmlFor="identifier" className="text-white/70 font-medium tracking-wide">
-                  Email o usuario
-                </label>
-                <div className="relative group/field">
-                  <div className={[
-                    "absolute left-0 top-1/2 -translate-y-1/2 w-px h-4/5 rounded-full transition-all duration-300 pointer-events-none",
-                    errors.identifier
-                      ? "bg-[#EF4444]/70"
-                      : "bg-[#10B981]/0 group-focus-within/field:bg-[#10B981]/60",
-                  ].join(" ")} />
-                  <i className="bi bi-envelope absolute left-3.5 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none transition-colors duration-200 group-focus-within/field:text-[#10B981]/70" />
-                  <input
-                    id="identifier"
-                    type="text"
-                    autoComplete="username"
-                    placeholder="tu@email.com"
-                    className={[
-                      "w-full bg-white/4 border rounded-xl pl-10 pr-4 py-3 text-white placeholder:text-white/20",
-                      "outline-none transition-all duration-200",
-                      "hover:bg-white/7 hover:border-white/25",
-                      "focus:bg-[#10B981]/6 focus:border-[#10B981]/60 focus:shadow-[0_0_0_3px_rgba(16,185,129,0.10)]",
-                      errors.identifier
-                        ? "border-[#EF4444]/70 shadow-[0_0_0_3px_rgba(239,68,68,0.10)]"
-                        : "border-white/10",
-                    ].join(" ")}
-                    {...register("identifier", { required: "Este campo es obligatorio." })}
-                  />
-                </div>
-                {errors.identifier && (
-                  <p className="text-[#EF4444] flex items-center gap-1.5">
-                    <i className="bi bi-exclamation-circle shrink-0" />
-                    {errors.identifier.message as string}
-                  </p>
-                )}
+            <div className="space-y-1.5">
+              <label htmlFor="password" className="text-xs font-semibold tracking-wider uppercase text-white/40">
+                Contraseña
+              </label>
+              <div className="relative">
+                <i className="bi bi-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-white/30 text-sm pointer-events-none" />
+                <input
+                  id="password"
+                  type="password"
+                  autoComplete="current-password"
+                  placeholder="••••••••"
+                  className="w-full bg-white/8 border border-white/20 rounded-xl pl-10 pr-4 py-3 text-white placeholder:text-white/30 text-sm focus:outline-none focus:border-[#FFD166] focus:ring-1 focus:ring-[#FFD166]/35 transition-colors duration-150"
+                  {...register("password", { required: "Este campo es obligatorio." })}
+                />
               </div>
+              {errors.password && (
+                <p className="flex items-center gap-1.5 text-red-400 text-xs mt-1">
+                  <i className="bi bi-exclamation-circle" />
+                  {errors.password.message as string}
+                </p>
+              )}
+            </div>
 
-              <div className="flex flex-col gap-2">
-                <label htmlFor="password" className="text-white/70 font-medium tracking-wide">
-                  Contraseña
-                </label>
-                <div className="relative group/field">
-                  <div className={[
-                    "absolute left-0 top-1/2 -translate-y-1/2 w-px h-4/5 rounded-full transition-all duration-300 pointer-events-none",
-                    errors.password
-                      ? "bg-[#EF4444]/70"
-                      : "bg-[#10B981]/0 group-focus-within/field:bg-[#10B981]/60",
-                  ].join(" ")} />
-                  <i className="bi bi-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none transition-colors duration-200 group-focus-within/field:text-[#10B981]/70" />
-                  <input
-                    id="password"
-                    type="password"
-                    autoComplete="current-password"
-                    placeholder="••••••••"
-                    className={[
-                      "w-full bg-white/4 border rounded-xl pl-10 pr-4 py-3 text-white placeholder:text-white/20",
-                      "outline-none transition-all duration-200",
-                      "hover:bg-white/7 hover:border-white/25",
-                      "focus:bg-[#10B981]/6 focus:border-[#10B981]/60 focus:shadow-[0_0_0_3px_rgba(16,185,129,0.10)]",
-                      errors.password
-                        ? "border-[#EF4444]/70 shadow-[0_0_0_3px_rgba(239,68,68,0.10)]"
-                        : "border-white/10",
-                    ].join(" ")}
-                    {...register("password", { required: "Este campo es obligatorio." })}
-                  />
-                </div>
-                {errors.password && (
-                  <p className="text-[#EF4444] flex items-center gap-1.5">
-                    <i className="bi bi-exclamation-circle shrink-0" />
-                    {errors.password.message as string}
-                  </p>
-                )}
-              </div>
+            <button
+              type="submit"
+              disabled={loadingAuth?.loginLoading}
+              className="w-full hover:bg-[#BC96E6] text-[#210B2C] font-semibold rounded-xl px-5 py-3 flex items-center justify-center gap-2 bg-[#FFD166] active:scale-[0.98] transition-all duration-150 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed mt-2"
+            >
+              {loadingAuth?.loginLoading ? (
+                <>
+                  <i className="bi bi-arrow-repeat animate-spin" />
+                  Ingresando...
+                </>
+              ) : (
+                <>
+                  Iniciar sesión
+                  <i className="bi bi-arrow-right" />
+                </>
+              )}
+            </button>
 
-              <div className="h-px w-full bg-white/15" aria-hidden="true" />
+          </form>
+        </motion.div>
 
-              <div className="relative group/btn">
-                <div className="absolute -inset-1 rounded-xl bg-linear-to-r from-[#10B981]/50 to-[#3B82F6]/25 blur-lg opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300 pointer-events-none" />
-                <button
-                  type="submit"
-                  disabled={loadingAuth?.loginLoading}
-                  className={[
-                    "relative w-full py-4 px-6 rounded-xl text-white font-semibold tracking-wide cursor-pointer",
-                    "bg-linear-to-r from-[#10B981] via-[#0fca8a] to-[#0ea371]",
-                    "border border-[#10B981]/25 shadow-[0_4px_24px_rgba(16,185,129,0.30),inset_0_1px_0_rgba(255,255,255,0.12)]",
-                    "transition-all duration-200",
-                    "hover:-translate-y-0.5 hover:shadow-[0_10px_40px_rgba(16,185,129,0.50),inset_0_1px_0_rgba(255,255,255,0.15)]",
-                    "active:translate-y-0 active:scale-[0.98] active:shadow-[0_2px_12px_rgba(16,185,129,0.25)]",
-                    "disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-[0_4px_24px_rgba(16,185,129,0.30)]",
-                  ].join(" ")}
-                >
-                  <span className="flex items-center justify-center gap-2">
-                    {loadingAuth?.loginLoading ? (
-                      <>
-                        <i className="bi bi-arrow-repeat animate-spin" />
-                        Ingresando...
-                      </>
-                    ) : (
-                      <>
-                        Iniciar sesión
-                        <i className="bi bi-arrow-right opacity-70 transition-transform duration-200 group-hover/btn:translate-x-0.5" />
-                      </>
-                    )}
-                  </span>
-                </button>
-              </div>
-
-            </form>
-          </div>
-        </div>
-
-        <p className="text-center text-white/30 mt-6">
+        <motion.p {...fadeIn(0.16)} className="text-center text-white/40 text-sm mt-6">
           ¿No tenés cuenta?{" "}
-          <Link
-            to="/registro"
-            className="text-[#10B981] underline underline-offset-4 decoration-[#10B981]/30 transition-all duration-150 hover:text-white hover:decoration-white/50"
-          >
+          <Link to="/registro" className="text-[#BC96E6] hover:text-[#BC96E6]/80 font-medium transition-colors duration-150">
             Registrate
           </Link>
-        </p>
-
+        </motion.p>
       </section>
     </main>
   )

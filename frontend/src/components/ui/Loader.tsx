@@ -2,7 +2,9 @@ import { PropagateLoader } from "react-spinners";
 
 const Loader = () => {
   return (
-    <PropagateLoader color="#ffffff" size={6} />
+    <div className="flex items-center justify-center py-8">
+      <PropagateLoader size={8} color="#BC96E6" />
+    </div>
   )
 }
 

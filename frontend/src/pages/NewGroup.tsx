@@ -3,29 +3,29 @@ import { useForm } from "react-hook-form"
 import type { CreateGroupData } from "../types/groups.types"
 import { Link, useNavigate } from "react-router-dom"
 import { useState } from "react"
+import { motion } from "motion/react"
+import { fadeUp } from "../utils/motion"
 
 const NewGroup = () => {
-
   const { register, handleSubmit, reset, formState: { errors } } = useForm<CreateGroupData>()
   const { createGroup, loading } = useGroup()
   const navigate = useNavigate()
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
 
   const onSubmit = async (data: CreateGroupData) => {
-    try{
-        const formData = new FormData()
-        formData.append('name', data.name)
-        formData.append('description', data.description)
-        if (data.image && data.image[0]) {
-          formData.append('image', data.image[0])
-        }
-        await createGroup(formData)
-        reset()
-        setPreviewUrl(null)
-        navigate("/inicio")
-    }
-    catch(error: any){
-      if(error?.response?.data?.message){
+    try {
+      const formData = new FormData()
+      formData.append('name', data.name)
+      formData.append('description', data.description)
+      if (data.image && data.image[0]) {
+        formData.append('image', data.image[0])
+      }
+      await createGroup(formData)
+      reset()
+      setPreviewUrl(null)
+      navigate("/inicio")
+    } catch (error: any) {
+      if (error?.response?.data?.message) {
         console.log("Error al crear el grupo:", error.response.data.message)
       }
     }
@@ -42,198 +42,149 @@ const NewGroup = () => {
   }
 
   return (
-    <main className="relative min-h-screen bg-[#0F172A] overflow-hidden flex items-center justify-center px-4 py-12">
+    <main className="min-h-screen bg-[#210B2C] relative">
 
-      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 80% 60% at 100% 0%, rgba(16,185,129,0.30) 0%, transparent 65%)" }} />
-      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 60% 50% at 0% 100%, rgba(16,185,129,0.20) 0%, transparent 65%)" }} />
-      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 55% 45% at 0% 0%, rgba(59,130,246,0.20) 0%, transparent 65%)" }} />
-      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 45% 35% at 100% 100%, rgba(59,130,246,0.14) 0%, transparent 65%)" }} />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden hidden xl:block">
+        <div className="absolute top-14 right-0 w-80 h-px bg-linear-to-l from-[#BC96E6]/58 to-transparent" />
+        <div className="absolute top-28 right-0 w-52 h-px bg-linear-to-l from-[#FFD166]/44 to-transparent" />
+        <div className="absolute top-44 right-0 w-30 h-px bg-linear-to-l from-[#BC96E6]/32 to-transparent" />
+        <div className="absolute bottom-36 left-0 w-68 h-px bg-linear-to-r from-[#BC96E6]/54 to-transparent" />
+        <div className="absolute bottom-20 left-0 w-44 h-px bg-linear-to-r from-[#FFD166]/40 to-transparent" />
+        <div className="absolute bottom-52 left-0 w-26 h-px bg-linear-to-r from-[#BC96E6]/32 to-transparent" />
+        <div className="absolute top-[28%] right-10 w-px h-32 bg-linear-to-b from-transparent via-[#BC96E6]/50 to-transparent" />
+        <div className="absolute top-[50%] left-8 w-px h-28 bg-linear-to-b from-transparent via-[#FFD166]/38 to-transparent" />
+        <div className="absolute top-[68%] right-24 w-px h-24 bg-linear-to-b from-transparent via-[#BC96E6]/32 to-transparent" />
+      </div>
 
-      <div className="relative z-10 w-full max-w-lg">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 xl:px-8 py-8 md:py-10">
 
         <Link
           to="/inicio"
-          className="inline-flex items-center gap-2 text-white/40 mb-8 transition-colors duration-150 hover:text-white"
+          className="inline-flex items-center gap-2 text-white/50 hover:text-[#BC96E6] hover:bg-[#BC96E6]/8 rounded-lg px-2 py-1 -ml-2 text-sm transition-all duration-150 mb-8"
         >
           <i className="bi bi-arrow-left" />
           Volver al dashboard
         </Link>
 
-        <div className="relative p-px rounded-3xl bg-linear-to-br from-[#10B981]/45 via-white/5 to-[#3B82F6]/40 shadow-[0_25px_60px_rgba(0,0,0,0.6)]">
+        <motion.div {...fadeUp()} className="mb-8">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-10 h-10 rounded-xl bg-[#BC96E6]/15 flex items-center justify-center">
+              <i className="bi bi-people text-[#BC96E6] text-lg" />
+            </div>
+            <h1 className="text-white font-bold text-2xl tracking-tight">Nuevo grupo</h1>
+          </div>
+          <p className="text-white/40 text-sm ml-13">Completá los datos para crear tu grupo y empezar a dividir gastos.</p>
+        </motion.div>
 
-          <div className="absolute inset-px rounded-[23px] border border-white/5 pointer-events-none z-10" />
+        <motion.div {...fadeUp(0.08)} className="max-w-xl">
+          <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5">
 
-          <div className="relative bg-[#0A1020]/85 backdrop-blur-3xl rounded-[23px] p-8 md:p-10 overflow-hidden">
-
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-linear-to-r from-transparent via-[#10B981]/30 via-[#3B82F6]/25 to-transparent pointer-events-none" />
-
-            <div className="absolute top-0 left-0 w-40 h-40 bg-[#10B981]/4 rounded-full blur-2xl pointer-events-none -translate-x-1/3 -translate-y-1/3" />
-            <div className="absolute bottom-0 right-0 w-40 h-40 bg-[#3B82F6]/5 rounded-full blur-3xl pointer-events-none translate-x-1/3 translate-y-1/3" />
-
-            <div className="relative flex flex-col gap-1 mb-8">
-              <div className="flex items-center gap-3 mb-1">
-                <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-[#10B981]/10 border border-[#10B981]/20">
-                  <i className="bi bi-people text-[#10B981]" />
-                </div>
-                <h1 className="text-white">Nuevo grupo</h1>
-              </div>
-              <p className="text-white/40">
-                Completá los datos para crear tu grupo y empezar a dividir gastos.
-              </p>
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold tracking-wider uppercase text-white/40">
+                Nombre del grupo <span className="text-[#BC96E6]">*</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Ej: Los del asado"
+                autoComplete="off"
+                className="w-full bg-white/8 border border-white/20 rounded-xl px-4 py-3 text-white placeholder:text-white/30 text-sm focus:outline-none focus:border-[#FFD166] focus:ring-1 focus:ring-[#FFD166]/35 transition-colors duration-150"
+                {...register("name", {
+                  required: "El nombre es requerido",
+                  minLength: { value: 2, message: "Mínimo 2 caracteres" },
+                  maxLength: { value: 60, message: "Máximo 60 caracteres" },
+                })}
+              />
+              {errors.name && (
+                <p className="flex items-center gap-1.5 text-red-400 text-xs">
+                  <i className="bi bi-exclamation-circle" />
+                  {errors.name.message}
+                </p>
+              )}
             </div>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="relative flex flex-col gap-5" noValidate>
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold tracking-wider uppercase text-white/40">
+                Descripción <span className="text-[#BC96E6]">*</span>
+              </label>
+              <textarea
+                placeholder="¿De qué se trata el grupo?"
+                rows={3}
+                className="w-full bg-white/8 border border-white/20 rounded-xl px-4 py-3 text-white placeholder:text-white/30 text-sm focus:outline-none focus:border-[#FFD166] focus:ring-1 focus:ring-[#FFD166]/35 transition-colors duration-150 resize-none"
+                {...register("description", {
+                  required: "La descripción es requerida",
+                  minLength: { value: 5, message: "Mínimo 5 caracteres" },
+                  maxLength: { value: 300, message: "Máximo 300 caracteres" },
+                })}
+              />
+              {errors.description && (
+                <p className="flex items-center gap-1.5 text-red-400 text-xs">
+                  <i className="bi bi-exclamation-circle" />
+                  {errors.description.message}
+                </p>
+              )}
+            </div>
 
-              <div className="flex flex-col gap-1.5">
-                <label className="text-white/70">
-                  Nombre del grupo <span className="text-[#EF4444]">*</span>
-                </label>
-                <input
-                  type="text"
-                  placeholder="Ej: Los del asado"
-                  autoComplete="off"
-                  {...register("name", {
-                    required: "El nombre es requerido",
-                    minLength: { value: 2, message: "Mínimo 2 caracteres" },
-                    maxLength: { value: 60, message: "Máximo 60 caracteres" },
-                  })}
-                  className={[
-                    "w-full px-4 py-3 rounded-xl text-white placeholder:text-white/25",
-                    "bg-white/5 border",
-                    errors.name ? "border-[#EF4444]/60" : "border-white/10",
-                    "outline-none transition-all duration-200",
-                    "hover:bg-white/7 hover:border-white/25",
-                    "focus:bg-[#10B981]/5 focus:border-[#10B981]/60 focus:shadow-[0_0_0_3px_rgba(16,185,129,0.12)]",
-                  ].join(" ")}
-                />
-                {errors.name && (
-                  <p className="flex items-center gap-1.5 text-[#EF4444]">
-                    <i className="bi bi-exclamation-circle" />
-                    {errors.name.message}
-                  </p>
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold tracking-wider uppercase text-white/40">
+                Imagen del grupo <span className="text-white/30 normal-case tracking-normal font-normal">(opcional)</span>
+              </label>
+              <label
+                htmlFor="group-image"
+                className="flex items-center gap-4 bg-white/8 border border-[#BC96E6]/25 border-dashed rounded-xl px-5 py-4 cursor-pointer hover:bg-[#BC96E6]/4 hover:border-[#BC96E6]/45 transition-all duration-150"
+              >
+                {previewUrl ? (
+                  <>
+                    <img src={previewUrl} alt="Preview" className="w-14 h-14 rounded-xl object-cover shrink-0" />
+                    <div>
+                      <span className="text-white/80 text-sm font-medium block">Imagen seleccionada</span>
+                      <span className="text-white/40 text-xs">Hacé click para cambiarla</span>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="w-12 h-12 rounded-xl bg-[#BC96E6]/10 flex items-center justify-center shrink-0">
+                      <i className="bi bi-image text-[#BC96E6]/60 text-xl" />
+                    </div>
+                    <div>
+                      <span className="text-white/60 text-sm font-medium block">Subir imagen</span>
+                      <span className="text-white/30 text-xs">PNG, JPG o WEBP</span>
+                    </div>
+                  </>
                 )}
-              </div>
+              </label>
+              <input
+                id="group-image"
+                type="file"
+                accept="image/png,image/jpeg,image/webp"
+                className="hidden"
+                {...register("image")}
+                onChange={(e) => {
+                  register("image").onChange(e)
+                  handleImageChange(e)
+                }}
+              />
+            </div>
 
-              <div className="flex flex-col gap-1.5">
-                <label className="text-white/70">
-                  Descripción <span className="text-[#EF4444]">*</span>
-                </label>
-                <textarea
-                  placeholder="¿De qué se trata el grupo?"
-                  rows={3}
-                  {...register("description", {
-                    required: "La descripción es requerida",
-                    minLength: { value: 5, message: "Mínimo 5 caracteres" },
-                    maxLength: { value: 300, message: "Máximo 300 caracteres" },
-                  })}
-                  className={[
-                    "w-full px-4 py-3 rounded-xl text-white placeholder:text-white/25 resize-none",
-                    "bg-white/5 border",
-                    errors.description ? "border-[#EF4444]/60" : "border-white/10",
-                    "outline-none transition-all duration-200",
-                    "hover:bg-white/7 hover:border-white/25",
-                    "focus:bg-[#10B981]/5 focus:border-[#10B981]/60 focus:shadow-[0_0_0_3px_rgba(16,185,129,0.12)]",
-                  ].join(" ")}
-                />
-                {errors.description && (
-                  <p className="flex items-center gap-1.5 text-[#EF4444]">
-                    <i className="bi bi-exclamation-circle" />
-                    {errors.description.message}
-                  </p>
-                )}
-              </div>
+            <button
+              type="submit"
+              disabled={loading.createLoading}
+              className="w-full bg-[#BC96E6] text-[#210B2C] font-semibold rounded-xl px-5 py-3 flex items-center justify-center gap-2 hover:bg-[#FFD166] active:scale-[0.98] transition-all duration-150 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              {loading.createLoading ? (
+                <>
+                  <span className="w-4 h-4 border-2 border-[#210B2C]/30 border-t-[#210B2C] rounded-full animate-spin" />
+                  Creando grupo...
+                </>
+              ) : (
+                <>
+                  <i className="bi bi-plus-circle" />
+                  Crear grupo
+                </>
+              )}
+            </button>
 
-              <div className="flex flex-col gap-1.5">
-                <label className="text-white/70">
-                  Imagen del grupo <span className="text-white/30">(opcional)</span>
-                </label>
-
-                <label
-                  htmlFor="group-image"
-                  className={[
-                    "relative flex items-center gap-4 px-4 py-4 rounded-xl border border-dashed cursor-pointer",
-                    "bg-white/3 border-white/10 text-white/40",
-                    "transition-all duration-200",
-                    "hover:bg-white/5 hover:border-[#10B981]/40 hover:text-white/60",
-                  ].join(" ")}
-                >
-                  {previewUrl ? (
-                    <>
-                      <img
-                        src={previewUrl}
-                        alt="Preview"
-                        className="w-12 h-12 rounded-lg object-cover border border-white/10 shrink-0"
-                      />
-                      <div className="flex flex-col gap-0.5 min-w-0">
-                        <span className="text-white/70 truncate">Imagen seleccionada</span>
-                        <span className="text-white/30">Hacé click para cambiarla</span>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-white/5 border border-white/8 shrink-0">
-                        <i className="bi bi-image text-white/40" />
-                      </div>
-                      <div className="flex flex-col gap-0.5">
-                        <span className="text-white/60">Subir imagen</span>
-                        <span className="text-white/30">PNG, JPG o WEBP</span>
-                      </div>
-                    </>
-                  )}
-                </label>
-
-                <input
-                  id="group-image"
-                  type="file"
-                  accept="image/png,image/jpeg,image/webp"
-                  className="sr-only"
-                  {...register("image")}
-                  onChange={(e) => {
-                    register("image").onChange(e)
-                    handleImageChange(e)
-                  }}
-                />
-              </div>
-              <div className="flex items-center gap-2 opacity-20" aria-hidden="true">
-                <div className="h-px flex-1 bg-white/40" />
-                <div className="w-1 h-1 rounded-full bg-white" />
-                <div className="w-1 h-1 rounded-full bg-white" />
-                <div className="w-1 h-1 rounded-full bg-white" />
-                <div className="h-px flex-1 bg-white/40" />
-              </div>
-
-              <div className="relative group/btn">
-                <div className="absolute -inset-1 rounded-xl bg-linear-to-r from-[#10B981]/50 to-[#3B82F6]/25 blur-lg opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300 pointer-events-none" />
-                <button
-                  type="submit"
-                  disabled={loading.createLoading}
-                  className={[
-                    "relative flex items-center justify-center gap-2 w-full py-3.5 px-6 rounded-xl text-white",
-                    "bg-linear-to-r from-[#10B981] via-[#0fca8a] to-[#0ea371]",
-                    "border border-[#10B981]/25 shadow-[0_4px_24px_rgba(16,185,129,0.30),inset_0_1px_0_rgba(255,255,255,0.12)]",
-                    "transition-all duration-200",
-                    loading.createLoading
-                      ? "opacity-60 cursor-not-allowed"
-                      : "hover:-translate-y-0.5 hover:shadow-[0_10px_40px_rgba(16,185,129,0.50),inset_0_1px_0_rgba(255,255,255,0.15)] active:translate-y-0 active:scale-[0.98] active:shadow-[0_2px_12px_rgba(16,185,129,0.25)]",
-                  ].join(" ")}
-                >
-                  {loading.createLoading ? (
-                    <>
-                      <span className="w-4 h-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
-                      Creando grupo...
-                    </>
-                  ) : (
-                    <>
-                      <i className="bi bi-plus-circle" />
-                      Crear grupo
-                    </>
-                  )}
-                </button>
-              </div>
-
-            </form>
-          </div>
-        </div>
+          </form>
+        </motion.div>
       </div>
     </main>
   )

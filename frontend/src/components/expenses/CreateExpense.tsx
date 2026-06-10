@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { motion } from "motion/react";
+import { modalBackdrop, modalPanel } from "../../utils/motion";
 import type { CreateExpenseModalProps } from "../../types/expense.types";
 import useExpense from "../../hooks/useExpense";
 import PaidByPicker from "./PaidByPicker";
@@ -53,69 +55,64 @@ const CreateExpense = ({ idGroup, idPlan, members, onClose }: CreateExpenseModal
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+         
+            <motion.div {...modalBackdrop} onClick={onClose} className="absolute inset-0 bg-[#210B2C]/80 backdrop-blur-md" />
 
-            <div
-                className="absolute inset-0 bg-[#0A1020]/80 backdrop-blur-sm"
-                onClick={onClose}
-            />
+            <motion.div {...modalPanel} className="relative w-full max-w-md z-10 max-h-[90vh] flex flex-col">
+                <div className="bg-[#210B2C] border border-white/10 rounded-2xl shadow-2xl flex flex-col max-h-[90vh]">
 
-            <div className="relative w-full max-w-xl z-10">
-                <div className="p-px rounded-3xl bg-linear-to-br from-[#3B82F6]/45 via-white/5 to-[#10B981]/30 shadow-[0_25px_60px_rgba(0,0,0,0.6)]">
-                    <div className="bg-[#0A1020]/95 backdrop-blur-3xl rounded-[23px] p-6 flex flex-col gap-5 max-h-[90vh] overflow-y-auto">
-
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                                <div className="w-9 h-9 rounded-xl bg-[#3B82F6]/10 border border-[#3B82F6]/20 flex items-center justify-center">
-                                    <i className="bi bi-receipt text-[#3B82F6]" />
-                                </div>
-                                <h2 className="text-white font-semibold">Agregar gasto</h2>
+                    <div className="flex items-center justify-between p-5 pb-4 shrink-0">
+                        <div className="flex items-center gap-2.5">
+                            <div className="w-8 h-8 rounded-xl bg-[#FFD166]/10 flex items-center justify-center">
+                                <i className="bi bi-receipt text-[#FFD166] text-sm" />
                             </div>
-                            <button
-                                onClick={onClose}
-                                className="w-8 h-8 flex items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white/40 hover:text-white hover:bg-white/10 transition-all duration-200 cursor-pointer"
-                            >
-                                <i className="bi bi-x text-lg" />
-                            </button>
+                            <h2 className="text-white font-semibold text-lg">Agregar gasto</h2>
                         </div>
+                        <button
+                            onClick={onClose}
+                            className="w-8 h-8 flex items-center justify-center rounded-xl bg-white/7 border border-white/10 text-white/40 hover:text-[#BC96E6] hover:bg-[#BC96E6]/8 hover:border-[#BC96E6]/20 transition-all duration-150 cursor-pointer"
+                        >
+                            <i className="bi bi-x text-lg" />
+                        </button>
+                    </div>
 
-                        <div className="w-full h-px bg-linear-to-r from-transparent via-white/8 to-transparent" />
+                    <div className="border-t border-white/[0.07] mx-5 shrink-0" />
 
-                        <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-2 gap-x-4 gap-y-5" noValidate>
+                    {/* Scrollable form */}
+                    <div className="overflow-y-auto p-5">
+                        <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5">
 
-                            <div className="col-span-2 flex flex-col gap-1.5">
-                                <label className="text-white/70 text-sm">
-                                    Descripción <span className="text-white/30">(opcional)</span>
+                            <div className="space-y-1.5">
+                                <label className="text-xs font-semibold tracking-wider uppercase text-white/40">
+                                    Descripción <span className="text-white/25 normal-case tracking-normal font-normal">(opcional)</span>
                                 </label>
                                 <input
                                     type="text"
                                     placeholder="Ej: Compra del super"
                                     autoComplete="off"
+                                    className="w-full bg-white/8 border border-white/20 rounded-xl px-4 py-3 text-white placeholder:text-white/30 text-sm focus:outline-none focus:border-[#FFD166] focus:ring-1 focus:ring-[#FFD166]/35 transition-colors duration-150"
                                     {...register("description")}
-                                    className="w-full px-4 py-3 rounded-xl text-white placeholder:text-white/25 bg-white/5 border border-white/10 outline-none transition-all duration-200 hover:bg-white/7 hover:border-white/25 focus:bg-[#3B82F6]/5 focus:border-[#3B82F6]/60 focus:shadow-[0_0_0_3px_rgba(59,130,246,0.12)]"
                                 />
                             </div>
 
-                            <div className="flex flex-col gap-1.5">
-                                <label className="text-white/70 text-sm">
-                                    Monto <span className="text-[#EF4444]">*</span>
+                            <div className="space-y-1.5">
+                                <label className="text-xs font-semibold tracking-wider uppercase text-white/40">
+                                    Monto <span className="text-[#BC96E6]">*</span>
                                 </label>
                                 <input
                                     type="number"
                                     step="0.01"
                                     min="0.01"
                                     placeholder="0.00"
+                                    className="w-full bg-white/8 border border-white/20 rounded-xl px-4 py-3 text-[#FFD166] font-bold placeholder:text-white/30 placeholder:font-normal text-lg focus:outline-none focus:border-[#FFD166] focus:ring-1 focus:ring-[#FFD166]/35 transition-colors duration-150"
                                     {...register("amount", {
                                         required: "El monto es requerido",
                                         min: { value: 0.01, message: "El monto debe ser mayor a 0" },
                                         valueAsNumber: true,
                                     })}
-                                    className={[
-                                        "w-full px-4 py-3 rounded-xl text-white placeholder:text-white/25 bg-white/5 border outline-none transition-all duration-200 hover:bg-white/7 hover:border-white/25 focus:bg-[#3B82F6]/5 focus:border-[#3B82F6]/60 focus:shadow-[0_0_0_3px_rgba(59,130,246,0.12)]",
-                                        errors.amount ? "border-[#EF4444]/60" : "border-white/10"
-                                    ].join(" ")}
                                 />
                                 {errors.amount && (
-                                    <p className="flex items-center gap-1.5 text-[#EF4444] text-sm">
+                                    <p className="flex items-center gap-1.5 text-red-400 text-xs">
                                         <i className="bi bi-exclamation-circle" />
                                         {errors.amount.message}
                                     </p>
@@ -137,28 +134,20 @@ const CreateExpense = ({ idGroup, idPlan, members, onClose }: CreateExpenseModal
                             />
 
                             {errorResponse && (
-                                <div className="col-span-2 flex items-center gap-2 px-4 py-3 rounded-xl bg-[#EF4444]/8 border border-[#EF4444]/25">
-                                    <i className="bi bi-exclamation-circle text-[#EF4444]" />
-                                    <span className="text-[#EF4444] text-sm">{errorResponse}</span>
+                                <div className="flex items-center gap-2 bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-xl px-4 py-3">
+                                    <i className="bi bi-exclamation-circle shrink-0" />
+                                    <span>{errorResponse}</span>
                                 </div>
                             )}
 
                             <button
                                 type="submit"
                                 disabled={loading.createLoading}
-                                className={[
-                                    "col-span-2 flex items-center justify-center gap-2 w-full py-3.5 px-6 rounded-xl text-white font-medium",
-                                    "bg-linear-to-r from-[#3B82F6] via-[#4f8ef7] to-[#2563EB]",
-                                    "border border-[#3B82F6]/25 shadow-[0_4px_24px_rgba(59,130,246,0.30),inset_0_1px_0_rgba(255,255,255,0.12)]",
-                                    "transition-all duration-200",
-                                    loading.createLoading
-                                        ? "opacity-60 cursor-not-allowed"
-                                        : "hover:-translate-y-0.5 hover:shadow-[0_10px_40px_rgba(59,130,246,0.50)] active:translate-y-0 active:scale-[0.98]",
-                                ].join(" ")}
+                                className="w-full bg-[#BC96E6] text-[#210B2C] font-semibold rounded-xl px-5 py-3 flex items-center justify-center gap-2 hover:bg-[#FFD166] active:scale-[0.98] transition-all duration-150 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
                             >
                                 {loading.createLoading ? (
                                     <>
-                                        <span className="w-4 h-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+                                        <span className="w-4 h-4 border-2 border-[#210B2C]/30 border-t-[#210B2C] rounded-full animate-spin" />
                                         Guardando...
                                     </>
                                 ) : (
@@ -171,8 +160,9 @@ const CreateExpense = ({ idGroup, idPlan, members, onClose }: CreateExpenseModal
 
                         </form>
                     </div>
+
                 </div>
-            </div>
+            </motion.div>
         </div>
     );
 };

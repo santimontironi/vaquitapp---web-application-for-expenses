@@ -1,4 +1,5 @@
 import usePlan from "../../hooks/usePlan"
+import { AnimatePresence } from "motion/react"
 import Loader from "../ui/Loader"
 import PlanItem from "./PlanItem"
 import PlanHistory from "./PlanHistory"
@@ -23,75 +24,78 @@ const AllPlans = ({ idGroup }: AllPlansProps) => {
       confirmButtonText: "Sí, marcar como completado",
       cancelButtonText: "No, cancelar",
       reverseButtons: true,
+      buttonsStyling: false,
+      customClass: {
+        popup: "va-swal-popup",
+        title: "va-swal-title",
+        htmlContainer: "va-swal-text",
+        confirmButton: "va-swal-confirm",
+        cancelButton: "va-swal-cancel",
+      },
     })
-    if(result.isConfirmed) {
+    if (result.isConfirmed) {
       checkPlanAsCompleted(idGroup, id)
     }
   }
 
   return (
     <>
-    <div className="relative p-px rounded-2xl bg-[#3B82F6]/30 shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
-      <div className="relative rounded-[15px] bg-[#0A1020]/85 backdrop-blur-2xl p-6 md:p-8 overflow-hidden">
-
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-linear-to-r from-transparent via-[#3B82F6]/20 to-transparent pointer-events-none" />
-        <div className="absolute bottom-0 right-0 w-40 h-40 bg-[#3B82F6]/4 rounded-full blur-2xl pointer-events-none translate-x-1/3 translate-y-1/3" />
-
-        <div className="relative flex flex-col gap-5">
-
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-xl bg-[#3B82F6]/10 border border-[#3B82F6]/20 flex items-center justify-center">
-                <i className="bi bi-calendar-event text-[#3B82F6]" />
-              </div>
-              <h2 className="text-white font-semibold">Planes</h2>
+      <div className="bg-white/6 border border-white/10 rounded-2xl p-5 hover:border-[#FFD166]/40 transition-colors duration-200">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-[#BC96E6]/15 flex items-center justify-center shrink-0">
+              <i className="bi bi-calendar-event text-[#BC96E6] text-sm" />
             </div>
-            <div className="flex items-center gap-2">
-              {!loading.fetchLoading && (
-                <span className="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-white/40 text-xs">
-                  {plans.length} {plans.length === 1 ? "plan" : "planes"}
-                </span>
-              )}
-              <button
-                onClick={() => setIsHistoryOpen(true)}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#3B82F6]/15 border border-[#3B82F6]/35 text-[#3B82F6] text-sm font-medium hover:-translate-y-0.5 hover:bg-[#3B82F6]/25 hover:border-[#3B82F6]/55 hover:shadow-[0_4px_16px_rgba(59,130,246,0.20)] active:translate-y-0 active:scale-[0.97] transition-all duration-200 cursor-pointer"
-              >
-                <i className="bi bi-clock-history" />
-                <span>Historial</span>
-              </button>
-            </div>
+            <h2 className="text-white font-semibold text-base">Planes</h2>
           </div>
-
-          <div className="w-full h-px bg-linear-to-r from-transparent via-white/8 to-transparent" />
-
-          {loading.fetchLoading ? (
-            <div className="flex items-center justify-center py-10">
-              <Loader />
-            </div>
-          ) : plans.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {plans.map((plan) => (
-                <PlanItem key={plan._id} plan={plan} idGroup={idGroup} onCheckCompleted={() => handleCheckCompleted(plan._id)} />
-              ))}
-            </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center gap-3 py-10 text-center">
-              <div className="w-12 h-12 rounded-2xl bg-[#3B82F6]/10 border border-[#3B82F6]/20 flex items-center justify-center">
-                <i className="bi bi-calendar-event text-[#3B82F6]" />
-              </div>
-              <p className="text-white/40 max-w-xs">
-                No hay planes en este grupo todavía.
-              </p>
-            </div>
-          )}
-
+          <div className="flex items-center gap-2">
+            {!loading.fetchLoading && (
+              <span className="bg-[#FFD166]/10 text-[#FFD166] text-xs font-semibold px-2.5 py-1 rounded-full">
+                {plans.length} {plans.length === 1 ? "plan" : "planes"}
+              </span>
+            )}
+            <button
+              onClick={() => setIsHistoryOpen(true)}
+              className="flex items-center gap-1.5 border border-[#BC96E6]/25 text-[#BC96E6] rounded-xl px-3 py-2 text-xs font-medium hover:bg-[#BC96E6]/10 hover:border-[#BC96E6]/40 transition-all duration-150 cursor-pointer"
+            >
+              <i className="bi bi-clock-history" />
+              <span>Historial</span>
+            </button>
+          </div>
         </div>
-      </div>
-    </div>
 
-      {isHistoryOpen && (
-        <PlanHistory idGroup={idGroup} onClose={() => setIsHistoryOpen(false)} />
-      )}
+        <div className="border-t border-white/[0.07] mb-4" />
+
+        {loading.fetchLoading ? (
+          <div className="py-4">
+            <Loader />
+          </div>
+        ) : plans.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-5">
+            {plans.map((plan) => (
+              <PlanItem
+                key={plan._id}
+                plan={plan}
+                idGroup={idGroup}
+                onCheckCompleted={() => handleCheckCompleted(plan._id)}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-col items-center text-center py-10 gap-3">
+            <div className="w-12 h-12 rounded-xl bg-[#BC96E6]/10 flex items-center justify-center">
+              <i className="bi bi-calendar-event text-[#BC96E6]/40 text-xl" />
+            </div>
+            <p className="text-white/30 text-sm">No hay planes en este grupo todavía.</p>
+          </div>
+        )}
+      </div>
+
+      <AnimatePresence>
+        {isHistoryOpen && (
+          <PlanHistory idGroup={idGroup} onClose={() => setIsHistoryOpen(false)} />
+        )}
+      </AnimatePresence>
     </>
   )
 }

@@ -9,30 +9,32 @@ interface SplitPickerProps {
 
 const SplitPicker = ({ members, value, onChange, error }: SplitPickerProps) => {
     return (
-        <div className="col-span-2 flex flex-col gap-1.5">
-            <label className="text-white/70 text-sm">
-                Dividir entre <span className="text-[#EF4444]">*</span>
+        <div className="space-y-2">
+            <label className="text-xs font-semibold tracking-wider uppercase text-white/40">
+                Dividir entre <span className="text-[#BC96E6]">*</span>
             </label>
-            <div className="flex flex-wrap gap-2">
-                {members.map(member => (
-                    <button
-                        key={member._id}
-                        type="button"
-                        onClick={() => onChange(member._id)}
-                        className={[
-                            "flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all duration-200 cursor-pointer text-sm",
-                            value.includes(member._id)
-                                ? "bg-[#10B981]/12 border-[#10B981]/35 text-[#10B981]"
-                                : "bg-white/3 border-white/10 text-white/40 hover:border-white/25 hover:text-white/70"
-                        ].join(" ")}
-                    >
-                        <i className={value.includes(member._id) ? "bi bi-check-circle-fill" : "bi bi-circle"} />
-                        {member.username}
-                    </button>
-                ))}
+            <div className="flex flex-wrap gap-2 mt-1">
+                {members.map(member => {
+                    const isSelected = value.includes(member._id);
+                    return (
+                        <button
+                            key={member._id}
+                            type="button"
+                            onClick={() => onChange(member._id)}
+                            className={`flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium border transition-all duration-150 cursor-pointer ${
+                                isSelected
+                                    ? "bg-[#BC96E6]/15 border-[#BC96E6]/30 text-[#BC96E6]"
+                                    : "bg-white/5 border-white/10 text-white/50 hover:bg-white/9 hover:text-white/70 hover:border-white/20"
+                            }`}
+                        >
+                            <i className={`text-sm ${isSelected ? "bi bi-check-circle-fill text-[#BC96E6]" : "bi bi-circle text-white/25"}`} />
+                            {member.username}
+                        </button>
+                    );
+                })}
             </div>
             {error && (
-                <p className="flex items-center gap-1.5 text-[#EF4444] text-sm">
+                <p className="flex items-center gap-1.5 text-red-400 text-xs">
                     <i className="bi bi-exclamation-circle" />
                     {error}
                 </p>

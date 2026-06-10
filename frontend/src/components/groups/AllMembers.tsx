@@ -6,7 +6,6 @@ import Swal from "sweetalert2"
 
 const AllMembers = ({ idGroup }: AllMembersProps) => {
   const { members, getMembersByGroup, deleteMember, groups, getAdminRole } = useGroup()
-
   const isAdmin = groups?.find(g => g.group._id === idGroup)?.role === "admin"
 
   useEffect(() => {
@@ -20,17 +19,23 @@ const AllMembers = ({ idGroup }: AllMembersProps) => {
         text: "Este miembro pasará a ser administrador del grupo.",
         icon: "question",
         showCancelButton: true,
-        confirmButtonColor: "#10B981",
-        cancelButtonColor: "#6B7280",
         confirmButtonText: "Sí, dar admin",
         cancelButtonText: "Cancelar",
+        buttonsStyling: false,
+        customClass: {
+          popup: "va-swal-popup",
+          title: "va-swal-title",
+          htmlContainer: "va-swal-text",
+          confirmButton: "va-swal-confirm",
+          cancelButton: "va-swal-cancel",
+        },
       })
       if (result.isConfirmed) {
         await getAdminRole(idGroup, idUser)
         await getMembersByGroup(idGroup)
       }
     } catch (error: any) {
-      if(error.response?.data?.message) {
+      if (error.response?.data?.message) {
         console.log(error.response.data.message)
       }
     }
@@ -43,10 +48,16 @@ const AllMembers = ({ idGroup }: AllMembersProps) => {
         text: "¿Estás seguro de que quieres eliminar a este miembro del grupo? Esta acción no se puede deshacer.",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#EF4444",
-        cancelButtonColor: "#6B7280",
         confirmButtonText: "Sí, eliminar",
         cancelButtonText: "Cancelar",
+        buttonsStyling: false,
+        customClass: {
+          popup: "va-swal-popup",
+          title: "va-swal-title",
+          htmlContainer: "va-swal-text",
+          confirmButton: "va-swal-confirm va-swal-confirm-danger",
+          cancelButton: "va-swal-cancel",
+        },
       })
       if (result.isConfirmed) {
         await deleteMember(idGroup, idUser)
@@ -55,50 +66,45 @@ const AllMembers = ({ idGroup }: AllMembersProps) => {
       console.error("Error al eliminar al miembro del grupo:", error)
     }
   }
+
   return (
-    <div className="relative p-px rounded-2xl bg-linear-to-br from-[#10B981]/30 via-white/4 to-[#3B82F6]/15 shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
-      <div className="relative rounded-[15px] bg-[#0A1020]/85 backdrop-blur-2xl p-6 md:p-8 overflow-hidden">
-
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-linear-to-r from-transparent via-[#10B981]/30 to-transparent pointer-events-none" />
-        <div className="absolute bottom-0 right-0 w-40 h-40 bg-[#3B82F6]/4 rounded-full blur-2xl pointer-events-none translate-x-1/3 translate-y-1/3" />
-
-        <div className="relative flex flex-col gap-5">
-
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-xl bg-[#10B981]/15 border border-[#10B981]/30 flex items-center justify-center">
-                <i className="bi bi-people text-[#10B981]" />
-              </div>
-              <h2 className="text-white font-semibold">Miembros</h2>
-            </div>
-            {members && (
-              <span className="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-white/40 text-xs">
-                {members.length} {members.length === 1 ? "miembro" : "miembros"}
-              </span>
-            )}
+    <div className="bg-white/6 border border-white/10 rounded-2xl p-5 hover:border-[#FFD166]/40 transition-colors duration-200">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-xl bg-[#BC96E6]/15 flex items-center justify-center shrink-0">
+            <i className="bi bi-people text-[#BC96E6] text-sm" />
           </div>
-
-          <div className="w-full h-px bg-linear-to-r from-transparent via-white/8 to-transparent" />
-
-          {members && members.length > 0 ? (
-            <div className="flex flex-col gap-2">
-              {members.map((member) => (
-                <MemberItem isAdmin={isAdmin} key={member._id} member={member} onDeleteMember={() => handleDeleteMember(member.user._id)} onGrantAdmin={() => handleGrantAdmin(member.user._id)} />
-              ))}
-            </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center gap-3 py-10 text-center">
-              <div className="w-12 h-12 rounded-2xl bg-[#10B981]/15 border border-[#10B981]/30 flex items-center justify-center">
-                <i className="bi bi-people text-[#10B981]" />
-              </div>
-              <p className="text-white/40 max-w-xs">
-                No hay miembros en este grupo todavía.
-              </p>
-            </div>
-          )}
-
+          <h2 className="text-white font-semibold text-base">Miembros</h2>
         </div>
+        {members && (
+          <span className="bg-[#FFD166]/10 text-[#FFD166] text-xs font-semibold px-2.5 py-1 rounded-full">
+            {members.length} {members.length === 1 ? "miembro" : "miembros"}
+          </span>
+        )}
       </div>
+
+      <div className="border-t border-white/[0.07] mb-4" />
+
+      {members && members.length > 0 ? (
+        <div className="space-y-2">
+          {members.map((member) => (
+            <MemberItem
+              isAdmin={isAdmin}
+              key={member._id}
+              member={member}
+              onDeleteMember={() => handleDeleteMember(member.user._id)}
+              onGrantAdmin={() => handleGrantAdmin(member.user._id)}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="flex flex-col items-center text-center py-10 gap-3">
+          <div className="w-12 h-12 rounded-xl bg-[#BC96E6]/10 flex items-center justify-center">
+            <i className="bi bi-people text-[#BC96E6]/40 text-xl" />
+          </div>
+          <p className="text-white/30 text-sm">No hay miembros en este grupo todavía.</p>
+        </div>
+      )}
     </div>
   )
 }
