@@ -86,6 +86,8 @@ VaquitApp/
 │   │   ├── expense.routes.js
 │   │   ├── group.routes.js
 │   │   └── plan.routes.js
+│   ├── utils/
+│   │   └── emailTemplates.js
 │   ├── babel.config.cjs
 │   ├── app.js
 │   ├── index.js
@@ -169,10 +171,20 @@ VaquitApp/
 ## Funcionalidades
 
 ### Autenticación
-- Registro con nombre de usuario, email y contraseña; envía correo de confirmación (enlace JWT, 24 h)
+- Registro con nombre de usuario, email y contraseña; envía correo de confirmación (enlace JWT, 24 h) con plantilla HTML estilizada (ver abajo) y texto plano como fallback
 - Login con username o email + contraseña; sesión en cookie `httpOnly` (7 días)
 - La cuenta debe estar confirmada antes de poder iniciar sesión
 - Logout elimina la cookie del servidor
+
+#### Email de confirmación de cuenta
+
+El correo de confirmación se genera con `getConfirmAccountEmailHtml(username, urlConfirmed)` en `backend/utils/emailTemplates.js` y se envía mediante Nodemailer junto con un `text` plano de respaldo.
+
+- Estilos 100% inline (compatibilidad con clientes de correo), layout basado en tablas con `max-width: 600px`
+- Sigue la identidad visual de VaquitApp: paleta `#210B2C` / `#BC96E6` / `#FFD166`, tipografía "Outfit" con fallbacks y mascota 🐄
+- Botón CTA "Confirmar mi cuenta" que enlaza a `urlConfirmed`
+- Aviso de expiración del enlace (24 h) y enlace alternativo en texto plano
+- Preheader oculto para la previsualización en bandejas de entrada
 
 ### Grupos
 - Crear grupo con nombre, descripción e imagen opcional (Cloudinary)
