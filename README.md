@@ -1,6 +1,6 @@
 # VaquitApp
 
-Aplicación web para organizar gastos compartidos entre grupos de personas. Creás un grupo, definís planes (ej: "asado del domingo"), registrás quién pagó qué y entre quiénes se divide, y la app calcula automáticamente el mínimo de transferencias para saldar todas las deudas. 
+Aplicación web FullStack para organizar gastos compartidos entre grupos de personas. Creás un grupo, definís planes (ej: "asado del domingo"), registrás quién pagó qué y entre quiénes se divide, y la app calcula automáticamente el mínimo de transferencias para saldar todas las deudas. 
 
 ## Ver proyecto desplegado - https://vaquitapp-frontend.vercel.app/
 
